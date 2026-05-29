@@ -1,0 +1,26 @@
+/* Global styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* فونت */
+@font-face {
+  font-family: 'irabYekan';
+  src: url('/assets/fonts/Qs_Iranyekan.ttf') format('truetype');
+}
+
+/* reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+* {
+  font-family: Vazir, Tahoma, Arial, sans-serif !important;
+}

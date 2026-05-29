@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SendOtpCodePayload, AuthPayload, VerifyOtpCodePayload } from '../dto/signup-payload.interface';
-import { API_CONFIG } from '../../../common/api/api.config';
+import { API_CONFIG } from '../../common/api/api.config';
 
 @Injectable({
   providedIn: 'root',
