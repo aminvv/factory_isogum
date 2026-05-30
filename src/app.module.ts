@@ -19,6 +19,7 @@ import { AlertComponent } from './alert/alert.component';
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ProductService } from './home/product-grid/services/product.service';
 import { CertificateComponent } from './home/certificate/certificate.component';
+import { JalaliPipe } from './common/pipes/alali.pipe';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { CertificateComponent } from './home/certificate/certificate.component';
     ProductDetailPageComponent,
     AlertComponent,
     CertificateComponent,
+    JalaliPipe  
    
   ],
   imports: [
@@ -48,6 +50,8 @@ import { CertificateComponent } from './home/certificate/certificate.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
      ProductService
+  ],
+    exports: [
   ],
   bootstrap: [AppComponent] 
 })

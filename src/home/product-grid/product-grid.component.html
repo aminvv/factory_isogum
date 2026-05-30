@@ -2,7 +2,7 @@
   <div class="product-card" *ngFor="let product of products">
     <a [routerLink]="['/productDetail', product.id]">
       <img 
-        [src]="(product.image && product.image[0]?.url) || 'https://via.placeholder.com/300x200/323842/ffffff?text=بدون+عکس'" 
+        [src]="(product.image && product.image[0].url) || 'https://via.placeholder.com/300x200/323842/ffffff?text=بدون+عکس'" 
         [alt]="product.productName" 
       />
       <div class="product-info">

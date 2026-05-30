@@ -1,11 +1,18 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { API_CONFIG } from "../../../common/api/api.config";
+import { API_CONFIG } from "../../common/api/api.config";
 
 export interface ProductImage {
   url: string;
   publicId: string;
+}
+
+export interface ProductDetail {
+  id: number;
+  productId: number;
+  key: string;
+  value: string;
 }
 
 export interface Product {
@@ -14,27 +21,24 @@ export interface Product {
   productName?: string;
   description?: string;
   price: number;
-  rollWeight?: number;
-  thickness?: number;
-  dimensions?: string;
-  lifespan?: string;
+  quantity: number;
+  rating: number;
+  active_discount: boolean;
+  slug: string;
+  discount: string | number;
+  image?: { url: string; publicId: string }[];
+  details?: { id: number; productId: number; key: string; value: string }[];  // ⬅️ اضافه کن
   bitumenType?: string;
-  warranty?: string;
-  image?: ProductImage[];
-  quantity?: number;
-  discountPercent?: number;
-  discountAmount?: number;
-  nationalProductCode?: string;
-  fiberBaseType?: string;
-  internationalCode?: string;
-  brandRegistrationNumber?: string;
   coatingType?: string;
-  productBenefits?: string;
-  applicationType?: string;
-  isogumType?: string;
-  technicalSpecifications?: string;
-  discount?: string | number;
-  active_discount?: boolean;
+  update_at: Date
+  lifespan?: string;
+  weight?: string;
+  thickness?: string;
+  saleType?: string;
+  deliveryTime?: string;
+  deliveryCost?: string;
+  returnable?: boolean;
+  insurance?: boolean;
 }
 
 export interface ProductResponse {
@@ -45,13 +49,13 @@ export interface ProductResponse {
 @Injectable({
   providedIn: 'root'
 })
-export class ProductService {
+export class ProductDetailService {
   private apiUrl = `${API_CONFIG.baseUrl}/${API_CONFIG.product}`;
 
   constructor(private http: HttpClient) { }
 
   getProducts(page: number = 1, limit: number = 6): Observable<ProductResponse> {
-    const params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
+    const params = new HttpParams().set('page', page).set('limit', limit);
     return this.http.get<ProductResponse>(`${this.apiUrl}/list`, { params });
   }
 

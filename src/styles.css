@@ -1,16 +1,14 @@
-/* Global styles */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
 
-/* فونت */
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+
 @font-face {
-  font-family: 'irabYekan';
+  font-family: 'IRANYekan';
   src: url('/assets/fonts/Qs_Iranyekan.ttf') format('truetype');
+  font-display: swap;
 }
 
-/* reset */
+
 * {
   margin: 0;
   padding: 0;
@@ -21,6 +19,32 @@ html {
   overflow-x: hidden;
 }
 
-* {
-  font-family: Vazir, Tahoma, Arial, sans-serif !important;
+body {
+  margin: 0;
+  font-family: 'IRANYekan', Vazir, Tahoma, Arial, sans-serif;
+  background-color: #fff;
+  color: #222;
+  line-height: 1.5;
 }
+
+
+body,
+button,
+input,
+textarea,
+select,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span:not(.fa):not(.fas):not(.far):not(.fab),
+a,
+li,
+label,
+div:not(.fa):not(.fas):not(.far):not(.fab) {
+  font-family: 'IRANYekan', Vazir, Tahoma, Arial, sans-serif;
+}
+

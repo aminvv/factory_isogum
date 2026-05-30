@@ -19,7 +19,9 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "@fortawesome/fontawesome-free": "^7.2.0",
     "aos": "^2.3.4",
+    "jalali-moment": "^3.3.11",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

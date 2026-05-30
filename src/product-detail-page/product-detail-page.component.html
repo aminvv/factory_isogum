@@ -1,5 +1,5 @@
 <div class="digikala-product-page" *ngIf="product">
-    <!-- Breadcrumb -->
+    <!-- Breadcrumb (Static) -->
     <nav class="breadcrumb-nav">
         <div class="breadcrumb-container">
             <a href="#" class="breadcrumb-link">دیجی‌کالا</a>
@@ -14,165 +14,205 @@
 
     <!-- Main Product Section -->
     <div class="product-main">
+        <!-- ========== GALLERY (Dynamic) ========== -->
+        <!-- ========== GALLERY (Dynamic) ========== -->
         <div class="product-gallery-side">
-            <!-- Gallery -->
             <div class="gallery-container">
                 <div class="main-gallery">
-                    <div class="main-image-wrapper">
-                        <img src="https://dkstatics-public.digikala.com/digikala-products/8e9f284c1b07b8e8652d8a2d0b4d6c96b6f4b6e7.jpg"
-                            alt="ماوس مخصوص بازی مدل GM02" class="main-product-image">
+                    <div class="zoom-container" (mouseenter)="isZoomActive = true" (mouseleave)="resetZoom()"
+                        (mousemove)="handleZoomMove($event)">
+                        <img [src]="currentImageUrl" [alt]="product.productName" class="main-product-image"
+                            [class.zoomed]="isZoomActive" [style.transform]="zoomTransform">
                         <div class="image-actions">
-                            <button class="action-btn zoom-btn">🔍</button>
+                            <button class="action-btn zoom-btn" (click)="openZoomModal()">
+                                <i class="fas fa-expand"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="thumbnails-wrapper">
+                <div class="thumbnails-wrapper" *ngIf="product.image && product.image.length > 1">
                     <div class="thumbnails-container">
-                        <div class="thumbnail-item active">
-                            <img src="https://dkstatics-public.digikala.com/digikala-products/8e9f284c1b07b8e8652d8a2d0b4d6c96b6f4b6e7.jpg"
-                                alt="thumbnail 1">
-                        </div>
-                        <div class="thumbnail-item">
-                            <img src="https://dkstatics-public.digikala.com/digikala-products/2b7d1b1e5e8c9a7d8f6e4c2a1b9d8e7f5c3a2d4.jpg"
-                                alt="thumbnail 2">
-                        </div>
-                        <div class="thumbnail-item">
-                            <img src="https://dkstatics-public.digikala.com/digikala-products/5c8e7d6f4a3b2c1d9e8f7a6b5c4d3e2f1a9b8c7.jpg"
-                                alt="thumbnail 3">
-                        </div>
-                        <div class="thumbnail-item">
-                            <img src="https://dkstatics-public.digikala.com/digikala-products/9a8b7c6d5e4f3g2h1i0j9k8l7m6n5o4p3q2r1s0.jpg"
-                                alt="thumbnail 4">
+                        <div class="thumbnail-item" *ngFor="let img of product.image; let i = index"
+                            [class.active]="selectedImageIndex === i" (click)="changeMainImage(i)">
+                            <img [src]="img.url" [alt]="'thumbnail ' + i">
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Modal Zoom (بزرگنمایی تمام صفحه) -->
+            <div class="zoom-modal" [class.show]="isZoomModalOpen" (click)="closeZoomModal()">
+                <div class="zoom-modal-content" (click)="$event.stopPropagation()">
+                    <button class="zoom-modal-close" (click)="closeZoomModal()">✕</button>
+                    <img [src]="currentImageUrl" alt="Zoomed product">
+                </div>
+            </div>
         </div>
 
+        <!-- ========== PRODUCT VIRTUAL SIDE (Dynamic) ========== -->
+        <div class="product-container">
 
 
-        <!--  product-virtual-side  -->
-          <!-- product.component.html -->
-<div class="product-container">
-  <header class="product-header">
-    <h1 class="product-title"></h1>
-    <div class="product-actions">
-      <span class="reviews-link">پرسش > 7 دیدگاه > 30 خالصه دیدگاه ها</span>
-    </div>
-  </header>
 
-  <div class="product-content">
-    <div class="color-info">
-      <span class="color-label">زنگ:</span>
-      <span class="color-value">مشکی</span>
-    </div>
+            <header class="product-header">
+                <!-- ردیف اول: عنوان و کد -->
+                <div class="header-row title-row">
+                    <div class="title-group">
+                        <h1 class="product-title">{{ product.productName }}</h1>
+                        <span class="product-code">
+                            <i class="fas fa-barcode"></i> {{ product.productCode }}
+                        </span>
+                    </div>
+                    <div class="badge-group">
+                        <span class="badge discount-badge" *ngIf="product.active_discount && +product.discount > 0">
+                            <i class="fas fa-tag"></i> {{ product.discount }}% تخفیف
+                        </span>
+                        <span class="badge stock-badge" [class.out-of-stock]="product.quantity === 0">
+                            <i class="fas" [class.fa-check-circle]="product.quantity > 0"
+                                [class.fa-times-circle]="product.quantity === 0"></i>
+                            {{ product.quantity > 0 ? 'موجود' : 'ناموجود' }}
+                        </span>
+                    </div>
+                </div>
 
-    <section class="features-section">
-      <h2 class="section-title">ویژگی‌ها</h2>
-      
-      <div class="features-grid">
-        <div class="feature-item">
-          <span class="feature-label">نوع حسگر</span>
-          <span class="feature-value">اپتیکال</span>
+                <!-- ردیف دوم: کارت‌های آماری با آیکون‌های زیبا -->
+                <div class="header-row stats-row">
+                    <div class="stat-card">
+                        <i class="fas fa-star stat-icon"></i>
+                        <div class="stat-info">
+                            <span class="stat-value">{{ product.rating || '—' }}</span>
+                            <span class="stat-label">امتیاز (از 5)</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-boxes stat-icon"></i>
+                        <div class="stat-info">
+                            <span class="stat-value">{{ product.quantity | number }}</span>
+                            <span class="stat-label">موجودی (عدد)</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-alt stat-icon"></i>
+                        <div class="stat-info">
+                            <span class="stat-value">{{ product.update_at| jalali }}</span>
+                            <span class="stat-label">آخرین بروزرسانی</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" *ngIf="product.bitumenType || product.coatingType">
+                        <i class="fas fa-oil-can stat-icon"></i>
+                        <div class="stat-info">
+                            <span class="stat-value">{{ product.bitumenType || product.coatingType }}</span>
+                            <span class="stat-label">نوع / پوشش</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ردیف سوم: لینک‌های اقدام با آیکون‌های زیبا -->
+                <div class="header-row actions-row">
+                    <a class="action-link" (click)="scrollTo('specs')">
+                        <i class="fas fa-microchip"></i> مشخصات فنی
+                    </a>
+                    <a class="action-link" (click)="scrollTo('reviews')">
+                        <i class="fas fa-comments"></i> نظرات
+                    </a>
+                    <a class="action-link" (click)="scrollTo('questions')">
+                        <i class="fas fa-question-circle"></i> پرسش و پاسخ
+                    </a>
+                    <a class="action-link" (click)="scrollTo('description')">
+                        <i class="fas fa-align-left"></i> توضیحات
+                    </a>
+                </div>
+            </header>
+
+
+
+
+            <div class="product-content">
+
+
+                <section class="features-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-list-ul"></i>شرایط
+                    </h2>
+
+                    <div class="features-grid">
+                        <div class="feature-item" *ngFor="let feature of mainFeatures">
+                            <div class="feature-content">
+                                <span class="feature-icon" [class]="feature.icon"></span>
+                                <span class="feature-label">{{ feature.label }}</span>
+                                <span class="feature-value">{{ feature.value }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="features-button-grid" *ngIf="hasExtraSpecs()">
+                        <div class="line left-line"></div>
+                        <button class="view-all-features" (click)="scrollTo('specs')">
+                            <i class="fas fa-arrow-down"></i> مشاهده همه ویژگی‌ها
+                        </button>
+                        <div class="line right-line"></div>
+                    </div>
+                </section>
+
+                <div class="return-policy">
+                    <p>درخواست مرجوع کردن کالا در گروه مایوس (موضوع) با دلیل "انصراف از خرید" تنها در صورتی قابل تایید
+                        است که کالا در شرایط اولیه باشد (در صورت پلمپ بودن، کالا نباید باز شده باشد).</p>
+                </div>
+
+                <section class="shipping-section">
+                    <h3 class="shipping-title">ارسال رایگان سفارش‌ها برای اعضای پلاستی</h3>
+                    <ul class="shipping-options">
+                        <li class="shipping-option">ارسال رایگان عادی</li>
+                        <li class="shipping-option">ارسال سورمرکزی</li>
+                        <li class="shipping-option">ارسال رایگان 450 دقیقه‌ای</li>
+                    </ul>
+                </section>
+            </div>
         </div>
-        <div class="feature-item">
-          <span class="feature-label">نوع رابط</span>
-          <span class="feature-value">USB Type-A</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-label">سطوح قابل پشتیبانی</span>
-          <span class="feature-value">پارچه، چوب، پلاستیک، فلز</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-label">حداکثر تعداد حالت DPI</span>
-          <span class="feature-value">سه</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-label">کاربری مایوس</span>
-          <span class="feature-value">گیمینگ</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-label">نوع سوییچ مایوس</span>
-          <span class="feature-value">اپتیکال</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-label">نورپردازی</span>
-          <span class="feature-value">RGB</span>
-        </div>
-      </div>
-      
-<div class="features-button-grid">
-  <div class="line left-line"></div>
-  <button class="view-all-features" (click)="scrollTo('specs')">مشاهده همه ویژگی‌ها</button>
-  <div class="line right-line"></div>
-</div>
-      
-    </section>
-
-    <div class="return-policy">
-      <p>
-        درخواست مرجوع کردن کالا در گروه مایوس (موضوع) با دلیل "انصراف از خرید" تنها در صورتی قابل تایید است که کالا در شرایط اولیه باشد (در صورت پلمپ بودن، کالا نباید باز شده باشد).
-      </p>
-    </div>
-
-    <section class="shipping-section">
-      <h3 class="shipping-title">ارسال رایگان سفارش‌ها برای اعضای پلاستی</h3>
-      <ul class="shipping-options">
-        <li class="shipping-option">ارسال رایگان عادی</li>
-        <li class="shipping-option">ارسال سورمرکزی</li>
-        <li class="shipping-option">ارسال رایگان 450 دقیقه‌ای</li>
-      </ul>
-    </section>
-  </div>
-</div>
-
-
-
-
-        <div class="product-info-side" >
-            <!-- Product Header -->
+        <!-- ========== PRODUCT INFO SIDE (Dynamic) ========== -->
+        <div class="product-info-side">
             <div class="product-header">
-                <h1 class="product-title">{{product.productName}}</h1>
-                <div class="product-brand">
-                    <span class="brand-label">{{product.bitumenType}}</span>
-                    <a href="#" class="brand-link">{{product.coatingType}}</a>
+                <h1 class="product-title">{{ product.productName }}</h1>
+                <div class="product-brand" *ngIf="product.bitumenType || product.coatingType">
+                    <span class="brand-label">{{ product.bitumenType }}</span>
+                    <a href="#" class="brand-link">{{ product.coatingType }}</a>
                 </div>
             </div>
 
-            <!-- Rating -->
-            <div class="rating-section">
+            <!-- Rating (Dynamic) -->
+            <div class="rating-section" *ngIf="product.rating && product.rating > 0">
                 <div class="rating-stars">
-                    <span class="star filled">★</span>
+                    <!-- می‌توانی از متد getRatingStars استفاده کنی، فعلاً عدد نمایش داده می‌شود -->
                     <span class="star filled">★</span>
                     <span class="star filled">★</span>
                     <span class="star filled">★</span>
                     <span class="star half">★</span>
-                    <span class="rating-score">۴.۲</span>
+                    <span class="rating-score">{{ product.rating }}</span>
                 </div>
                 <div class="rating-details">
-                    <a href="#" class="reviews-link">(۱۵۲ نظر)</a>
+                    <a href="#" class="reviews-link">(۱۵۲ نظر)</a> <!-- Static -->
                 </div>
             </div>
 
-            <!-- Price Section -->
+            <!-- Price Section (Dynamic with Discount) -->
             <div class="price-section">
                 <div class="price-main">
                     <div class="current-price">
-                        <span class="price-amount">{{product.price}}</span>
+                        <span class="price-amount">{{ getFinalPrice(product) | number }}</span>
                         <span class="price-currency">تومان</span>
                     </div>
-                    <div class="discount-badge">
-                        <span class="discount-percent">{{product.discountPercent}}</span>
+                    <div class="discount-badge" *ngIf="product.active_discount && +product.discount > 0">
+                        <span class="discount-percent">{{ product.discount }}%</span>
                     </div>
                 </div>
-                <div class="original-price">
-                    <span class="old-price">{{product.price}}</span>
+                <div class="original-price" *ngIf="product.active_discount && +product.discount > 0">
+                    <span class="old-price">{{ product.price | number }}</span>
                     <span class="price-currency">تومان</span>
                 </div>
             </div>
 
-            <!-- Delivery Info -->
+            <!-- Delivery Info (Static) -->
             <div class="delivery-info">
                 <div class="delivery-item">
                     <span class="delivery-icon">🚚</span>
@@ -184,7 +224,7 @@
                 </div>
             </div>
 
-            <!-- Color Variant -->
+            <!-- Color Variant (Static) -->
             <div class="variant-section">
                 <div class="variant-header">
                     <h3 class="variant-title">رنگ:</h3>
@@ -214,16 +254,15 @@
                 </div>
             </div>
 
-            <!-- Add to Cart -->
+            <!-- Add to Cart (Dynamic quantity) -->
             <div class="purchase-section">
                 <div class="quantity-selector">
-                    <button class="quantity-btn minus">-</button>
-                    <span class="quantity-display">۱</span>
-                    <button class="quantity-btn plus">+</button>
+                    <button class="quantity-btn minus" (click)="decreaseQuantity()">-</button>
+                    <span class="quantity-display">{{ quantity }}</span>
+                    <button class="quantity-btn plus" (click)="increaseQuantity()">+</button>
                 </div>
-
                 <div class="action-buttons">
-                    <button class="add-to-cart-btn primary">
+                    <button class="add-to-cart-btn primary" (click)="addToCart()">
                         <span class="cart-icon">🛒</span>
                         افزودن به سبد خرید
                     </button>
@@ -233,7 +272,7 @@
                 </div>
             </div>
 
-            <!-- Product Highlights -->
+            <!-- Product Highlights (Static) -->
             <div class="highlights-section">
                 <div class="highlight-item">
                     <span class="highlight-icon">✓</span>
@@ -247,7 +286,7 @@
         </div>
     </div>
 
-    <!-- Product Tabs -->
+    <!-- Product Tabs (Specifications from details) -->
     <div class="product-tabs" id="specs">
         <div class="tabs-navigation">
             <button class="tab-btn active">مشخصات فنی</button>
@@ -255,48 +294,14 @@
             <button class="tab-btn">پرسش و پاسخ</button>
             <button class="tab-btn">معرفی محصول</button>
         </div>
-
         <div class="tab-content">
             <div class="specifications-table">
-                <div class="spec-row">
-                    <div class="spec-title">برند</div>
-                    <div class="spec-value">مکسیز</div>
+                <div class="spec-row" *ngFor="let detail of product.details!">
+                    <div class="spec-title">{{ detail.key }}</div>
+                    <div class="spec-value">{{ detail.value }}</div>
                 </div>
-                <div class="spec-row">
-                    <div class="spec-title">مدل</div>
-                    <div class="spec-value">GM02</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">نوع اتصال</div>
-                    <div class="spec-value">سیمی</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">طول سیم</div>
-                    <div class="spec-value">۱.۸ متر</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">رزولوشن</div>
-                    <div class="spec-value">۶۴۰۰ DPI</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">تعداد کلیدها</div>
-                    <div class="spec-value">۶ کلید</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">نورپردازی</div>
-                    <div class="spec-value">RGB</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">سایز</div>
-                    <div class="spec-value">مناسب برای دست متوسط و بزرگ</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">سنسور</div>
-                    <div class="spec-value">اپتیکال</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-title">محدوده DPI</div>
-                    <div class="spec-value">۱۰۰۰ - ۶۴۰۰</div>
+                <div *ngIf="!product.details || product.details.length === 0" class="spec-row">
+                    <div class="spec-value">هیچ مشخصه‌ای ثبت نشده است.</div>
                 </div>
             </div>
         </div>
