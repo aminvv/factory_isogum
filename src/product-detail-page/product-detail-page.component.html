@@ -14,8 +14,7 @@
 
     <!-- Main Product Section -->
     <div class="product-main">
-        <!-- ========== GALLERY (Dynamic) ========== -->
-        <!-- ========== GALLERY (Dynamic) ========== -->
+        <!-- GALLERY -->
         <div class="product-gallery-side">
             <div class="gallery-container">
                 <div class="main-gallery">
@@ -41,7 +40,7 @@
                 </div>
             </div>
 
-            <!-- Modal Zoom (بزرگنمایی تمام صفحه) -->
+            <!-- Modal Zoom -->
             <div class="zoom-modal" [class.show]="isZoomModalOpen" (click)="closeZoomModal()">
                 <div class="zoom-modal-content" (click)="$event.stopPropagation()">
                     <button class="zoom-modal-close" (click)="closeZoomModal()">✕</button>
@@ -50,13 +49,9 @@
             </div>
         </div>
 
-        <!-- ========== PRODUCT VIRTUAL SIDE (Dynamic) ========== -->
+        <!-- PRODUCT VIRTUAL SIDE -->
         <div class="product-container">
-
-
-
             <header class="product-header">
-                <!-- ردیف اول: عنوان و کد -->
                 <div class="header-row title-row">
                     <div class="title-group">
                         <h1 class="product-title">{{ product.productName }}</h1>
@@ -76,7 +71,6 @@
                     </div>
                 </div>
 
-                <!-- ردیف دوم: کارت‌های آماری با آیکون‌های زیبا -->
                 <div class="header-row stats-row">
                     <div class="stat-card">
                         <i class="fas fa-star stat-icon"></i>
@@ -108,7 +102,6 @@
                     </div>
                 </div>
 
-                <!-- ردیف سوم: لینک‌های اقدام با آیکون‌های زیبا -->
                 <div class="header-row actions-row">
                     <a class="action-link" (click)="scrollTo('specs')">
                         <i class="fas fa-microchip"></i> مشخصات فنی
@@ -125,17 +118,11 @@
                 </div>
             </header>
 
-
-
-
             <div class="product-content">
-
-
                 <section class="features-section">
                     <h2 class="section-title">
                         <i class="fas fa-list-ul"></i>شرایط
                     </h2>
-
                     <div class="features-grid">
                         <div class="feature-item" *ngFor="let feature of mainFeatures">
                             <div class="feature-content">
@@ -146,7 +133,8 @@
                         </div>
                     </div>
 
-                    <div class="features-button-grid" *ngIf="hasExtraSpecs()">
+                    <!-- استفاده از فلگ به جای تابع -->
+                    <div class="features-button-grid" *ngIf="hasExtraSpecsFlag">
                         <div class="line left-line"></div>
                         <button class="view-all-features" (click)="scrollTo('specs')">
                             <i class="fas fa-arrow-down"></i> مشاهده همه ویژگی‌ها
@@ -170,7 +158,8 @@
                 </section>
             </div>
         </div>
-        <!-- ========== PRODUCT INFO SIDE (Dynamic) ========== -->
+
+        <!-- PRODUCT INFO SIDE -->
         <div class="product-info-side">
             <div class="product-header">
                 <h1 class="product-title">{{ product.productName }}</h1>
@@ -180,10 +169,8 @@
                 </div>
             </div>
 
-            <!-- Rating (Dynamic) -->
             <div class="rating-section" *ngIf="product.rating && product.rating > 0">
                 <div class="rating-stars">
-                    <!-- می‌توانی از متد getRatingStars استفاده کنی، فعلاً عدد نمایش داده می‌شود -->
                     <span class="star filled">★</span>
                     <span class="star filled">★</span>
                     <span class="star filled">★</span>
@@ -191,15 +178,15 @@
                     <span class="rating-score">{{ product.rating }}</span>
                 </div>
                 <div class="rating-details">
-                    <a href="#" class="reviews-link">(۱۵۲ نظر)</a> <!-- Static -->
+                    <a href="#" class="reviews-link">(۱۵۲ نظر)</a>
                 </div>
             </div>
 
-            <!-- Price Section (Dynamic with Discount) -->
+            <!-- قیمت با مقدار finalPrice محاسبه شده -->
             <div class="price-section">
                 <div class="price-main">
                     <div class="current-price">
-                        <span class="price-amount">{{ getFinalPrice(product) | number }}</span>
+                        <span class="price-amount">{{ finalPrice | number }}</span>
                         <span class="price-currency">تومان</span>
                     </div>
                     <div class="discount-badge" *ngIf="product.active_discount && +product.discount > 0">
@@ -212,7 +199,6 @@
                 </div>
             </div>
 
-            <!-- Delivery Info (Static) -->
             <div class="delivery-info">
                 <div class="delivery-item">
                     <span class="delivery-icon">🚚</span>
@@ -224,7 +210,6 @@
                 </div>
             </div>
 
-            <!-- Color Variant (Static) -->
             <div class="variant-section">
                 <div class="variant-header">
                     <h3 class="variant-title">رنگ:</h3>
@@ -254,7 +239,6 @@
                 </div>
             </div>
 
-            <!-- Add to Cart (Dynamic quantity) -->
             <div class="purchase-section">
                 <div class="quantity-selector">
                     <button class="quantity-btn minus" (click)="decreaseQuantity()">-</button>
@@ -272,7 +256,6 @@
                 </div>
             </div>
 
-            <!-- Product Highlights (Static) -->
             <div class="highlights-section">
                 <div class="highlight-item">
                     <span class="highlight-icon">✓</span>
@@ -286,7 +269,7 @@
         </div>
     </div>
 
-    <!-- Product Tabs (Specifications from details) -->
+    <!-- Product Tabs -->
     <div class="product-tabs" id="specs">
         <div class="tabs-navigation">
             <button class="tab-btn active">مشخصات فنی</button>

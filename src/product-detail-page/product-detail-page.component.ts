@@ -1,27 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product, ProductDetailService } from './services/product-detail.service';
 
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail-page.component.html',
-  styleUrls: ['./product-detail-page.component.css']
+  styleUrls: ['./product-detail-page.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailPageComponent implements OnInit {
   quantity: number = 1;
   product?: Product;
 
-  // Gallery properties
   selectedImageIndex = 0;
   currentImageUrl: string = '';
   isZoomActive = false;
   zoomTransform: string = '';
   private zoomScale = 2.2;
 
-  // Modal zoom
   isZoomModalOpen = false;
 
-  // Translation map for saleType enum
+  // به جای getter
+  mainFeatures: any[] = [];
+  hasExtraSpecsFlag: boolean = false;
+  finalPrice: number = 0;
+
   saleTypeMap: { [key: string]: string } = {
     'CASH': 'نقدی',
     'CREDIT': 'اقساطی',
@@ -30,7 +33,8 @@ export class ProductDetailPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductDetailService
+    private productService: ProductDetailService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -45,30 +49,59 @@ export class ProductDetailPageComponent implements OnInit {
       next: (res) => {
         this.product = res;
         this.setCurrentImage();
-        console.log('Product loaded:', this.product);
+        this.updateFeaturesAndFlags();
+        this.cdr.markForCheck();
       },
-      error: (err) => {
-        console.error('Error loading product:', err);
-      }
+      error: (err) => console.error(err)
     });
   }
 
-  // ----- Image Gallery -----
-  setCurrentImage(): void {
-    if (this.product?.image && this.product.image.length > 0) {
-      this.currentImageUrl = this.product.image[this.selectedImageIndex]?.url || 'assets/default.jpg';
-    } else {
-      this.currentImageUrl = 'assets/default.jpg';
+  private updateFeaturesAndFlags(): void {
+    if (!this.product) {
+      this.mainFeatures = [];
+      this.hasExtraSpecsFlag = false;
+      this.finalPrice = 0;
+      return;
     }
+    const saleTypeText = this.saleTypeMap[this.product.saleType || ''] || this.product.saleType || '—';
+    this.mainFeatures = [
+      { label: 'طول عمر', value: this.product.lifespan || '—', icon: 'fas fa-hourglass-start' },
+      { label: 'وزن', value: this.product.weight || '—', icon: 'fas fa-weight-scale' },
+      { label: 'ضخامت', value: this.product.thickness || '—', icon: 'fas fa-ruler-combined' },
+      { label: 'نوع فروش', value: saleTypeText, icon: 'fas fa-tag' },
+      { label: 'زمان تحویل', value: this.product.deliveryTime || '—', icon: 'fas fa-truck' },
+      { label: 'هزینه ارسال', value: this.product.deliveryCost || '—', icon: 'fas fa-dollar-sign' },
+      { label: 'موجودی', value: this.product.quantity + ' عدد', icon: 'fas fa-boxes-stacked' },
+      { label: 'کد محصول', value: this.product.productCode, icon: 'fas fa-barcode' }
+    ];
+    this.hasExtraSpecsFlag = !!(this.product.details?.length || this.product.description ||
+                               this.product.returnable !== undefined || this.product.insurance !== undefined);
+    this.finalPrice = this.calcFinalPrice(this.product);
+  }
+
+  private calcFinalPrice(product: Product): number {
+    if (product.active_discount && product.discount && +product.discount > 0) {
+      return product.price - (product.price * +product.discount / 100);
+    }
+    return product.price;
+  }
+
+  getFinalPrice(product: Product): number {
+    return this.calcFinalPrice(product);
+  }
+
+  setCurrentImage(): void {
+    this.currentImageUrl = this.product?.image?.[this.selectedImageIndex]?.url || 'assets/default.jpg';
   }
 
   changeMainImage(index: number): void {
     this.selectedImageIndex = index;
     this.setCurrentImage();
     this.resetZoom();
+    this.cdr.markForCheck();
   }
 
-  // ----- Hover Zoom -----
+  // ✅ زوم ماوس به همان شکل قبلی (سینکرون) – بدون throttling
   handleZoomMove(event: MouseEvent): void {
     if (!this.isZoomActive) return;
     const target = event.currentTarget as HTMLElement;
@@ -82,67 +115,39 @@ export class ProductDetailPageComponent implements OnInit {
     const moveX = (percentX - 50) * (this.zoomScale - 1) / this.zoomScale;
     const moveY = (percentY - 50) * (this.zoomScale - 1) / this.zoomScale;
     this.zoomTransform = `scale(${this.zoomScale}) translate(${-moveX}%, ${-moveY}%)`;
+    // با OnPush باید view رو به‌روز کنیم
+    this.cdr.markForCheck();
   }
 
   resetZoom(): void {
     this.zoomTransform = `scale(1) translate(0%, 0%)`;
+    this.cdr.markForCheck();
   }
 
-  // ----- Modal Zoom -----
   openZoomModal(): void {
     this.isZoomModalOpen = true;
     document.body.style.overflow = 'hidden';
+    this.cdr.markForCheck();
   }
 
   closeZoomModal(): void {
     this.isZoomModalOpen = false;
     document.body.style.overflow = '';
+    this.cdr.markForCheck();
   }
 
-  // ----- Main features (getter - but it's okay if not too heavy) -----
-  get mainFeatures() {
-    if (!this.product) return [];
-    const saleTypeText = this.saleTypeMap[this.product.saleType || ''] || this.product.saleType || '—';
-    return [
-      { label: 'طول عمر', value: this.product.lifespan || '—', icon: 'fas fa-hourglass-start' },
-      { label: 'وزن', value: this.product.weight || '—', icon: 'fas fa-weight-scale' },
-      { label: 'ضخامت', value: this.product.thickness || '—', icon: 'fas fa-ruler-combined' },
-      { label: 'نوع فروش', value: saleTypeText, icon: 'fas fa-tag' },
-      { label: 'زمان تحویل', value: this.product.deliveryTime || '—', icon: 'fas fa-truck' },
-      { label: 'هزینه ارسال', value: this.product.deliveryCost || '—', icon: 'fas fa-dollar-sign' },
-      { label: 'موجودی', value: this.product.quantity + ' عدد', icon: 'fas fa-boxes-stacked' },
-      { label: 'کد محصول', value: this.product.productCode, icon: 'fas fa-barcode' }
-    ];
-  }
-
-  hasExtraSpecs(): boolean {
-    return (this.product?.details && this.product.details.length > 0) ||
-           !!this.product?.description ||
-           this.product?.returnable !== undefined ||
-           this.product?.insurance !== undefined;
-  }
-
-  // ----- Quantity & Price -----
   increaseQuantity(): void {
     this.quantity++;
+    this.cdr.markForCheck();
   }
 
   decreaseQuantity(): void {
     if (this.quantity > 1) this.quantity--;
-  }
-
-  getFinalPrice(product: Product): number {
-    if (product.active_discount && product.discount && +product.discount > 0) {
-      return product.price - (product.price * +product.discount / 100);
-    }
-    return product.price;
+    this.cdr.markForCheck();
   }
 
   scrollTo(targetId: string): void {
-    const el = document.getElementById(targetId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   getRatingStars(rating: number): string[] {
@@ -158,5 +163,9 @@ export class ProductDetailPageComponent implements OnInit {
 
   addToCart(): void {
     console.log('Add to cart:', this.product?.id, this.quantity);
+  }
+
+  hasExtraSpecs(): boolean {
+    return this.hasExtraSpecsFlag;
   }
 }
