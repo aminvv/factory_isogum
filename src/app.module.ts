@@ -20,6 +20,7 @@ import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ProductService } from './home/product-grid/services/product.service';
 import { CertificateComponent } from './home/certificate/certificate.component';
 import { JalaliPipe } from './common/pipes/alali.pipe';
+import { PersianNumberPipe } from './common/pipes/persian-number.pipe';
 
 
 @NgModule({
@@ -35,8 +36,9 @@ import { JalaliPipe } from './common/pipes/alali.pipe';
     ProductDetailPageComponent,
     AlertComponent,
     CertificateComponent,
-    JalaliPipe  
-   
+    JalaliPipe,
+    PersianNumberPipe
+
   ],
   imports: [
     HttpClientModule,
@@ -49,10 +51,10 @@ import { JalaliPipe } from './common/pipes/alali.pipe';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-     ProductService
+    ProductService
   ],
-    exports: [
+  exports: [
   ],
-  bootstrap: [AppComponent] 
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

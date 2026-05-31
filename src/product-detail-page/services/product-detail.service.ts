@@ -15,6 +15,18 @@ export interface ProductDetail {
   value: string;
 }
 
+export interface Discount {
+  id: number;
+  code?: string | null;
+  percent?: number;
+  amount?: number;
+  limit?: number;
+  usage?: number;
+  expires_in?: Date;
+  productId?: number | null;
+  type: string;
+}
+
 export interface Product {
   id: number;
   productCode: string;
@@ -27,10 +39,10 @@ export interface Product {
   slug: string;
   discount: string | number;
   image?: { url: string; publicId: string }[];
-  details?: { id: number; productId: number; key: string; value: string }[];  // ⬅️ اضافه کن
+  details?: { id: number; productId: number; key: string; value: string }[];
   bitumenType?: string;
   coatingType?: string;
-  update_at: Date
+  update_at: Date;
   lifespan?: string;
   weight?: string;
   thickness?: string;
@@ -39,6 +51,7 @@ export interface Product {
   deliveryCost?: string;
   returnable?: boolean;
   insurance?: boolean;
+  discounts?: Discount[];
 }
 
 export interface ProductResponse {
@@ -61,5 +74,9 @@ export class ProductDetailService {
 
   getProductById(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/get-product/${id}`);
+  }
+
+  getProductDiscounts(productId: number): Observable<Discount[]> {
+    return this.http.get<Discount[]>(`${API_CONFIG.baseUrl}/discount/get-discounts-by-product/${productId}`);
   }
 }

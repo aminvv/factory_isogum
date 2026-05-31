@@ -60,9 +60,16 @@
                         </span>
                     </div>
                     <div class="badge-group">
-                        <span class="badge discount-badge" *ngIf="product.active_discount && +product.discount > 0">
-                            <i class="fas fa-tag"></i> {{ product.discount }}% تخفیف
-                        </span>
+                        <ng-container *ngIf="hasDiscount">
+                            <div class="discount-info">
+                                <span class="badge discount-badge" *ngIf="discountType === 'percent'">
+                                    <i class="fas fa-tag"></i> تخفیف {{ discountPercent | persianNumber }}%
+                                </span>
+                                <span class="badge discount-badge" *ngIf="discountType === 'amount'">
+                                    <i class="fas fa-tag"></i> تخفیف {{ discountAmount | persianNumber }} تومانی
+                                </span>
+                            </div>
+                        </ng-container>
                         <span class="badge stock-badge" [class.out-of-stock]="product.quantity === 0">
                             <i class="fas" [class.fa-check-circle]="product.quantity > 0"
                                 [class.fa-times-circle]="product.quantity === 0"></i>
@@ -75,21 +82,21 @@
                     <div class="stat-card">
                         <i class="fas fa-star stat-icon"></i>
                         <div class="stat-info">
-                            <span class="stat-value">{{ product.rating || '—' }}</span>
+                            <span class="stat-value">{{ (product.rating || '—') | persianNumber }}</span>
                             <span class="stat-label">امتیاز (از 5)</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-boxes stat-icon"></i>
                         <div class="stat-info">
-                            <span class="stat-value">{{ product.quantity | number }}</span>
+                            <span class="stat-value">{{ product.quantity | persianNumber }}</span>
                             <span class="stat-label">موجودی (عدد)</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-calendar-alt stat-icon"></i>
                         <div class="stat-info">
-                            <span class="stat-value">{{ product.update_at| jalali }}</span>
+                            <span class="stat-value">{{ product.update_at | jalali }}</span>
                             <span class="stat-label">آخرین بروزرسانی</span>
                         </div>
                     </div>
@@ -128,7 +135,7 @@
                             <div class="feature-content">
                                 <span class="feature-icon" [class]="feature.icon"></span>
                                 <span class="feature-label">{{ feature.label }}</span>
-                                <span class="feature-value">{{ feature.value }}</span>
+                                <span class="feature-value">{{ feature.value | persianNumber }}</span>
                             </div>
                         </div>
                     </div>
@@ -161,109 +168,112 @@
 
         <!-- PRODUCT INFO SIDE -->
         <div class="product-info-side">
+            <!-- عنوان و کد محصول -->
             <div class="product-header">
                 <h1 class="product-title">{{ product.productName }}</h1>
-                <div class="product-brand" *ngIf="product.bitumenType || product.coatingType">
-                    <span class="brand-label">{{ product.bitumenType }}</span>
-                    <a href="#" class="brand-link">{{ product.coatingType }}</a>
+                <div class="product-meta">
+                    <span class="product-code">کد: {{ product.productCode }}</span>
+                    <div class="product-brand" *ngIf="product.bitumenType || product.coatingType">
+                        <span class="brand-label">{{ product.bitumenType }}</span>
+                        <span *ngIf="product.bitumenType && product.coatingType" class="brand-separator">|</span>
+                        <span class="brand-link">{{ product.coatingType }}</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- امتیاز -->
             <div class="rating-section" *ngIf="product.rating && product.rating > 0">
                 <div class="rating-stars">
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star half">★</span>
-                    <span class="rating-score">{{ product.rating }}</span>
+                    <span class="star" *ngFor="let star of getRatingStars(product.rating)">{{ star }}</span>
+                    <span class="rating-score">{{ product.rating | persianNumber }}</span>
                 </div>
-                <div class="rating-details">
-                    <a href="#" class="reviews-link">(۱۵۲ نظر)</a>
+                <span class="rating-text">از ۵</span>
+            </div>
+
+            <div class="price-box">
+                <ng-container *ngIf="hasDiscount">
+                    <div class="discount-info">
+                        <span class="badge discount-badge" *ngIf="discountType === 'percent'">
+                            <i class="fas fa-tag"></i> تخفیف {{ discountPercent | persianNumber }}%
+                        </span>
+                        <span class="badge discount-badge" *ngIf="discountType === 'amount'">
+                            <i class="fas fa-tag"></i> تخفیف {{ discountAmount | persianNumber }} تومانی
+                        </span>
+                        <span class="old-price">{{ product.price | persianNumber }} تومان</span>
+                    </div>
+                    <div class="final-price">
+                        <span class="price-amount">{{ finalPrice | persianNumber }}</span>
+                        <span class="price-unit">تومان</span>
+                    </div>
+                </ng-container>
+
+                <!-- بدون تخفیف -->
+                <ng-template #noDiscount>
+                    <div class="final-price">
+                        <span class="price-amount">{{ product.price | persianNumber }}</span>
+                        <span class="price-unit">تومان</span>
+                    </div>
+                </ng-template>
+            </div>
+
+            <!-- موجودی -->
+            <div class="stock-status" [class.low-stock]="product.quantity < 10">
+                <i class="fas" [class.fa-check-circle]="product.quantity > 0"
+                    [class.fa-times-circle]="product.quantity === 0"></i>
+                <span>{{ product.quantity > 0 ? 'موجود در انبار' : 'ناموجود' }}</span>
+                <span *ngIf="product.quantity > 0 && product.quantity < 10" class="low-stock-warning">(فقط {{
+                    product.quantity | persianNumber }} عدد)</span>
+            </div>
+
+            <!-- ارسال و تحویل -->
+            <div class="delivery-box">
+                <div class="delivery-item" *ngIf="product.deliveryTime">
+                    <i class="fas fa-clock"></i>
+                    <span>زمان تحویل: {{ product.deliveryTime }}</span>
+                </div>
+                <div class="delivery-item" *ngIf="product.deliveryCost">
+                    <i class="fas fa-truck"></i>
+                    <span>هزینه ارسال: {{ product.deliveryCost }}</span>
                 </div>
             </div>
 
-            <!-- قیمت با مقدار finalPrice محاسبه شده -->
-            <div class="price-section">
-                <div class="price-main">
-                    <div class="current-price">
-                        <span class="price-amount">{{ finalPrice | number }}</span>
-                        <span class="price-currency">تومان</span>
-                    </div>
-                    <div class="discount-badge" *ngIf="product.active_discount && +product.discount > 0">
-                        <span class="discount-percent">{{ product.discount }}%</span>
-                    </div>
+            <!-- تضمین‌ها -->
+            <div class="guarantee-box" *ngIf="product.returnable || product.insurance">
+                <div class="guarantee-item" *ngIf="product.returnable">
+                    <i class="fas fa-undo-alt"></i> امکان بازگشت کالا
                 </div>
-                <div class="original-price" *ngIf="product.active_discount && +product.discount > 0">
-                    <span class="old-price">{{ product.price | number }}</span>
-                    <span class="price-currency">تومان</span>
+                <div class="guarantee-item" *ngIf="product.insurance">
+                    <i class="fas fa-shield-alt"></i> دارای بیمه نامه
                 </div>
             </div>
 
-            <div class="delivery-info">
-                <div class="delivery-item">
-                    <span class="delivery-icon">🚚</span>
-                    <span class="delivery-text">ارسال رایگان برای این کالا</span>
-                </div>
-                <div class="delivery-item">
-                    <span class="delivery-icon">🛡️</span>
-                    <span class="delivery-text">گارانتی ۱۸ ماهه پارس کالا</span>
-                </div>
+            <div class="quantity-error" *ngIf="quantityError">
+                <i class="fas fa-exclamation-triangle"></i> {{ quantityError | persianNumber }}
             </div>
 
-            <div class="variant-section">
-                <div class="variant-header">
-                    <h3 class="variant-title">رنگ:</h3>
-                    <span class="selected-variant">مشکی</span>
-                </div>
-                <div class="variant-options">
-                    <div class="variant-option selected">
-                        <div class="color-swatch" style="background: #000000"></div>
-                        <span class="color-name">مشکی</span>
-                        <div class="variant-tooltip">مشکی</div>
-                    </div>
-                    <div class="variant-option">
-                        <div class="color-swatch" style="background: #ffffff; border: 1px solid #e0e0e0"></div>
-                        <span class="color-name">سفید</span>
-                        <div class="variant-tooltip">سفید</div>
-                    </div>
-                    <div class="variant-option">
-                        <div class="color-swatch" style="background: #ff0000"></div>
-                        <span class="color-name">قرمز</span>
-                        <div class="variant-tooltip">قرمز</div>
-                    </div>
-                    <div class="variant-option">
-                        <div class="color-swatch" style="background: #0000ff"></div>
-                        <span class="color-name">آبی</span>
-                        <div class="variant-tooltip">آبی</div>
+            <!-- خرید -->
+            <div class="purchase-box">
+                <div class="quantity-wrapper">
+                    <div class="quantity-selector">
+                        <button class="qty-btn minus" (click)="decreaseQuantity()" (mousedown)="startDecreasing()"
+                            (mouseup)="stopChanging()" (mouseleave)="stopChanging()">-</button>
+
+                        <input #quantityInput type="text" class="qty-value" [value]="displayQuantity"
+                            (input)="onQuantityInput($event)">
+                        <button class="qty-btn plus" (click)="increaseQuantity()" (mousedown)="startIncreasing()"
+                            (mouseup)="stopChanging()" (mouseleave)="stopChanging()">+</button>
                     </div>
                 </div>
+                <button class="add-to-cart-btn" (click)="addToCart()">
+                    <i class="fas fa-shopping-cart"></i> افزودن به سبد خرید
+                </button>
             </div>
 
-            <div class="purchase-section">
-                <div class="quantity-selector">
-                    <button class="quantity-btn minus" (click)="decreaseQuantity()">-</button>
-                    <span class="quantity-display">{{ quantity }}</span>
-                    <button class="quantity-btn plus" (click)="increaseQuantity()">+</button>
-                </div>
-                <div class="action-buttons">
-                    <button class="add-to-cart-btn primary" (click)="addToCart()">
-                        <span class="cart-icon">🛒</span>
-                        افزودن به سبد خرید
-                    </button>
-                    <button class="wishlist-btn secondary">
-                        <span class="heart-icon">❤️</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="highlights-section">
-                <div class="highlight-item">
-                    <span class="highlight-icon">✓</span>
-                    <span>امکان بازگشت کالا در گروه کالای لوازم جانبی کامپیوتر</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-icon">✓</span>
-                    <span>ارسال فوری (شهر تهران)</span>
+            <!-- سه ویژگی کلیدی -->
+            <div class="key-features" *ngIf="mainFeatures.length">
+                <div class="key-feature" *ngFor="let feature of mainFeatures.slice(0,3)">
+                    <i [class]="feature.icon"></i>
+                    <span>{{ feature.label }}: {{ feature.value | persianNumber }}</span>
                 </div>
             </div>
         </div>
