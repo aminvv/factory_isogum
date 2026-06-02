@@ -21,6 +21,7 @@ import { ProductService } from './home/product-grid/services/product.service';
 import { CertificateComponent } from './home/certificate/certificate.component';
 import { JalaliPipe } from './common/pipes/alali.pipe';
 import { PersianNumberPipe } from './common/pipes/persian-number.pipe';
+import { CommentModule } from './product-detail-page/product-comment.page/comment.module';
 
 
 @NgModule({
@@ -47,8 +48,9 @@ import { PersianNumberPipe } from './common/pipes/persian-number.pipe';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
-  ],
+    RouterModule,
+    CommentModule
+],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ProductService

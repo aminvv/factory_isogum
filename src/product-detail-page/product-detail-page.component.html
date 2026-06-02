@@ -300,4 +300,8 @@
         </div>
     </div>
 </div>
+<div class="digikala-product-page" *ngIf="product">
+  <app-product-comments [productId]="product.id"></app-product-comments>
+</div>
+<app-footer></app-footer>
 <app-footer></app-footer>

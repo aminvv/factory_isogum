@@ -1,0 +1,110 @@
+<!-- product-detail-page/product-comment/comment.component.html -->
+<div class="comments-section">
+  <!-- بخش بالایی: امتیازدهی و خلاصه -->
+  <div class="rating-summary">
+    <div class="rating-number">
+      <div class="rating-value">{{ averageRating.toFixed(1) }}</div>
+      <div class="rating-stars">
+        <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star" [class.active]="star <= averageRating"></i>
+      </div>
+      <div class="rating-count">({{ totalRatings }} نظر)</div>
+    </div>
+    <button class="btn-rate" (click)="scrollToForm()">⭐ امتیاز و نظر بده</button>
+  </div>
+
+  <!-- فرم ثبت نظر (اصلاح شده با form و formGroup) -->
+  <div id="review-form" class="comment-form" *ngIf="showForm">
+    <div class="form-header">
+      <h4>✍️ نظر خود را بنویسید</h4>
+      <button class="close-form" (click)="showForm = false">✕</button>
+    </div>
+    <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+      <div class="rating-input">
+        <span>امتیاز شما:</span>
+        <div class="stars">
+          <i *ngFor="let star of [1,2,3,4,5]" 
+             class="far fa-star" 
+             [class.fas]="star <= userRating" 
+             [class.active]="star <= userRating"
+             (click)="setRating(star)"></i>
+        </div>
+      </div>
+      <textarea formControlName="text" rows="3" placeholder="متن نظر..."></textarea>
+      <div class="form-helper">
+        <i class="fas fa-info-circle"></i> پس از تأیید نمایش داده می‌شود.
+      </div>
+      <div class="reply-badge" *ngIf="replyTo">
+        <span>📌 در پاسخ به: {{ replyTo.text | slice:0:40 }}...</span>
+        <button type="button" (click)="cancelReply()">لغو</button>
+      </div>
+      <button type="submit" class="btn-submit" [disabled]="commentForm.invalid">
+        <i class="fas fa-paper-plane"></i> ارسال نظر
+      </button>
+    </form>
+    <div class="login-warning" *ngIf="!isLoggedIn()">
+      🔒 برای ثبت نظر <a (click)="goToLogin()">وارد شوید</a>
+    </div>
+  </div>
+
+  <!-- سربرگ نظرات -->
+  <div class="comments-header">
+    <h3>💬 دیدگاه کاربران</h3>
+    <select class="sort-dropdown" [(ngModel)]="sortOrder" (change)="loadComments()">
+      <option value="newest">جدیدترین</option>
+      <option value="oldest">قدیمی‌ترین</option>
+    </select>
+  </div>
+
+  <!-- لیست نظرات -->
+  <div *ngIf="loading" class="loading-spinner">⏳ در حال بارگیری...</div>
+  <div *ngIf="!loading && comments.length === 0" class="empty-state">📭 هنوز نظری ثبت نشده است. اولین نفر باشید!</div>
+
+  <div class="comments-list" *ngIf="!loading && comments.length > 0">
+    <div *ngFor="let comment of comments" class="comment-item">
+      <div class="comment-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="comment-body">
+        <div class="comment-header">
+          <span class="username">{{ getDisplayName(comment) }}</span>
+          <span class="comment-date">{{ comment.created_at | date:'yyyy/MM/dd' }}</span>
+          <span class="comment-rating" *ngIf="comment.rating">
+            <i class="fas fa-star"></i> {{ comment.rating }}
+          </span>
+          <button class="delete-comment" *ngIf="canDelete(comment)" (click)="deleteComment(comment.id)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+        <div class="comment-text">{{ comment.text }}</div>
+        <button class="reply-button" (click)="setReply(comment)" [disabled]="!isLoggedIn()">
+          <i class="fas fa-reply"></i> پاسخ
+        </button>
+
+        <!-- پاسخ‌ها -->
+        <div class="replies-list" *ngIf="comment.children && comment.children.length">
+          <div *ngFor="let reply of comment.children" class="reply-item">
+            <div class="reply-avatar"><i class="fas fa-user-circle"></i></div>
+            <div class="reply-body">
+              <div class="reply-header">
+                <span class="username">{{ getDisplayName(reply) }}</span>
+                <span class="reply-date">{{ reply.created_at | date:'yyyy/MM/dd' }}</span>
+                <button class="delete-comment" *ngIf="canDelete(reply)" (click)="deleteComment(reply.id)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+              <div class="reply-text">{{ reply.text }}</div>
+              <button class="reply-button small" (click)="setReply(reply)" [disabled]="!isLoggedIn()">پاسخ</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحه‌بندی -->
+  <div class="pagination" *ngIf="pagination && pagination.pageCount > 1">
+    <button [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">قبلی</button>
+    <span>صفحه {{ currentPage }} از {{ pagination.pageCount }}</span>
+    <button [disabled]="currentPage === pagination.pageCount" (click)="changePage(currentPage + 1)">بعدی</button>
+  </div>
+</div>

@@ -1306,6 +1306,7 @@
     border-bottom: none;
 }
 
+
 .spec-title {
     flex: 0 0 200px;
     color: #81858b;
@@ -1315,7 +1316,10 @@
 .spec-value {
     flex: 1;
     color: #23254e;
+    text-align: right;
     font-size: 14px;
+    margin-right: 38px;
+
     font-weight: 500;
 }
 
