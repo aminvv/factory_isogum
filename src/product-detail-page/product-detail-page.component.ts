@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product, ProductDetailService, Discount } from './services/product-detail.service';
+import { CommentStats } from './product-comment.page/model/comment.model';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -41,6 +42,10 @@ export class ProductDetailPageComponent implements OnInit {
     'CREDIT': 'اقساطی',
     'BOTH': 'نقد و اقساط'
   };
+
+
+totalCommentsFromComments: number = 0;
+averageCommentRatingFromComments: number = 0;
 
   private persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
@@ -126,6 +131,19 @@ export class ProductDetailPageComponent implements OnInit {
       this.finalPrice = this.product?.price || 0;
     }
   }
+
+
+
+onCommentStatsChange(stats: CommentStats) {
+  this.totalCommentsFromComments = Number(stats.total) || 0;
+  this.averageCommentRatingFromComments = Number(stats.averageRating) || 0; // اینجا به عدد تبدیل شده
+  this.cdr.markForCheck();
+}
+
+get roundedAvgRating(): number {
+  return Math.round((this.averageCommentRatingFromComments || 0) * 10) / 10;
+}
+
 
   private calculateDiscountFallback(): void {
     this.fallbackToActiveDiscount();
@@ -314,4 +332,18 @@ export class ProductDetailPageComponent implements OnInit {
   hasExtraSpecs(): boolean {
     return this.hasExtraSpecsFlag;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

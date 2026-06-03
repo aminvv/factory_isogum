@@ -1,6 +1,9 @@
-/* ========== بخش نظرات - طراحی مدرن و کارتی ========== */
+/* ========== بخش نظات - طراحی مدرن و کارتی ========== */
 .comments-section {
   background: #ffffff;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
   border-radius: 20px;
   padding: 1.5rem;
   margin-top: 2rem;
@@ -17,6 +20,7 @@
   background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
   border-radius: 16px;
   padding: 0.8rem 1.2rem;
+  flex-direction: row-reverse;
   margin-bottom: 1.5rem;
   border: 1px solid #eef2f6;
 }
@@ -107,7 +111,7 @@
   cursor: pointer;
   font-size: 1.1rem;
   margin: 0 0.1rem;
-  color: #cbd5e1;
+  color: #fbbf24;
 }
 
 .stars i.active {
@@ -159,7 +163,7 @@ textarea:focus {
   background: #10b981;
   color: white;
   border: none;
-  border-radius: 40px;
+  border-radius: 7px;
   padding: 0.4rem 1rem;
   font-size: 0.75rem;
   cursor: pointer;
@@ -170,6 +174,61 @@ textarea:focus {
 
 .btn-submit:disabled {
   opacity: 0.5;
+}
+
+
+/* comment.component.css - استایل زیبا و مدرن برای پیام خطا و لینک ورود */
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-radius: 5px;
+  padding: 4px 16px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s;
+}
+
+.error-message i {
+  font-size: 1rem;
+  color: #f59e0b;
+}
+
+.error-message a {
+  background: #fef3c7;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 7px;
+  font-weight: 500;
+  color: #d97706;
+  text-decoration: none;
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.error-message a:hover {
+  background: #fde68a;
+  color: #92400e;
+  transform: translateY(-1px);
+}
+
+/* نسخه موبایل */
+@media (max-width: 560px) {
+  .error-message {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+  .error-message a {
+    width: auto;
+    justify-content: center;
+  }
 }
 
 .login-warning {
@@ -211,17 +270,61 @@ textarea:focus {
   font-size: 0.7rem;
 }
 
+
+.productName {
+  font-size: 2rem;
+  color: #9b9d9f;
+  background: transparent;
+  padding: 0;
+  margin-top: 4px;
+}
+
 /* لیست نظرات */
 .comments-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-left: 8px;
+  margin-top: 16px;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  direction: ltr;
+  /* اسکرول را به راست می‌برد */
+}
+
+/* بازگرداندن جهت متن به راست‌چین (RTL) برای محتوای داخل */
+.comments-list>* {
+  direction: rtl;
+}
+
+/* استایل اسکرول برای مرورگرهای Webkit (Chrome, Edge, Safari) */
+.comments-list::-webkit-scrollbar {
+  width: 2.5px;
+  /* عرض باریک */
+  height: 4px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* رنگ پس‌زمینه */
+  border-radius: 4px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  /* رنگ اسکرول */
+  border-radius: 4px;
+}
+
+.comments-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 .comment-item {
   display: flex;
   gap: 0.8rem;
   background: #ffffff;
+  margin-right: 16px;
   border-radius: 16px;
   padding: 0.8rem;
   border: 1px solid #edf2f7;
@@ -255,13 +358,24 @@ textarea:focus {
   font-size: 0.65rem;
   color: #64748b;
 }
+.reply-date {
+  font-size: 0.65rem;
+  color: #64748b;
+}
 
 .comment-rating {
   font-size: 0.7rem;
-  background: #fef9c3;
   padding: 0.1rem 0.4rem;
   border-radius: 20px;
-  color: #854d0e;
+   color: #fbbf24;
+}
+
+.comment-rating i {
+  color: #e2e8f0; 
+  font-size: 12px;
+}
+.comment-rating i.filled {
+  color: #fbbf24; 
 }
 
 .delete-comment {
@@ -274,6 +388,7 @@ textarea:focus {
 
 .comment-text {
   font-size: 0.85rem;
+  text-align: right;
   color: #1e293b;
   line-height: 1.4;
   margin: 0.3rem 0;
@@ -332,6 +447,7 @@ textarea:focus {
 
 .reply-text {
   font-size: 0.8rem;
+  text-align: right;
   color: #334155;
 }
 
@@ -356,7 +472,8 @@ textarea:focus {
   opacity: 0.4;
 }
 
-.loading-spinner, .empty-state {
+.loading-spinner,
+.empty-state {
   text-align: center;
   padding: 1.5rem;
   color: #64748b;

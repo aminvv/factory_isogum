@@ -22,6 +22,7 @@ import { CertificateComponent } from './home/certificate/certificate.component';
 import { JalaliPipe } from './common/pipes/alali.pipe';
 import { PersianNumberPipe } from './common/pipes/persian-number.pipe';
 import { CommentModule } from './product-detail-page/product-comment.page/comment.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -37,20 +38,20 @@ import { CommentModule } from './product-detail-page/product-comment.page/commen
     ProductDetailPageComponent,
     AlertComponent,
     CertificateComponent,
-    JalaliPipe,
-    PersianNumberPipe
+
+
 
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    CommentModule
-],
+    CommentModule,
+    SharedModule
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ProductService

@@ -182,12 +182,13 @@
             </div>
 
             <!-- امتیاز -->
-            <div class="rating-section" *ngIf="product.rating && product.rating > 0">
+            <div class="rating-section" *ngIf="(+averageCommentRatingFromComments || 0) > 0">
                 <div class="rating-stars">
-                    <span class="star" *ngFor="let star of getRatingStars(product.rating)">{{ star }}</span>
-                    <span class="rating-score">{{ product.rating | persianNumber }}</span>
+                    <span class="star" *ngFor="let star of getRatingStars(averageCommentRatingFromComments ?? 0)">{{
+                        star }}</span>
+                    <span class="rating-score">{{ roundedAvgRating | persianNumber }}</span>
                 </div>
-                <span class="rating-text">از ۵</span>
+                <span class="rating-text">از ۵ ({{ totalCommentsFromComments | persianNumber }} نظر)</span>
             </div>
 
             <div class="price-box">
@@ -301,7 +302,8 @@
     </div>
 </div>
 <div class="digikala-product-page" *ngIf="product">
-  <app-product-comments [productId]="product.id"></app-product-comments>
+    <app-product-comments [productId]="product.id" [productName]="product.productName"
+        (statsChange)="onCommentStatsChange($event)">
+    </app-product-comments>
 </div>
-<app-footer></app-footer>
 <app-footer></app-footer>

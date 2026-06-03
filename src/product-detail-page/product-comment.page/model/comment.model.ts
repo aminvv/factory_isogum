@@ -21,3 +21,12 @@ export interface ProductComment {
   admin?: CommentAdmin;
   children?: ProductComment[];
 }
+
+
+
+
+
+export interface CommentStats{
+  averageRating:number
+  total:number
+}

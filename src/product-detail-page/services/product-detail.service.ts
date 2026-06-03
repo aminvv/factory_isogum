@@ -30,8 +30,8 @@ export interface Discount {
 export interface Product {
   id: number;
   productCode: string;
-  productName?: string;
-  description?: string;
+  productName: string;
+  description: string;
   price: number;
   quantity: number;
   rating: number;

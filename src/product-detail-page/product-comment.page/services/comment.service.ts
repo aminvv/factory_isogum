@@ -44,4 +44,18 @@ addComment(comment: { text: string; productId: number; parentId?: number }): Obs
     }
     return this.http.delete(`${this.baseUrl}/delete/${commentId}`, { headers });
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
