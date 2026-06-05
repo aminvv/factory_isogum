@@ -44,8 +44,9 @@ export class ProductDetailPageComponent implements OnInit {
   };
 
 
-totalCommentsFromComments: number = 0;
-averageCommentRatingFromComments: number = 0;
+  totalCommentsFromComments: number = 0;
+  averageCommentRatingFromComments: number = 0;
+  activeTab: string = 'specs';
 
   private persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
@@ -134,16 +135,21 @@ averageCommentRatingFromComments: number = 0;
 
 
 
-onCommentStatsChange(stats: CommentStats) {
-  this.totalCommentsFromComments = Number(stats.total) || 0;
-  this.averageCommentRatingFromComments = Number(stats.averageRating) || 0; // اینجا به عدد تبدیل شده
-  this.cdr.markForCheck();
-}
+  onCommentStatsChange(stats: CommentStats) {
+    this.totalCommentsFromComments = Number(stats.total) || 0;
+    this.averageCommentRatingFromComments = Number(stats.averageRating) || 0; // اینجا به عدد تبدیل شده
+    this.cdr.markForCheck();
+  }
 
-get roundedAvgRating(): number {
-  return Math.round((this.averageCommentRatingFromComments || 0) * 10) / 10;
-}
+  get roundedAvgRating(): number {
+    return Math.round((this.averageCommentRatingFromComments || 0) * 10) / 10;
+  }
 
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    this.cdr.markForCheck();
+  }
 
   private calculateDiscountFallback(): void {
     this.fallbackToActiveDiscount();

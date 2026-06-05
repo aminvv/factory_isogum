@@ -1288,7 +1288,20 @@
 
 .tab-content {
     padding: 30px;
+    text-align: right;
+    margin-left: 350px;
+    margin-right: 200px;
 }
+
+
+
+
+
+
+
+
+
+
 
 /* Specifications Table */
 .specifications-table {
