@@ -146,8 +146,14 @@ export class ProductDetailPageComponent implements OnInit {
   }
 
 
-  setActiveTab(tab: string): void {
+  setActiveTab(tab: string) {
     this.activeTab = tab;
+    setTimeout(() => {           
+      const element = document.getElementById('specs');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 0);
     this.cdr.markForCheck();
   }
 
@@ -319,6 +325,10 @@ export class ProductDetailPageComponent implements OnInit {
       this.intervalId = null;
     }
   }
+
+
+
+
 
   getRatingStars(rating: number): string[] {
     const fullStars = Math.floor(rating);

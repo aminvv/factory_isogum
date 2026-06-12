@@ -1262,6 +1262,7 @@
 
 .tabs-navigation {
     display: flex;
+    justify-content: space-evenly;
     border-bottom: 1px solid #f0f0f1;
 }
 
@@ -1282,18 +1283,39 @@
     border-bottom-color: #ef394e;
 }
 
+.tab-btn:focus {
+    outline: none;
+}
+
+
+
 .tab-btn:hover {
     color: #ef394e;
 }
 
-.tab-content {
-    padding: 30px;
+.tab-content[_ngcontent-ng-c4284243436] {
+    border-radius: 10px;
+    padding: 105px;
     text-align: right;
     margin-left: 350px;
-    margin-right: 200px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    border: solid 1px #f3eeee;
+    margin-right: 350px;
+    
+    background-color: #ffffff; 
+    transition: all 0.3s ease-in-out; 
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08),   
+                0 8px 10px -6px rgba(0, 0, 0, 0.02);     
 }
 
-
+/* افکت هاور برای تعامل زیباتر */
+.tab-content[_ngcontent-ng-c4284243436]:hover {
+    border-color: #efefef;                    
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15),  
+                0 4px 8px -4px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);             
+}
 
 
 

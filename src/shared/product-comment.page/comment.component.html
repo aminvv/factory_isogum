@@ -1,0 +1,103 @@
+<div class="comments-section">
+  <!-- بخش امتیازدهی -->
+  <div class="rating-summary">
+    <div class="rating-number">
+      <div class="rating-value">{{ averageRating.toFixed(1) | persianNumber }}</div>
+      <div class="rating-stars">
+        <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star" [class.active]="star <= averageRating"></i>
+      </div>
+      <div class="rating-count">({{ totalRatings | persianNumber }} نظر)</div>
+    </div>
+    <div class="productName">
+      <span>{{ totalRatings | persianNumber }} دیدگاه برای {{ productName }}</span>
+    </div>
+  </div>
+
+  <!-- پیام لاگین (همیشه نمایش داده می‌شود اگر کاربر لاگین نباشد) -->
+  <div class="login-warning" *ngIf="!isLoggedIn()">
+    <i class="fas fa-lock"></i> برای ثبت نظر، لطفاً
+    <a (click)="goToLogin()">وارد شوید</a>.
+  </div>
+
+  <!-- فرم ثبت نظر (فقط در صورت لاگین بودن یا با کلیک دکمه نمایش داده شود) -->
+  <div id="review-form" class="comment-form" *ngIf="showForm && isLoggedIn()">
+    <div class="form-header">
+      <h4>✍️ نظر خود را بنویسید</h4>
+    </div>
+    <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+      <div class="rating-input">
+        <span>امتیاز شما:</span>
+        <div class="stars">
+          <i *ngFor="let star of [1,2,3,4,5]" class="far fa-star" [class.fas]="star <= userRating"
+            (click)="setRating(star)"></i>
+        </div>
+      </div>
+      <textarea formControlName="text" rows="3" placeholder="متن نظر..."></textarea>
+      <div class="reply-badge" *ngIf="replyTo">
+        <span>📌 در پاسخ به: {{ replyTo.text | slice:0:40 }}...</span>
+        <button type="button" (click)="cancelReply()">لغو</button>
+      </div>
+      <button type="submit" class="btn-submit" [disabled]="commentForm.invalid">
+        <i class="fas fa-paper-plane"></i> ارسال نظر
+      </button>
+
+    </form>
+    <!-- فقط نمایش لینک ورود در داخل error-message -->
+    <div class="error-message" *ngIf="error">
+      <i></i> {{ error }}
+      <a *ngIf="error.includes('وارد حساب')" (click)="goToLogin()">
+        وارد شوید
+      </a>
+    </div>
+  </div>
+
+  <!-- سربرگ نظرات -->
+  <div class="comments-header">
+    <h3>💬 دیدگاه کاربران</h3>
+  </div>
+
+  <!-- لیست نظرات -->
+  <div *ngIf="loading" class="loading-spinner">⏳ در حال بارگیری...</div>
+  <div *ngIf="!loading && comments.length === 0" class="empty-state">📭 هنوز نظری ثبت نشده است. اولین نفر باشید!</div>
+
+  <div class="scroll-wrapper">
+    <div class="comments-list" *ngIf="!loading && comments.length > 0">
+      <div *ngFor="let comment of comments" class="comment-item">
+        <div class="comment-avatar"><i class="fas fa-user-circle"></i></div>
+        <div class="comment-body">
+          <div class="comment-header">
+            <span class="username">{{ getDisplayName(comment) }}</span>
+            <span class="comment-date">{{ comment.created_at | jalali }}</span>
+            <span class="comment-rating" *ngIf="comment.rating">
+              <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star" [class.filled]="star <= comment.rating"></i>
+            </span>
+            <button class="delete-comment" *ngIf="canDelete(comment)" (click)="deleteComment(comment.id)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          <div class="comment-text">{{ comment.text }}</div>
+          <button class="reply-button" (click)="setReply(comment)" [disabled]="!isLoggedIn()">
+            <i class="fas fa-reply"></i> پاسخ
+          </button>
+
+          <div class="replies-list" *ngIf="comment.children?.length">
+            <div *ngFor="let reply of comment.children" class="reply-item">
+              <div class="reply-avatar"><i class="fas fa-user-circle"></i></div>
+              <div class="reply-body">
+                <div class="reply-header">
+                  <span class="username">{{ getDisplayName(reply) }}</span>
+                  <span class="reply-date">{{ reply.created_at | date:'yyyy/MM/dd' }}</span>
+                  <button class="delete-comment" *ngIf="canDelete(reply)" (click)="deleteComment(reply.id)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+                <div class="reply-text">{{ reply.text }}</div>
+                <button class="reply-button small" (click)="setReply(reply)" [disabled]="!isLoggedIn()">پاسخ</button>
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>

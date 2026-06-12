@@ -19,9 +19,6 @@ import { AlertComponent } from './alert/alert.component';
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ProductService } from './home/product-grid/services/product.service';
 import { CertificateComponent } from './home/certificate/certificate.component';
-import { JalaliPipe } from './common/pipes/alali.pipe';
-import { PersianNumberPipe } from './common/pipes/persian-number.pipe';
-import { CommentModule } from './product-detail-page/product-comment.page/comment.module';
 import { SharedModule } from './shared/shared.module';
 
 
@@ -49,7 +46,6 @@ import { SharedModule } from './shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    CommentModule,
     SharedModule
   ],
   providers: [
