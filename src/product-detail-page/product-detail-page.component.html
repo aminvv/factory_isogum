@@ -184,8 +184,7 @@
             <!-- امتیاز -->
             <div class="rating-section" *ngIf="(+averageCommentRatingFromComments || 0) > 0">
                 <div class="rating-stars">
-                    <span class="star" *ngFor="let star of getRatingStars(averageCommentRatingFromComments ?? 0)">{{
-                        star }}</span>
+                    <span [class]="starClass" class="star" *ngFor="let  starClass  of getRatingStars(averageCommentRatingFromComments ?? 0)"></span>
                     <span class="rating-score">{{ roundedAvgRating | persianNumber }}</span>
                 </div>
                 <span class="rating-text">از ۵ ({{ totalCommentsFromComments | persianNumber }} نظر)</span>
@@ -280,50 +279,57 @@
         </div>
     </div>
 
-<!-- Product Tabs -->
-<div class="product-tabs" id="specs">
-  <div class="tabs-navigation">
-    <button class="tab-btn" [class.active]="activeTab === 'specs'" (click)="setActiveTab('specs')">
-      مشخصات فنی
-    </button>
-    <button class="tab-btn" [class.active]="activeTab === 'comments'" (click)="setActiveTab('comments')">
-      نظرات ({{ totalCommentsFromComments | persianNumber }})
-    </button>
-    <button class="tab-btn" [class.active]="activeTab === 'intro'" (click)="setActiveTab('intro')">
-      معرفی محصول
-    </button>
-  </div>
+    <!-- Product Tabs -->
+    <div class="product-tabs" id="specs">
+        <div class="tabs-navigation">
+            <button class="tab-btn" [class.active]="activeTab === 'specs'" (click)="setActiveTab('specs')">
+                مشخصات فنی
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'comments'" (click)="setActiveTab('comments')">
+                نظرات ({{ totalCommentsFromComments | persianNumber }})
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'intro'" (click)="setActiveTab('intro')">
+                معرفی محصول
+            </button>
+        </div>
 
-  <!-- محتوای تب مشخصات فنی -->
-  <div class="tab-content" *ngIf="activeTab === 'specs'">
-    <div class="specifications-table">
-      <div class="spec-row" *ngFor="let detail of product.details!">
-        <div class="spec-title">{{ detail.key }}</div>
-        <div class="spec-value">{{ detail.value }}</div>
-      </div>
-      <div *ngIf="!product.details || product.details.length === 0" class="spec-row">
-        <div class="spec-value">هیچ مشخصه‌ای ثبت نشده است.</div>
-      </div>
+        <!-- محتوای تب مشخصات فنی -->
+        <div class="tab-content" *ngIf="activeTab === 'specs'">
+            <div class="specifications-table">
+                <div class="spec-row" *ngFor="let detail of product.details!">
+                    <div class="spec-title">{{ detail.key }}</div>
+                    <div class="spec-value">{{ detail.value }}</div>
+                </div>
+                <div *ngIf="!product.details || product.details.length === 0" class="spec-row">
+                    <div class="spec-value">هیچ مشخصه‌ای ثبت نشده است.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" [hidden]="activeTab !== 'comments'">
+            <app-product-comments [productId]="product.id" [productName]="product.productName"
+                (statsChange)="onCommentStatsChange($event)">
+            </app-product-comments>
+        </div>
+
+        <!-- محتوای تب پرسش و پاسخ (موقت) -->
+        <div class="tab-content" *ngIf="activeTab === 'questions'">
+            <p>بخش پرسش و پاسخ به زودی اضافه می‌شود.</p>
+        </div>
+
+        <div class="tab-content" *ngIf="activeTab === 'intro'">
+            <div class="product-description" [innerHTML]="product.description | safeHtml"></div>
+        </div>
     </div>
-  </div>
 
-<div class="tab-content" [hidden]="activeTab !== 'comments'">
-  <app-product-comments 
-    [productId]="product.id" 
-    [productName]="product.productName"
-    (statsChange)="onCommentStatsChange($event)">
-  </app-product-comments>
+
+<app-related-products 
+  *ngIf="product?.id"
+  [currentProductId]="product!.id">
+</app-related-products>
+
+
 </div>
 
-  <!-- محتوای تب پرسش و پاسخ (موقت) -->
-  <div class="tab-content" *ngIf="activeTab === 'questions'">
-    <p>بخش پرسش و پاسخ به زودی اضافه می‌شود.</p>
-  </div>
-
-<div class="tab-content" *ngIf="activeTab === 'intro'">
-  <div class="product-description" [innerHTML]="product.description | safeHtml"></div>
-</div>
-</div>
-</div>
 
 <app-footer></app-footer>

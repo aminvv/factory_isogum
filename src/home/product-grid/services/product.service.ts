@@ -58,4 +58,12 @@ export class ProductService {
   getProductById(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/get-product/${id}`);
   }
+
+
+  getRelatedProducts(productId: number, limit: number = 4): Observable<Product[]> {
+    const params = new HttpParams().set('limit', limit.toString());
+    return this.http.get<Product[]>(`${this.apiUrl}/${productId}/related`, { params });
+  }
+
+
 }

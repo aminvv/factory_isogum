@@ -346,8 +346,8 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 2px;
+    gap: 8px;
+    margin-bottom: 12px;
 }
 
 .title-group {
@@ -362,6 +362,7 @@
     font-weight: 700;
     background: linear-gradient(135deg, var(--bg-dark), var(--bg-soft));
     background-clip: text;
+    text-align: right;
     -webkit-background-clip: text;
     color: transparent;
     margin: 0;
@@ -943,6 +944,8 @@
 
 .star {
     color: #fbbf24;
+    display: flex;
+    align-items: center;
     font-size: 0.8rem;
 }
 
@@ -1209,6 +1212,7 @@
 
     .product-title {
         font-size: 1.4rem;
+        text-align: right;
     }
 
     .final-price .price-amount {
@@ -1302,23 +1306,57 @@
     margin-bottom: 50px;
     border: solid 1px #f3eeee;
     margin-right: 350px;
-    
-    background-color: #ffffff; 
-    transition: all 0.3s ease-in-out; 
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08),   
-                0 8px 10px -6px rgba(0, 0, 0, 0.02);     
+
+    background-color: #ffffff;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08),
+        0 8px 10px -6px rgba(0, 0, 0, 0.02);
 }
 
 /* افکت هاور برای تعامل زیباتر */
 .tab-content[_ngcontent-ng-c4284243436]:hover {
-    border-color: #efefef;                    
-    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15),  
-                0 4px 8px -4px rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);             
+    border-color: #efefef;
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15),
+        0 4px 8px -4px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
 }
 
 
+/* پایه: برای همه دستگاه‌ها */
+.product-description {
+    max-width: 100%;
+    overflow-x: auto;
+    word-wrap: break-word;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+}
 
+/* ریسپانسیو کردن محتواهای داخلی */
+.product-description img,
+.product-description iframe,
+.product-description video,
+.product-description table {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.product-description table {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+}
+
+/* دسکتاپ: از 1200px به بالا */
+@media (min-width: 1200px) {
+    .product-description {
+        padding-left: 350px;
+        padding-right: 350px;
+        padding-top: 100px;
+    }
+}
 
 
 
@@ -1396,5 +1434,139 @@
 
     .breadcrumb-container {
         padding: 0 10px;
+    }
+}
+
+
+
+@media (max-width: 1024px) {
+    .product-main {
+        flex-wrap: wrap;
+    }
+
+    .product-gallery-side {
+        flex: 0 0 280px;
+    }
+
+    .product-container {
+        width: calc(100% - 300px);
+        max-width: unset;
+    }
+        .tab-content {
+        padding: 100px 40px;
+        margin: 0;
+    }
+
+    .product-info-side {
+        width: 100%;
+        order: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-main {
+        flex-direction: column;
+        margin: 0 10px 20px;
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .product-gallery-side {
+        width: 100%;
+        flex: none;
+        min-width: unset;
+    }
+
+    .product-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 14px;
+    }
+
+    .product-info-side {
+        width: 100%;
+        padding: 1.2rem;
+        border-radius: 16px;
+        order: unset;
+    }
+
+    .title-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .stats-row {
+        flex-direction: column;
+    }
+
+    .stat-card {
+        min-width: auto;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-label {
+        width: 80px;
+        font-size: 0.72rem;
+    }
+
+    .price-amount {
+        font-size: 1.5rem;
+    }
+
+    .tabs-navigation {
+        overflow-x: auto;
+    }
+
+    .tab-btn {
+        padding: 14px 16px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .tab-content {
+        padding: 100px 20px;
+        margin: 0;
+    }
+
+    .spec-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .spec-title {
+        flex: none;
+        font-size: 12px;
+        text-align: right;
+    }
+
+    .thumbnail-item {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .purchase-box {
+        flex-direction: column;
+    }
+
+    .quantity-selector {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .add-to-cart-btn {
+        width: 100%;
+    }
+
+    .badge-group {
+        flex-wrap: wrap;
+    }
+
+    .shipping-options {
+        flex-direction: column;
     }
 }

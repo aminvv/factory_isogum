@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product, ProductDetailService, Discount } from './services/product-detail.service';
-import { CommentStats } from './product-comment.page/model/comment.model';
+import { CommentStats } from '../shared/product-comment.page/model/comment.model';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -58,20 +58,26 @@ export class ProductDetailPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) this.loadProduct(id);
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.product = undefined;
+        this.loadProduct(id);
+        this.cdr.markForCheck();
+      }
+    });
     this.updateDisplay();
   }
 
   loadProduct(id: string): void {
     this.productService.getProductById(id).subscribe({
       next: (res) => {
-        this.product = res;
+        this.product = { ...res };
         this.setCurrentImage();
 
         this.productService.getProductDiscounts(res.id).subscribe({
           next: (discounts: Discount[]) => {
-            this.product!.discounts = discounts;
+            this.product = { ...this.product!, discounts };
             this.calculateDiscountFromArray();
             this.updateFeaturesAndFlags();
             this.cdr.markForCheck();
@@ -83,10 +89,8 @@ export class ProductDetailPageComponent implements OnInit {
           }
         });
       },
-      error: (err) => console.error(err)
     });
   }
-
   private calculateDiscountFromArray(): void {
     if (!this.product) return;
     let bestPercent = 0, bestAmount = 0;
@@ -148,7 +152,7 @@ export class ProductDetailPageComponent implements OnInit {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
-    setTimeout(() => {           
+    setTimeout(() => {
       const element = document.getElementById('specs');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -331,13 +335,13 @@ export class ProductDetailPageComponent implements OnInit {
 
 
   getRatingStars(rating: number): string[] {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    const empty = 5 - full - (half ? 1 : 0);
     const stars: string[] = [];
-    for (let i = 0; i < fullStars; i++) stars.push('★');
-    if (halfStar) stars.push('½');
-    for (let i = 0; i < emptyStars; i++) stars.push('☆');
+    for (let i = 0; i < full; i++) stars.push('fas fa-star');
+    if (half) stars.push('fas fa-star-half-alt fa-flip-horizontal');
+    for (let i = 0; i < empty; i++) stars.push('far fa-star');
     return stars;
   }
 

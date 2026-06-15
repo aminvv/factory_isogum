@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { API_CONFIG } from "../../common/api/api.config";
 
 export interface ProductImage {
@@ -79,4 +79,10 @@ export class ProductDetailService {
   getProductDiscounts(productId: number): Observable<Discount[]> {
     return this.http.get<Discount[]>(`${API_CONFIG.baseUrl}/discount/get-discounts-by-product/${productId}`);
   }
+
+
+
+
+
+
 }

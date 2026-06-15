@@ -7,24 +7,31 @@ import { JalaliPipe } from '../common/pipes/alali.pipe';
 import { PersianNumberPipe } from '../common/pipes/persian-number.pipe';
 import { SafeHtmlPipe } from '../common/pipes/safe-html.pipe';
 import { CommentComponent } from './product-comment.page/comment.component';
+import { RelatedProductsComponent } from './related-products.component/related-products.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    CommentComponent,   
+    CommentComponent,
+    RelatedProductsComponent,   
     JalaliPipe,         
     PersianNumberPipe,  
     SafeHtmlPipe        
-
+    
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule   
+    RouterModule,
+    ReactiveFormsModule,   
+
   ],
   exports: [
     JalaliPipe,
     PersianNumberPipe,
     SafeHtmlPipe,
-    CommentComponent      
+    RelatedProductsComponent,   
+    CommentComponent,
+    RouterModule      
   ]
 })
 export class SharedModule { }

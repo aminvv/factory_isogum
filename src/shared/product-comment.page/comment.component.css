@@ -279,7 +279,7 @@ textarea:focus {
 
 /* لیست نظرات */
 .comments-list {
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
   padding-left: 8px;
   margin-top: 16px;

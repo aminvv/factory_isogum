@@ -7,10 +7,11 @@ import { ProductDetailPageComponent } from './product-detail-page/product-detail
 import { AlertComponent } from './alert/alert.component';
 
 const routes: Routes = [
-  {path:'',component:HomePageComponent},
-  {path:'articles',component:ArticlesComponent},
-  {path:'signup',component:SignUpComponent},
-{ path: 'productDetail/:id', component: ProductDetailPageComponent },
+  { path: '', component: HomePageComponent },
+  { path: 'articles', component: ArticlesComponent },
+  { path: 'signup', component: SignUpComponent },
+  { path: 'productDetail/:id', component: ProductDetailPageComponent },
+
 ];
 
 @NgModule({

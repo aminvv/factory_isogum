@@ -1,0 +1,59 @@
+<div class="related-products-section" *ngIf="!loading && relatedProducts.length > 0">
+<div class="sec-head">
+  <div class="sec-head-badge">
+    <i class="ti ti-layout-grid"></i>
+    <h3>محصولات مرتبط</h3>
+  </div>
+  <div class="line"></div>
+</div>
+  <div class="sec-product">
+    <div class="related-products-grid">
+      <div class="product-card" *ngFor="let product of relatedProducts">
+
+        <div class="product-image">
+          <img [src]="product.image?.[0]?.url || 'assets/default-product.jpg'" [alt]="product.productName">
+
+
+          <span class="badge-discount" *ngIf="product.hasDiscount && product.discountPercent">
+            {{ product.discountPercent | persianNumber }}٪
+          </span>
+          <span class="badge-discount" *ngIf="product.hasDiscount && product.discountAmount">
+            {{ product.discountAmount | persianNumber }} تومان تخفیف
+          </span>
+
+        </div>
+
+        <div class="product-body">
+          <p class="product-name">{{ product.productName }}</p>
+
+          <div class="product-rating" *ngIf="product.rating && product.rating > 0">
+
+            <span class="stars">
+              <i *ngFor="let starClass of getRatingStars(product.rating)" [class]="starClass"></i>
+            </span>
+
+
+            <span class="rating-val">{{ product.rating | persianNumber }}</span>
+          </div>
+
+          <div class="price-block">
+            <div class="old-price" *ngIf="product.hasDiscount">
+              {{ product.price | persianNumber }} تومان
+            </div>
+            <div class="final-price">
+              {{ (product.finalPrice || product.price) | persianNumber }}
+              <small>تومان</small>
+            </div>
+          </div>
+
+          <a [routerLink]="['/productDetail', product.id]" class="details-btn">
+            مشاهده جزئیات <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-text">در حال بارگذاری...</div>
+<div *ngIf="!loading && relatedProducts.length === 0" class="no-related">محصول مرتبطی یافت نشد.</div>
