@@ -1,0 +1,82 @@
+<!-- src/app/modules/basket/components/basket/basket.component.html -->
+<div class="basket-container">
+  <h2>سبد خرید</h2>
+
+  <!-- نمایش پیام‌ها -->
+  <div *ngIf="loading" class="loading">در حال بارگذاری...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+
+  <!-- فرم افزودن محصول -->
+  <div class="form-section">
+    <h3>افزودن محصول جدید</h3>
+    <form [formGroup]="addProductForm" (ngSubmit)="addProduct()">
+      <div class="form-group">
+        <label>شناسه محصول</label>
+        <input type="number" formControlName="productId" placeholder="مثال: 14" />
+        <div *ngIf="addProductForm.get('productId')?.invalid && addProductForm.get('productId')?.touched" class="field-error">
+          شناسه محصول الزامی است.
+        </div>
+      </div>
+      <div class="form-group">
+        <label>تعداد</label>
+        <input type="number" formControlName="quantity" min="1" />
+      </div>
+      <button type="submit" [disabled]="addProductForm.invalid">افزودن به سبد</button>
+    </form>
+  </div>
+
+  <!-- فرم کد تخفیف -->
+  <div class="form-section">
+    <h3>کد تخفیف</h3>
+    <form [formGroup]="discountForm" (ngSubmit)="applyDiscount()">
+      <div class="form-group">
+        <label>کد تخفیف</label>
+        <input type="text" formControlName="code" placeholder="کد خود را وارد کنید" />
+      </div>
+      <div class="discount-buttons">
+        <button type="submit" [disabled]="discountForm.invalid">اعمال تخفیف</button>
+        <button type="button" (click)="removeDiscount()">حذف تخفیف</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- نمایش سبد خرید -->
+  <div *ngIf="basketData" class="basket-content">
+    <div class="summary">
+      <div>قیمت کل: {{ basketData.totalPrice | number }} تومان</div>
+      <div>تخفیف کل: {{ basketData.totalDiscountAmount | number }} تومان</div>
+      <div><strong>قیمت نهایی: {{ basketData.finalAmount | number }} تومان</strong></div>
+    </div>
+
+    <div *ngIf="basketData.products.length === 0" class="empty-basket">
+      سبد خرید شما خالی است.
+    </div>
+
+    <div class="product-list">
+      <div *ngFor="let product of basketData.products" class="product-item">
+        <div class="product-info">
+          <h4>{{ product.title }}</h4>
+          <div>قیمت واحد: {{ product.price | number }} تومان</div>
+          <div>تعداد: {{ product.quantity }}</div>
+          <div *ngIf="product.discount">تخفیف: {{ product.discount }}%</div>
+        </div>
+        <div class="product-actions">
+          <button (click)="removeItem(product.id)">کاهش یک عدد</button>
+          <!-- در صورت دسترسی به id رکورد سبد (basket item id) می‌توانید از removeItemById استفاده کنید -->
+          <!-- اینجا نمونه‌ای از حذف کامل توسط id را نشان نمی‌دهیم چون در پاسخ API productId کافی است -->
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="basketData.discounts.length > 0" class="discounts-list">
+      <h4>تخفیف‌های اعمال شده:</h4>
+      <div *ngFor="let disc of basketData.discounts">
+        <span *ngIf="disc.percent">درصدی: {{ disc.percent }}%</span>
+        <span *ngIf="disc.amount">مبلغی: {{ disc.amount }} تومان</span>
+        <span>کد: {{ disc.code }}</span>
+        <span *ngIf="disc.type === 'product'"> (ویژه محصول)</span>
+      </div>
+    </div>
+  </div>
+</div>

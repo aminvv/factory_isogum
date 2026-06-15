@@ -997,7 +997,7 @@
 .old-price {
     font-size: 0.85rem;
     color: #94a3b8;
-    text-decoration: line-through;
+    text-decoration: line-through !important;
 }
 
 .final-price {

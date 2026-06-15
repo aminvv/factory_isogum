@@ -22,11 +22,11 @@ export class AuthInterceptor implements HttpInterceptor {
     const accessToken = sessionStorage.getItem('accessToken')
     let authReq = req
 
-    if (accessToken) {
-      authReq.clone({
-        setHeaders: { Authorization: `Bearer${accessToken}` }
-      })
-    }
+   if (accessToken) {
+    authReq = req.clone({  
+      setHeaders: { Authorization: `Bearer ${accessToken}` }  
+    });
+  }
 
     return next.handle(authReq).pipe(
       catchError((err: HttpErrorResponse) => {
@@ -99,7 +99,7 @@ export class AuthInterceptor implements HttpInterceptor {
   
   private handleLogout() {
     sessionStorage.removeItem('accessToken');
-    this.router.navigate(['/login']);
+   this.router.navigate(['/auth/login']);
   }
 }
 

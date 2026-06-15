@@ -1,4 +1,4 @@
-<footer class="footer-section">
+<footer class="footer-section" dir="rtl">
   <div class="container">
     <div class="footer-cta pt-5 pb-5">
       <div class="row">
@@ -6,8 +6,8 @@
           <div class="single-cta">
             <i class="fas fa-map-marker-alt"></i>
             <div class="cta-text">
-              <h4>Find us</h4>
-              <span>1010 Avenue, sw 54321, chandigarh</span>
+              <h4>آدرس ما</h4>
+              <span>تهران، خیابان ولیعصر، نبش خیابان فلان، پلاک ۱۲۳</span>
             </div>
           </div>
         </div>
@@ -15,8 +15,8 @@
           <div class="single-cta">
             <i class="fas fa-phone"></i>
             <div class="cta-text">
-              <h4>Call us</h4>
-              <span>9876543210 0</span>
+              <h4>تماس با ما</h4>
+              <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
             </div>
           </div>
         </div>
@@ -24,8 +24,8 @@
           <div class="single-cta">
             <i class="far fa-envelope-open"></i>
             <div class="cta-text">
-              <h4>Mail us</h4>
-             <span>{{ 'support@mydomain.com' }}</span>
+              <h4>پست الکترونیک</h4>
+              <span>info&#64;mysite.com</span>
             </div>
           </div>
         </div>
@@ -36,52 +36,55 @@
         <div class="col-xl-4 col-lg-4 mb-50">
           <div class="footer-widget">
             <div class="footer-logo">
-              <a href="index.html"><img src="https://i.ibb.co/QDy827D/ak-logo.png" class="img-fluid" alt="logo"></a>
+              <a href="/"><img src="https://i.ibb.co/QDy827D/ak-logo.png" class="img-fluid" alt="لوگو"></a>
             </div>
             <div class="footer-text">
-              <p>Lorem ipsum dolor sit amet, consec tetur adipisicing elit, sed do eiusmod tempor incididuntut consec tetur adipisicing
-                elit,Lorem ipsum dolor sit amet.</p>
+              <p>ما با تکیه بر تجربه و تخصص، خدماتی مدرن و باکیفیت را به مشتریان خود ارائه می‌دهیم. هدف ما جلب رضایت شماست.</p>
             </div>
             <div class="footer-social-icon">
-              <span>Follow us</span>
+              <span>ما را دنبال کنید</span>
               <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
               <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-              <a href="#"><i class="fab fa-google-plus-g google-bg"></i></a>
+              <a href="#"><i class="fab fa-instagram instagram-bg"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in linkedin-bg"></i></a>
             </div>
           </div>
         </div>
         <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
           <div class="footer-widget">
             <div class="footer-widget-heading">
-              <h3>Useful Links</h3>
+              <h3>لینک‌های مفید</h3>
             </div>
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">about</a></li>
-              <li><a href="#">services</a></li>
-              <li><a href="#">portfolio</a></li>
-              <li><a href="#">Contact</a></li>
-              <li><a href="#">About us</a></li>
-              <li><a href="#">Our Services</a></li>
-              <li><a href="#">Expert Team</a></li>
-              <li><a href="#">Contact us</a></li>
-              <li><a href="#">Latest News</a></li>
+              <li><a href="#">خانه</a></li>
+              <li><a href="#">درباره ما</a></li>
+              <li><a href="#">خدمات</a></li>
+              <li><a href="#">نمونه کارها</a></li>
+              <li><a href="#">تماس با ما</a></li>
+              <li><a href="#">وبلاگ</a></li>
+              <li><a href="#">تیم ما</a></li>
+              <li><a href="#">سوالات متداول</a></li>
+              <li><a href="#">حریم خصوصی</a></li>
+              <li><a href="#">شرایط استفاده</a></li>
             </ul>
           </div>
         </div>
         <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
           <div class="footer-widget">
             <div class="footer-widget-heading">
-              <h3>Subscribe</h3>
+              <h3>خبرنامه</h3>
             </div>
             <div class="footer-text mb-25">
-              <p>Don’t miss to subscribe to our new feeds, kindly fill the form below.</p>
+              <p>با عضویت در خبرنامه، از آخرین مقالات و تخفیف‌ها با خبر شوید.</p>
             </div>
             <div class="subscribe-form">
-              <form action="#">
-                <input type="text" placeholder="Email Address">
-                <button><i class="fab fa-telegram-plane"></i></button>
+              <form (ngSubmit)="onSubscribe()" #subscribeForm="ngForm">
+                <input type="email" name="email" [(ngModel)]="email" placeholder="آدرس ایمیل شما" required email>
+                <button type="submit"><i class="fab fa-telegram-plane"></i></button>
               </form>
+              <div *ngIf="messageText" class="subscribe-message" [class.success]="messageType === 'success'" [class.error]="messageType === 'error'">
+                {{ messageText }}
+              </div>
             </div>
           </div>
         </div>
@@ -91,19 +94,18 @@
   <div class="copyright-area">
     <div class="container">
       <div class="row">
-        <div class="col-xl-6 col-lg-6 text-center text-lg-left">
+        <div class="col-xl-6 col-lg-6 text-center text-lg-right">
           <div class="copyright-text">
-            <p>Copyright &copy; 2018, All Right Reserved <a href="https://codepen.io/anupkumar92/">Anup</a></p>
+            <p>تمامی حقوق متعلق به {{ currentYear }} | طراحی و توسعه توسط <a href="#">شرکت نمونه</a></p>
           </div>
         </div>
-        <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
+        <div class="col-xl-6 col-lg-6 d-none d-lg-block text-left">
           <div class="footer-menu">
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Terms</a></li>
-              <li><a href="#">Privacy</a></li>
-              <li><a href="#">Policy</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="#">خانه</a></li>
+              <li><a href="#">قوانین</a></li>
+              <li><a href="#">حریم خصوصی</a></li>
+              <li><a href="#">راهنما</a></li>
             </ul>
           </div>
         </div>

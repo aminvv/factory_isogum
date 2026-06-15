@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChil
 import { ActivatedRoute } from '@angular/router';
 import { Product, ProductDetailService, Discount } from './services/product-detail.service';
 import { CommentStats } from '../shared/product-comment.page/model/comment.model';
+import { BasketService } from '../basket/services/basket.service';
+import { AddToBasketDto } from '../basket/model/basket.model';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -53,6 +55,7 @@ export class ProductDetailPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductDetailService,
+    private basketService: BasketService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
@@ -227,8 +230,39 @@ export class ProductDetailPageComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
+
+
+
+
+
   addToCart(): void {
-    console.log('Add to cart:', this.product?.id, this.quantity);
+
+    if (!this.product) return
+    if (this.quantity > this.product.quantity) {
+      this.quantityError = `حداکثر ${this.product.quantity} عدد موجود است`;
+      this.cdr.markForCheck()
+      return
+    }
+    const dto: AddToBasketDto = {
+      productId: this.product.id,
+      quantity: this.quantity
+    };
+
+    this.basketService.addToBasket(dto).subscribe({
+      next: (response) => {
+        alert('محصول به سبد خرید اضافه شد');
+        this.quantityError = '';
+        this.cdr.markForCheck()
+      },
+      error: (err) => {
+        const errorMessage = err.Error?.message || 'خطا در افزودن به سبد خرید';
+        this.quantityError = errorMessage;
+        console.error(err);
+        this.cdr.markForCheck();
+      }
+    })
+
+
   }
 
   // ---------- تبدیل اعداد ----------

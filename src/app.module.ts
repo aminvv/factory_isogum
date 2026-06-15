@@ -12,7 +12,6 @@ import { ArticlesComponent } from './articles/articles/articles.component';
 import { SliderComponent } from './home/slider/slider.component';
 import { ProductGridComponent } from './home/product-grid/product-grid.component';
 import { BlogSectionComponent } from './home/blog-section/blog-section.component';
-import { FooterComponent } from './home/footer/footer.component';
 import { SignUpComponent } from './auth/sign-up-in/sign-up.component';
 import { ProductDetailPageComponent } from './product-detail-page/product-detail-page.component';
 import { AlertComponent } from './alert/alert.component';
@@ -20,6 +19,8 @@ import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ProductService } from './home/product-grid/services/product.service';
 import { CertificateComponent } from './home/certificate/certificate.component';
 import { SharedModule } from './shared/shared.module';
+import { FooterComponent } from './home/footer/footer.component';
+import { BasketComponent } from './basket/basket.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { SharedModule } from './shared/shared.module';
     ProductDetailPageComponent,
     AlertComponent,
     CertificateComponent,
+    BasketComponent,
 
 
 
