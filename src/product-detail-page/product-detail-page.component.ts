@@ -4,6 +4,7 @@ import { Product, ProductDetailService, Discount } from './services/product-deta
 import { CommentStats } from '../shared/product-comment.page/model/comment.model';
 import { BasketService } from '../basket/services/basket.service';
 import { AddToBasketDto } from '../basket/model/basket.model';
+import { GuestBasketService } from '../basket/services/guest-basket.service';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -56,6 +57,7 @@ export class ProductDetailPageComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductDetailService,
     private basketService: BasketService,
+    private guestBasketService: GuestBasketService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
@@ -247,20 +249,33 @@ export class ProductDetailPageComponent implements OnInit {
       productId: this.product.id,
       quantity: this.quantity
     };
+   const isLoggedIn = sessionStorage.getItem('accessToken')
+    if (isLoggedIn) {
 
-    this.basketService.addToBasket(dto).subscribe({
-      next: (response) => {
-        alert('محصول به سبد خرید اضافه شد');
-        this.quantityError = '';
-        this.cdr.markForCheck()
-      },
-      error: (err) => {
-        const errorMessage = err.Error?.message || 'خطا در افزودن به سبد خرید';
-        this.quantityError = errorMessage;
-        console.error(err);
-        this.cdr.markForCheck();
-      }
-    })
+      this.basketService.addToBasket(dto).subscribe({
+        next: (response) => {
+          alert('محصول به سبد خرید اضافه شد');
+          this.quantityError = '';
+          this.cdr.markForCheck()
+        },
+        error: (err) => {
+          const errorMessage = err.Error?.message || 'خطا در افزودن به سبد خرید';
+          this.quantityError = errorMessage;
+          console.error(err);
+          this.cdr.markForCheck();
+        }
+      })
+    } else {
+
+      this.guestBasketService.addToCart({
+        productId: this.product.id,
+       quantity: this.quantity,
+        productName: this.product.productName,
+        finalPrice: this.finalPrice,
+        price: this.product.price,
+      })
+      alert('محصول به سبد خرید اضافه شد');
+    }
 
 
   }

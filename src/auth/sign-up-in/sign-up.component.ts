@@ -9,6 +9,7 @@ import { AuthPayload } from '../dto/signup-payload.interface';
 import {  debounceTime, distinctUntilChanged, filter, finalize, map, switchMap } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CartSyncService } from '../../basket/services/cartSync.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -37,6 +38,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private alertService: AlertService,
+      private cartSyncService: CartSyncService,
     private router: Router
   ) { }
 
@@ -208,13 +210,12 @@ submit() {
   };
 
   if (this.isSignUp) {
-
     this.authService.signup(payload).subscribe({
       next: res => {
         this.alertService.showAlert('success', res.message || 'ثبت‌نام موفقیت‌آمیز بود.')
         sessionStorage.setItem('accessToken', res.accessToken)
-        sessionStorage.removeItem('otpToken'); 
-        setTimeout(() => this.router.navigate(['/']), 1500)
+        sessionStorage.removeItem('otpToken');
+        this.afterLoginSuccess();
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.showAlert('error', err.error?.message || 'خطا در ثبت‌نام.')
@@ -225,14 +226,23 @@ submit() {
       next: res => {
         this.alertService.showAlert('success', res.message || 'ورود موفقیت‌آمیز بود.')
         sessionStorage.setItem('accessToken', res.accessToken)
-        sessionStorage.removeItem('otpToken'); 
-        setTimeout(() => this.router.navigate(['/']), 1500)
+        sessionStorage.removeItem('otpToken');
+        this.afterLoginSuccess();
       },
       error: (err: HttpErrorResponse) => {
         this.alertService.showAlert('error', err.error?.message || 'خطا در ورود.')
       }
     })
   }
+}
+
+private afterLoginSuccess() {
+  this.cartSyncService.syncGuestCartToServer().subscribe(result => {
+    if (!result.success) {
+      console.warn('بعضی آیتم‌ها sync نشدن', result.failedItems);
+    }
+    setTimeout(() => this.router.navigate(['/']), 1500);
+  });
 }
 
 
