@@ -82,6 +82,11 @@ export class ProductDetailService {
 
 
 
+    searchProducts(keyword: string): Observable<{ products: Product[] }> {
+    const params = new HttpParams().set('q', keyword);
+    return this.http.get<{ products: Product[] }>(`${this.apiUrl}/search`, { params });
+  }
+
 
 
 

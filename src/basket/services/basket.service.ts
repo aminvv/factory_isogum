@@ -6,6 +6,11 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { AddDiscountDto, AddToBasketDto, BasketResponse } from '../model/basket.model';
 import { API_CONFIG } from '../../common/api/api.config';
 
+
+
+
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +22,7 @@ export class BasketService {
 
   // دریافت سبد خرید و به‌روزرسانی BehaviorSubject
   getBasket(): Observable<BasketResponse> {
-    return this.http.get<BasketResponse>(API_CONFIG.baseUrl).pipe(
+    return this.http.get<BasketResponse>(`${API_CONFIG.baseUrl}/basket`).pipe(
       tap(basket => this.basketSubject.next(basket))
     );
   }
@@ -73,4 +78,25 @@ export class BasketService {
   private refreshBasket(): void {
     this.getBasket().subscribe();
   }
+
+
+
+
+updateQuantity(productId: number, quantity: number): Observable<any> {
+  return this.http.patch(`${API_CONFIG.baseUrl}/basket/update`, { productId, quantity }).pipe(
+    tap(() => this.refreshBasket())
+  );
+}
+
+
+
+
+
+
+
+
+
+
+  
+
 }

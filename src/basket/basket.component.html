@@ -57,9 +57,9 @@
       <div *ngFor="let product of basketData.products" class="product-item">
         <div class="product-info">
           <h4>{{ product.title }}</h4>
-          <div>قیمت واحد: {{ product.price | number }} تومان</div>
+          <div>قیمت واحد: {{ product.finalPrice| number }} تومان</div>
           <div>تعداد: {{ product.quantity }}</div>
-          <div *ngIf="product.discount">تخفیف: {{ product.discount }}%</div>
+          <div *ngIf="product.discountAmount">تخفیف: {{ product.discountAmount }}%</div>
         </div>
         <div class="product-actions">
           <button (click)="removeItem(product.id)">کاهش یک عدد</button>

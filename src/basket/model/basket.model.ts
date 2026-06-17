@@ -1,4 +1,6 @@
 
+
+
 export interface AddToBasketDto {
   productId: number;
   quantity: number;
@@ -12,9 +14,12 @@ export interface BasketProduct {
   id: number;
   slug: string;
   title: string;
-  discount: number | string; 
-  price: number;
+  originalPrice: number;
+  discountPercent: string | number | null;
+  discountAmount: string | number | null;
+  finalPrice: number;
   quantity: number;
+  image?: string; 
 }
 
 export interface BasketDiscount {
@@ -29,7 +34,47 @@ export interface BasketResponse {
   totalPrice: number;
   finalAmount: number;
   totalDiscountAmount: number;
+  avgDiscountPercent: number;
   products: BasketProduct[];
   discounts: BasketDiscount[];
-  productDiscounts: any[]; 
+  productDiscounts: any[];
 }
+
+
+
+export interface CartItem {
+  id: number;
+  slug: string;
+  name: string;
+  image: string| undefined;
+  price: number; 
+  discountType: BasketDiscountKind;
+  discountValue: number;
+  quantity: number;
+}
+
+
+
+export interface ItemPricing {
+  oldPrice: number;
+  newPrice: number;
+  discountAmount: number; 
+  hasDiscount: boolean;
+  lineOldTotal: number;
+  lineNewTotal: number;
+  lineDiscountTotal: number;
+}
+
+
+
+export interface CartTotals {
+  oldTotal: number;
+  newTotal: number;
+  discountTotal: number;
+  avgDiscountPercent: number;
+  hasAnyDiscount: boolean;
+}
+
+
+
+export type BasketDiscountKind = 'percent' | 'amount' | null;

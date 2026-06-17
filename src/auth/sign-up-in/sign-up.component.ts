@@ -6,10 +6,11 @@ import { AuthService } from '../service/Auth.service';
 import { AlertService } from '../../alert/service/alert.service';
 import { createSignUpForm } from '../form-config/signup-form.config';
 import { AuthPayload } from '../dto/signup-payload.interface';
-import {  debounceTime, distinctUntilChanged, filter, finalize, map, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CartSyncService } from '../../basket/services/cartSync.service';
+import { AuthStateService } from '../service/AuthStateSnapshot.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -38,8 +39,9 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private alertService: AlertService,
-      private cartSyncService: CartSyncService,
-    private router: Router
+    private cartSyncService: CartSyncService,
+    private router: Router,
+    private authStateService: AuthStateService
   ) { }
 
   ngOnInit() {
@@ -201,49 +203,51 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     });
   }
 
-submit() {
-  if (this.signupForm.invalid || !this.formValid) return;
+  submit() {
+    if (this.signupForm.invalid || !this.formValid) return;
 
-  const payload: AuthPayload = {
-    mobile: this.signupForm.value.mobile,
-    code: this.signupForm.value.code
-  };
+    const payload: AuthPayload = {
+      mobile: this.signupForm.value.mobile,
+      code: this.signupForm.value.code
+    };
 
-  if (this.isSignUp) {
-    this.authService.signup(payload).subscribe({
-      next: res => {
-        this.alertService.showAlert('success', res.message || 'ثبت‌نام موفقیت‌آمیز بود.')
-        sessionStorage.setItem('accessToken', res.accessToken)
-        sessionStorage.removeItem('otpToken');
-        this.afterLoginSuccess();
-      },
-      error: (err: HttpErrorResponse) => {
-        this.alertService.showAlert('error', err.error?.message || 'خطا در ثبت‌نام.')
-      }
-    });
-  } else {
-    this.authService.signIn(payload).subscribe({
-      next: res => {
-        this.alertService.showAlert('success', res.message || 'ورود موفقیت‌آمیز بود.')
-        sessionStorage.setItem('accessToken', res.accessToken)
-        sessionStorage.removeItem('otpToken');
-        this.afterLoginSuccess();
-      },
-      error: (err: HttpErrorResponse) => {
-        this.alertService.showAlert('error', err.error?.message || 'خطا در ورود.')
-      }
-    })
-  }
-}
-
-private afterLoginSuccess() {
-  this.cartSyncService.syncGuestCartToServer().subscribe(result => {
-    if (!result.success) {
-      console.warn('بعضی آیتم‌ها sync نشدن', result.failedItems);
+    if (this.isSignUp) {
+      this.authService.signup(payload).subscribe({
+        next: res => {
+          this.alertService.showAlert('success', res.message || 'ثبت‌نام موفقیت‌آمیز بود.')
+          sessionStorage.setItem('accessToken', res.accessToken)
+          sessionStorage.removeItem('otpToken');
+          this.authStateService.refresh();
+          this.afterLoginSuccess();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.alertService.showAlert('error', err.error?.message || 'خطا در ثبت‌نام.')
+        }
+      });
+    } else {
+      this.authService.signIn(payload).subscribe({
+        next: res => {
+          this.alertService.showAlert('success', res.message || 'ورود موفقیت‌آمیز بود.')
+          sessionStorage.setItem('accessToken', res.accessToken)
+          sessionStorage.removeItem('otpToken');
+          this.authStateService.refresh();
+          this.afterLoginSuccess();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.alertService.showAlert('error', err.error?.message || 'خطا در ورود.')
+        }
+      })
     }
-    setTimeout(() => this.router.navigate(['/']), 1500);
-  });
-}
+  }
+
+  private afterLoginSuccess() {
+    this.cartSyncService.syncGuestCartToServer().subscribe(result => {
+      if (!result.success) {
+        console.warn('بعضی آیتم‌ها sync نشدن', result.failedItems);
+      }
+      setTimeout(() => this.router.navigate(['/']), 1500);
+    });
+  }
 
 
   toggleForm(event?: Event) {

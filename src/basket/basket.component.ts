@@ -162,4 +162,5 @@ export class BasketComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
     this.successMessage = null;
   }
+  
 }

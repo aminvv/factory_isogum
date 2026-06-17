@@ -1,0 +1,130 @@
+<nav class="navbar">
+  <div class="navbar-container">
+
+    <!-- Logo -->
+    <div class="navbar-brand">
+      <a routerLink="/">فروشگاه</a>
+    </div>
+
+    <!-- Main links -->
+    <ul class="navbar-links">
+      <li><a routerLink="/">صفحه اصلی</a></li>
+      <li><a routerLink="/products">محصولات</a></li>
+      <li><a routerLink="/blog">وبلاگ</a></li>
+      <li><a routerLink="/about-us">درباره ما</a></li>
+      <li><a routerLink="/contact-us">تماس با ما</a></li>
+    </ul>
+
+    <!-- Search -->
+    <div class="navbar-search">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          placeholder="جستجوی محصول..."
+          [(ngModel)]="searchKeyword"
+          (input)="onSearchInput()"
+          (focus)="onSearchFocus()"
+        />
+      </div>
+
+      <div class="search-dropdown" *ngIf="isSearchDropdownOpen">
+
+        <div class="search-loading" *ngIf="searchLoading">در حال جستجو...</div>
+
+        <div class="search-empty" *ngIf="!searchLoading && searchResults.length === 0 && searchKeyword.trim().length >= 2">
+          نتیجه‌ای یافت نشد
+        </div>
+
+        <div
+          class="search-item"
+          *ngFor="let product of searchResults"
+          (click)="goToProduct(product)"
+        >
+          <img [src]="product.image?.[0]?.url || 'assets/default.jpg'" alt="{{ product.productName }}" />
+          <div class="search-item-info">
+            <span class="search-item-title">{{ product.productName }}</span>
+            <span class="search-item-price">{{ product.price | number }} تومان</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="navbar-actions">
+
+      <!-- Cart -->
+      <div
+        class="cart-wrapper"
+        (mouseenter)="onCartMouseEnter()"
+        (mouseleave)="onCartMouseLeave()"
+      >
+        <button class="icon-btn" (click)="onCartIconClick()" aria-label="سبد خرید">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="badge" *ngIf="cartSummary.itemsCount > 0">{{ cartSummary.itemsCount }}</span>
+        </button>
+
+        <div class="dropdown cart-dropdown" *ngIf="isCartDropdownOpen">
+
+          <div class="dropdown-header">
+            <span>سبد خرید</span>
+          </div>
+
+          <div class="dropdown-body">
+            <div class="state-text" *ngIf="loadingItems">در حال بارگذاری...</div>
+            <div class="state-text" *ngIf="!loadingItems && dropdownItems.length === 0">سبد خرید شما خالی است</div>
+
+            <div class="cart-item" *ngFor="let item of dropdownItems">
+              <div class="cart-item-info">
+                <span class="cart-item-title">{{ item.title }}</span>
+                <span class="cart-item-meta">{{ item.quantity }} × {{ item.price | number }} تومان</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dropdown-footer" *ngIf="dropdownItems.length > 0">
+            <div class="cart-total">
+              <span>جمع کل</span>
+              <span>{{ cartSummary.finalAmount | number }} تومان</span>
+            </div>
+            <button class="primary-btn" (click)="goToCheckout()">ادامه سفارش</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Auth -->
+      <div
+        class="auth-wrapper"
+        (mouseenter)="onAuthMouseEnter()"
+        (mouseleave)="onAuthMouseLeave()"
+      >
+        <button class="icon-btn auth-btn" (click)="onAuthIconClick()">
+          <i class="fas fa-user"></i>
+          <span class="auth-label" *ngIf="authState.isLoggedIn">
+            {{ authState.user?.fullName || authState.user?.mobile || 'حساب من' }}
+          </span>
+          <span class="auth-label" *ngIf="!authState.isLoggedIn">ورود / ثبت‌نام</span>
+        </button>
+
+        <div class="dropdown auth-dropdown" *ngIf="isAuthDropdownOpen && authState.isLoggedIn">
+          <button class="dropdown-link" (click)="goTo('/account/orders')">
+            <i class="fas fa-box"></i> سفارش‌ها
+          </button>
+          <button class="dropdown-link" (click)="goTo('/account/addresses')">
+            <i class="fas fa-map-marker-alt"></i> آدرس‌ها
+          </button>
+          <button class="dropdown-link" (click)="goTo('/account/comments')">
+            <i class="fas fa-comment"></i> نظرات
+          </button>
+          <button class="dropdown-link logout" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> خروج از حساب
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</nav>
