@@ -249,7 +249,7 @@ export class ProductDetailPageComponent implements OnInit {
       productId: this.product.id,
       quantity: this.quantity
     };
-   const isLoggedIn = sessionStorage.getItem('accessToken')
+    const isLoggedIn = sessionStorage.getItem('accessToken')
     if (isLoggedIn) {
 
       this.basketService.addToBasket(dto).subscribe({
@@ -266,13 +266,18 @@ export class ProductDetailPageComponent implements OnInit {
         }
       })
     } else {
-
+      const discount = this.product.discounts?.[0]; // یا هرجوری تخفیف معتبر رو پیدا می‌کنی
+      const discountType = discount?.percent ? 'percent' : (discount?.amount ? 'amount' : null);
+      const discountValue = discount?.percent ? Number(discount.percent) : Number(discount?.amount || 0);
       this.guestBasketService.addToCart({
         productId: this.product.id,
-       quantity: this.quantity,
+        quantity: this.quantity,
         productName: this.product.productName,
         finalPrice: this.finalPrice,
         price: this.product.price,
+        image: this.product.image?.[0]?.url,
+        discountType,
+        discountValue,
       })
       alert('محصول به سبد خرید اضافه شد');
     }

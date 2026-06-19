@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'persianNumber' })
 export class PersianNumberPipe implements PipeTransform {
-  transform(value: number | string): string {
+  transform(value: number | string |null): string {
     if (value == null) return '';
     
     // اگه عدد خالصه، فرمت هزارگان بزن

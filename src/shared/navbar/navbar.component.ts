@@ -3,18 +3,12 @@ import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil, catchError } from 'rxjs/operators';
 import { BasketService } from '../../basket/services/basket.service';
-import { BasketStateService, BasketSummary } from '../../basket/services/basket-state.service';
+import { BasketStateService, } from '../../basket/services/basket-state.service';
 import { GuestBasketService } from '../../basket/services/guest-basket.service';
 import { Product, ProductDetailService } from '../../product-detail-page/services/product-detail.service';
 import { GuestCartItem } from '../../basket/model/guest-basket.model';
 import { AuthStateService, AuthStateSnapshot } from '../../auth/service/AuthStateSnapshot.service';
-
-interface CartDropdownItem {
-  productId: number;
-  title: string;
-  quantity: number;
-  price: number;
-}
+import { CartItem, BasketDiscountKind, BasketProduct, BasketSummary } from '../../basket/model/basket.model';
 
 @Component({
   selector: 'app-navbar',
@@ -25,8 +19,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   // ---------- Cart ----------
-  cartSummary: BasketSummary = { itemsCount: 0, totalPrice: 0, finalAmount: 0 };
-  dropdownItems: CartDropdownItem[] = [];
+  cartSummary: BasketSummary = { itemsCount: 0, totalPrice: 0, finalAmount: 0, avgDiscountPercent: 0 };
+  dropdownItems: CartItem[] = [];
   isCartDropdownOpen = false;
   loadingItems = false;
 
@@ -40,7 +34,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isSearchDropdownOpen = false;
   searchLoading = false;
   private searchSubject = new Subject<string>();
-
   isMobile = false;
 
   constructor(
@@ -50,7 +43,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private authStateService: AuthStateService,
     private productService: ProductDetailService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.checkIsMobile();
@@ -58,6 +51,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.basketStateService.summary$
       .pipe(takeUntil(this.destroy$))
       .subscribe(summary => (this.cartSummary = summary));
+
+
+    this.basketStateService.items$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(items => (this.dropdownItems = items));
 
     this.authStateService.state$
       .pipe(takeUntil(this.destroy$))
@@ -95,6 +93,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isMobile = window.innerWidth <= 768;
   }
 
+
+
+  goToProductDetail(item: CartItem): void {
+  if (item.id) {
+    this.router.navigate(['/productDetail', item.id]);
+  } else if (item.slug) {
+    this.router.navigate(['/product', item.slug]);
+  }
+}
+
   // ================= Search =================
   onSearchInput(): void {
     this.isSearchDropdownOpen = true;
@@ -122,18 +130,41 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return this.authStateService.isLoggedIn();
   }
 
+  private mapBasketProductToCartItem(dto: BasketProduct): CartItem {
+    const percent = dto.discountPercent != null ? Number(dto.discountPercent) : 0;
+    const amount = dto.discountAmount != null ? Number(dto.discountAmount) : 0;
+
+    let discountType: BasketDiscountKind = null;
+    let discountValue = 0;
+
+    if (percent > 0) {
+      discountType = 'percent';
+      discountValue = percent;
+    } else if (amount > 0) {
+      discountType = 'amount';
+      discountValue = amount;
+    }
+
+    return {
+      id: dto.id,
+      slug: dto.slug,
+      name: dto.title,
+      image: dto.image,
+      price: Number(dto.originalPrice),
+      discountType,
+      discountValue,
+      quantity: dto.quantity,
+    };
+  }
+
   private loadDropdownItems(): void {
     this.loadingItems = true;
 
     if (this.isLoggedIn()) {
       this.basketService.getBasket().subscribe({
         next: res => {
-          this.dropdownItems = (res.products || []).map((p: any) => ({
-            productId: p.id,
-            title: p.title,
-            quantity: p.quantity,
-            price: p.price,
-          }));
+          this.dropdownItems = (res.products || []).map(p => this.mapBasketProductToCartItem(p));
+          console.log(this.dropdownItems);
           this.loadingItems = false;
         },
         error: () => {
@@ -143,25 +174,64 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
     } else {
       const guestItems: GuestCartItem[] = this.guestBasketService.getCart();
-      this.dropdownItems = guestItems.map(i => ({
-        productId: i.productId,
-        title: i.productName || '—',
+      this.dropdownItems = guestItems.map((i: any) => ({
+        id: i.productId,
+        slug: '',
+        name: i.productName || '—',
+        image: i.image,
+        price: i.price || 0,
+        discountType: i.discountType || null,
+        discountValue: i.discountValue || 0,
         quantity: i.quantity,
-        price: i.finalPrice ?? i.price ?? 0,
       }));
       this.loadingItems = false;
     }
   }
 
+  getItemNewPrice(item: CartItem): number {
+    if (item.discountType === 'percent' && item.discountValue > 0) {
+      const discount = Math.round(item.price * (item.discountValue / 100));
+      return Math.max(item.price - discount, 0);
+    }
+    if (item.discountType === 'amount' && item.discountValue > 0) {
+      return Math.max(item.price - item.discountValue, 0);
+    }
+    return item.price;
+  }
+
+
+
+  getItemLineTotal(item: CartItem): number {
+    return this.getItemNewPrice(item) * item.quantity;
+  }
+
+  getItemOldLineTotal(item: CartItem): number {
+    return item.price * item.quantity;
+  }
+
+
+  increaseItemQuantity(item: CartItem): void {
+    this.basketStateService.changeQuantity(item.id, 1);
+  }
+
+  decreaseItemQuantity(item: CartItem): void {
+    this.basketStateService.changeQuantity(item.id, -1);
+  }
+
+
+
+
+
   onCartMouseEnter(): void {
     if (this.isMobile) return;
     this.isCartDropdownOpen = true;
     this.loadDropdownItems();
+    this.basketStateService.refresh();
   }
 
   onCartMouseLeave(): void {
     if (this.isMobile) return;
-    this.isCartDropdownOpen = false;
+    this.isCartDropdownOpen = true;
   }
 
   onCartIconClick(): void {
@@ -169,6 +239,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isCartDropdownOpen = !this.isCartDropdownOpen;
     if (this.isCartDropdownOpen) {
       this.loadDropdownItems();
+      this.basketStateService.refresh();
     }
   }
 
@@ -181,7 +252,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.isLoggedIn()) {
       this.router.navigate(['/checkout/address']);
     } else {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/signup']);
     }
   }
 
@@ -198,7 +269,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onAuthIconClick(): void {
     if (!this.isLoggedIn()) {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/signup']);
       return;
     }
     if (this.isMobile) {

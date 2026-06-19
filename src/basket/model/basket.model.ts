@@ -77,4 +77,12 @@ export interface CartTotals {
 
 
 
+export interface BasketSummary {
+  itemsCount: number;
+  totalPrice: number;
+  finalAmount: number;
+  avgDiscountPercent: number; 
+}
+
+
 export type BasketDiscountKind = 'percent' | 'amount' | null;

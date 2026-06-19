@@ -60,6 +60,6 @@ export class AuthStateService {
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('otpToken');
     this.stateSubject.next(EMPTY_STATE);
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/signup']);
   }
 }

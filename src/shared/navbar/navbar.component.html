@@ -19,32 +19,24 @@
     <div class="navbar-search">
       <div class="search-box">
         <i class="fas fa-search search-icon"></i>
-        <input
-          type="text"
-          placeholder="جستجوی محصول..."
-          [(ngModel)]="searchKeyword"
-          (input)="onSearchInput()"
-          (focus)="onSearchFocus()"
-        />
+        <input type="text" placeholder="جستجوی محصول..." [(ngModel)]="searchKeyword" (input)="onSearchInput()"
+          (focus)="onSearchFocus()" />
       </div>
 
       <div class="search-dropdown" *ngIf="isSearchDropdownOpen">
 
         <div class="search-loading" *ngIf="searchLoading">در حال جستجو...</div>
 
-        <div class="search-empty" *ngIf="!searchLoading && searchResults.length === 0 && searchKeyword.trim().length >= 2">
+        <div class="search-empty"
+          *ngIf="!searchLoading && searchResults.length === 0 && searchKeyword.trim().length >= 2">
           نتیجه‌ای یافت نشد
         </div>
 
-        <div
-          class="search-item"
-          *ngFor="let product of searchResults"
-          (click)="goToProduct(product)"
-        >
+        <div class="search-item" *ngFor="let product of searchResults" (click)="goToProduct(product)">
           <img [src]="product.image?.[0]?.url || 'assets/default.jpg'" alt="{{ product.productName }}" />
           <div class="search-item-info">
             <span class="search-item-title">{{ product.productName }}</span>
-            <span class="search-item-price">{{ product.price | number }} تومان</span>
+            <span class="search-item-price">{{ product.price | persianNumber }} تومان</span>
           </div>
         </div>
 
@@ -55,20 +47,18 @@
     <div class="navbar-actions">
 
       <!-- Cart -->
-      <div
-        class="cart-wrapper"
-        (mouseenter)="onCartMouseEnter()"
-        (mouseleave)="onCartMouseLeave()"
-      >
+      <div class="cart-wrapper" (mouseenter)="onCartMouseEnter()" (mouseleave)="onCartMouseLeave()">
         <button class="icon-btn" (click)="onCartIconClick()" aria-label="سبد خرید">
           <i class="fas fa-shopping-cart"></i>
-          <span class="badge" *ngIf="cartSummary.itemsCount > 0">{{ cartSummary.itemsCount }}</span>
+          <span class="badge" *ngIf="cartSummary.itemsCount > 0">{{ cartSummary.itemsCount |persianNumber }}</span>
         </button>
 
         <div class="dropdown cart-dropdown" *ngIf="isCartDropdownOpen">
-
           <div class="dropdown-header">
-            <span>سبد خرید</span>
+            <span class="dropdown-header-title">خلاصه سبد خرید شما</span>
+            <span class="dropdown-header-count" *ngIf="cartSummary.itemsCount > 0">
+              {{ cartSummary.itemsCount |persianNumber }} کالا
+            </span>
           </div>
 
           <div class="dropdown-body">
@@ -76,30 +66,58 @@
             <div class="state-text" *ngIf="!loadingItems && dropdownItems.length === 0">سبد خرید شما خالی است</div>
 
             <div class="cart-item" *ngFor="let item of dropdownItems">
+              <img class="cart-item-image" *ngIf="item.image" [src]="item.image" [alt]="item.name"  (click)="goToProductDetail(item)"/>
+              <div class="cart-item-image-placeholder" *ngIf="!item.image"></div>
+
               <div class="cart-item-info">
-                <span class="cart-item-title">{{ item.title }}</span>
-                <span class="cart-item-meta">{{ item.quantity }} × {{ item.price | number }} تومان</span>
+                <span class="cart-item-title">{{ item.name }}</span>
+                <div class="cart-item-qty-control-price-row">
+
+                  <div class="cart-item-price-row">
+                    <ng-container *ngIf="item.discountType">
+                      <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
+                      <span class="cart-item-discount-label">
+                        <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue |
+                          persianNumber}}</ng-container>
+                        <ng-container *ngIf="item.discountType === 'amount'">{{ item.discountValue | persianNumber }}
+                          تخفیف تومان</ng-container>
+                      </span>
+                    </ng-container>
+                    <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
+                  </div>
+                  <div class="qty-control">
+                    <button *ngIf="item.quantity >1" type="button" class="qty-btn minus"
+                      (click)="decreaseItemQuantity(item)" [attr.aria-label]="'کم کردن یک عدد از ' + item.name">−</button>
+                    <button *ngIf="item.quantity === 1" (click)="decreaseItemQuantity(item)" class="btn-remove">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                    <span class="qty-value">{{ item.quantity }}</span>
+                    <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)"
+                      [attr.aria-label]="'اضافه کردن یک عدد ' + item.name">+</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="dropdown-footer" *ngIf="dropdownItems.length > 0">
-            <div class="cart-total">
-              <span>جمع کل</span>
-              <span>{{ cartSummary.finalAmount | number }} تومان</span>
-            </div>
-            <button class="primary-btn" (click)="goToCheckout()">ادامه سفارش</button>
-          </div>
+            <button class="primary-btn" (click)="goToCheckout()">ثبت سفارش</button>
 
+            <div class="cart-total">
+              <div class="cart-total-row" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
+                <span class="cart-total-old">{{ cartSummary.totalPrice | persianNumber }} تومان</span>
+                <span class="cart-total-discount">٪{{ cartSummary.avgDiscountPercent | number: '1.0-0' | persianNumber}}
+                </span>
+
+              </div>
+              <span class="cart-total-new">{{ cartSummary.finalAmount | persianNumber }} تومان</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Auth -->
-      <div
-        class="auth-wrapper"
-        (mouseenter)="onAuthMouseEnter()"
-        (mouseleave)="onAuthMouseLeave()"
-      >
+      <div class="auth-wrapper" (mouseenter)="onAuthMouseEnter()" (mouseleave)="onAuthMouseLeave()">
         <button class="icon-btn auth-btn" (click)="onAuthIconClick()">
           <i class="fas fa-user"></i>
           <span class="auth-label" *ngIf="authState.isLoggedIn">

@@ -3,17 +3,11 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { BasketService } from '../../basket/services/basket.service';
 import { GuestBasketService } from './guest-basket.service';
-import { BasketDiscountKind, BasketProduct, BasketResponse, CartItem } from '../model/basket.model';
+import { BasketDiscountKind, BasketProduct, BasketResponse, BasketSummary, CartItem } from '../model/basket.model';
 import { API_CONFIG } from '../../common/api/api.config';
 import { HttpClient } from '@angular/common/http';
 
-export interface BasketSummary {
-  itemsCount: number;
-  totalPrice: number;
-  finalAmount: number;
-}
-
-const EMPTY_SUMMARY: BasketSummary = { itemsCount: 0, totalPrice: 0, finalAmount: 0 };
+const EMPTY_SUMMARY: BasketSummary = { itemsCount: 0, totalPrice: 0, finalAmount: 0, avgDiscountPercent: 0 };
 
 @Injectable({ providedIn: 'root' })
 export class BasketStateService {
@@ -21,12 +15,11 @@ export class BasketStateService {
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
   private summarySubject = new BehaviorSubject<BasketSummary>(EMPTY_SUMMARY);
   private readonly itemsSubject = new BehaviorSubject<CartItem[]>([]);
-  
+
   readonly loading$: Observable<boolean> = this.loadingSubject.asObservable();
   readonly drawerOpen$: Observable<boolean> = this.drawerOpenSubject.asObservable();
   summary$ = this.summarySubject.asObservable();
 
-  // ✅ getter عمومی برای دسترسی به آیتم‌ها
   get items$(): Observable<CartItem[]> {
     return this.itemsSubject.asObservable();
   }
@@ -49,6 +42,7 @@ export class BasketStateService {
   }
 
   refresh(): void {
+    console.log('[basket] refresh() | isLoggedIn =', this.isLoggedIn());
     if (this.isLoggedIn()) {
       this.refreshFromServer();
     } else {
@@ -57,20 +51,20 @@ export class BasketStateService {
   }
 
   private refreshFromServer(): void {
-    this.basketService.getBasket().pipe(
-      tap((res: BasketResponse) => {
-        // ✅ تبدیل محصولات به CartItem
+    this.basketService.getBasket().subscribe({
+      next: (res: BasketResponse) => {
+        console.log('[basket] refreshFromServer response =', res);
         const items = (res.products || []).map((dto: BasketProduct) => this.mapBasketDtoToCartItem(dto));
         this.itemsSubject.next(items);
-        
         this.summarySubject.next({
           itemsCount: items.length,
           totalPrice: res.totalPrice || 0,
           finalAmount: res.finalAmount || 0,
+          avgDiscountPercent: res.avgDiscountPercent || 0,
         });
-      }),
-    ).subscribe({
-      error: () => {
+      },
+      error: (err) => {
+        console.error('[basket] refreshFromServer error =', err);
         this.summarySubject.next(EMPTY_SUMMARY);
         this.itemsSubject.next([]);
       },
@@ -81,8 +75,10 @@ export class BasketStateService {
     const items = this.guestBasketService.getCart();
     const totalPrice = items.reduce((sum, i) => sum + (i.price || 0) * i.quantity, 0);
     const finalAmount = items.reduce((sum, i) => sum + (i.finalPrice ?? i.price ?? 0) * i.quantity, 0);
+    const avgDiscountPercent = totalPrice > 0 ? ((totalPrice - finalAmount) / totalPrice) * 100 : 0;
 
-    // ✅ تبدیل به CartItem برای نمایش در دراپ‌داون
+    console.log('[basket] refreshGuestSummary =', { totalPrice, finalAmount, avgDiscountPercent });
+
     const cartItems: CartItem[] = items.map((item: any) => ({
       id: item.productId,
       slug: item.slug || '',
@@ -99,6 +95,7 @@ export class BasketStateService {
       itemsCount: items.length,
       totalPrice,
       finalAmount,
+      avgDiscountPercent,
     });
   }
 
@@ -117,10 +114,11 @@ export class BasketStateService {
           itemsCount: items.length,
           totalPrice: res.totalPrice || 0,
           finalAmount: res.finalAmount || 0,
+          avgDiscountPercent: res.avgDiscountPercent || 0,
         });
       }),
       catchError((err) => {
-        console.error('خطا در واکشی سبد خرید', err);
+        console.error('[basket] fetchBasket error =', err);
         return of([]);
       }),
       finalize(() => this.loadingSubject.next(false)),
@@ -128,7 +126,6 @@ export class BasketStateService {
   }
 
   mapBasketDtoToCartItem(dto: BasketProduct): CartItem {
-    // ✅ جلوگیری از undefined با مقدار پیش‌فرض
     const percent = dto.discountPercent != null ? Number(dto.discountPercent) : 0;
     const amount = dto.discountAmount != null ? Number(dto.discountAmount) : 0;
 
@@ -148,7 +145,7 @@ export class BasketStateService {
       slug: dto.slug || '',
       name: dto.title || 'نام محصول',
       image: dto.image || 'assets/default.jpg',
-      price: Number(dto.originalPrice || dto.finalPrice|| 0),
+      price: Number(dto.originalPrice || dto.finalPrice || 0),
       discountType,
       discountValue,
       quantity: dto.quantity || 1,
@@ -158,10 +155,14 @@ export class BasketStateService {
   changeQuantity(itemId: number, delta: 1 | -1): void {
     const current = this.itemsSubject.value;
     const target = current.find((i) => i.id === itemId);
-    if (!target) return;
+    if (!target) {
+      console.warn('[basket] changeQuantity: item not found', itemId);
+      return;
+    }
 
     const nextQty = target.quantity + delta;
     const previousSnapshot = [...current];
+    console.log('[basket] changeQuantity', { itemId, delta, nextQty });
 
     if (nextQty < 1) {
       this.itemsSubject.next(current.filter((i) => i.id !== itemId));
@@ -182,20 +183,25 @@ export class BasketStateService {
     rollbackSnapshot: CartItem[],
   ): void {
     if (!this.isLoggedIn()) {
+      console.log('[basket] updateQuantityOnServer: guest path');
       this.guestBasketService.updateQuantity(itemId, quantity);
       this.refreshGuestSummary();
       return;
     }
+
+    console.log('[basket] updateQuantityOnServer: PATCH /basket/update', { productId: itemId, quantity });
     this.http
-      .patch(`${API_CONFIG.baseUrl}/basket/${itemId}`, { quantity })
-      .pipe(
-        catchError((err) => {
-          console.error('خطا در بروزرسانی تعداد', err);
+      .patch(`${API_CONFIG.baseUrl}/basket/update`, { productId: itemId, quantity })
+      .subscribe({
+        next: (res) => {
+          console.log('[basket] PATCH success =', res);
+          this.refreshFromServer();
+        },
+        error: (err) => {
+          console.error('[basket] PATCH error =', err);
           this.itemsSubject.next(rollbackSnapshot);
-          return of(null);
-        }),
-      )
-      .subscribe();
+        },
+      });
   }
 
   private removeItemOnServer(itemId: number, rollbackSnapshot: CartItem[]): void {
@@ -205,20 +211,19 @@ export class BasketStateService {
       return;
     }
     this.http
-      .delete(`${API_CONFIG.baseUrl}/basket/${itemId}`)
-      .pipe(
-        catchError((err) => {
-          console.error('خطا در حذف آیتم', err);
+      .delete(`${API_CONFIG.baseUrl}/removeFromBasketById/${itemId}`)
+      .subscribe({
+        next: () => this.refreshFromServer(),
+        error: (err) => {
+          console.error('[basket] DELETE error =', err);
           this.itemsSubject.next(rollbackSnapshot);
-          return of(null);
-        }),
-      )
-      .subscribe();
+        },
+      });
   }
 
   openDrawer(): void {
     this.drawerOpenSubject.next(true);
-    this.fetchBasket().subscribe();
+    this.refresh();
   }
 
   closeDrawer(): void {
@@ -233,7 +238,6 @@ export class BasketStateService {
     return this.itemsSubject.value;
   }
 
-  // ✅ متد برای دسترسی به خلاصه فعلی (برای محاسبه میانگین تخفیف در کامپوننت)
   getCurrentSummary(): BasketSummary {
     return this.summarySubject.value;
   }
