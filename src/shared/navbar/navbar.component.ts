@@ -231,7 +231,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onCartMouseLeave(): void {
     if (this.isMobile) return;
-    this.isCartDropdownOpen = true;
+    this.isCartDropdownOpen = false;
   }
 
   onCartIconClick(): void {
@@ -242,6 +242,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.basketStateService.refresh();
     }
   }
+
+
+   goToBasket(){
+    this.router.navigate(['/checkout'])
+   }
 
   closeCartDropdown(): void {
     this.isCartDropdownOpen = false;
@@ -265,6 +270,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   onAuthMouseLeave(): void {
     if (this.isMobile) return;
     this.isAuthDropdownOpen = false;
+  }
+
+
+  get isCheckoutPage(){
+     return this.router.url.includes('/checkout')
   }
 
   onAuthIconClick(): void {

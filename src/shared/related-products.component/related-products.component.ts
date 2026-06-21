@@ -29,7 +29,6 @@ export class RelatedProductsComponent implements OnInit {
     this.loading = true;
     this.relatedService.getRelatedProducts(this.currentProductId).subscribe({
       next: (products) => {
-        console.log('ratings:', products.map(p => ({ name: p.productName, rating: p.rating }))); // ✅
         this.relatedProducts = products;
         this.loading = false;
         this.cdr.markForCheck();

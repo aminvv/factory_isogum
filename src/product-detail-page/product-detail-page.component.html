@@ -195,7 +195,7 @@
             </div>
 
             <div class="price-box">
-                <ng-container *ngIf="hasDiscount">
+                <ng-container *ngIf="hasDiscount; else noDiscount">
                     <div class="discount-info">
                         <span class="badge discount-badge" *ngIf="discountType === 'percent'">
                             <i class="fas fa-tag"></i> تخفیف {{ discountPercent | persianNumber }}%
@@ -337,4 +337,3 @@
 
 
 <app-footer></app-footer>
-<app-basket></app-basket>

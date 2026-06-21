@@ -1,8 +1,6 @@
-<!-- src/app/modules/basket/components/basket/basket.component.html -->
 <div class="basket-container">
   <h2>سبد خرید</h2>
 
-  <!-- نمایش پیام‌ها -->
   <div *ngIf="loading" class="loading">در حال بارگذاری...</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
   <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
@@ -41,42 +39,5 @@
     </form>
   </div>
 
-  <!-- نمایش سبد خرید -->
-  <div *ngIf="basketData" class="basket-content">
-    <div class="summary">
-      <div>قیمت کل: {{ basketData.totalPrice | number }} تومان</div>
-      <div>تخفیف کل: {{ basketData.totalDiscountAmount | number }} تومان</div>
-      <div><strong>قیمت نهایی: {{ basketData.finalAmount | number }} تومان</strong></div>
-    </div>
 
-    <div *ngIf="basketData.products.length === 0" class="empty-basket">
-      سبد خرید شما خالی است.
-    </div>
-
-    <div class="product-list">
-      <div *ngFor="let product of basketData.products" class="product-item">
-        <div class="product-info">
-          <h4>{{ product.title }}</h4>
-          <div>قیمت واحد: {{ product.finalPrice| number }} تومان</div>
-          <div>تعداد: {{ product.quantity }}</div>
-          <div *ngIf="product.discountAmount">تخفیف: {{ product.discountAmount }}%</div>
-        </div>
-        <div class="product-actions">
-          <button (click)="removeItem(product.id)">کاهش یک عدد</button>
-          <!-- در صورت دسترسی به id رکورد سبد (basket item id) می‌توانید از removeItemById استفاده کنید -->
-          <!-- اینجا نمونه‌ای از حذف کامل توسط id را نشان نمی‌دهیم چون در پاسخ API productId کافی است -->
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="basketData.discounts.length > 0" class="discounts-list">
-      <h4>تخفیف‌های اعمال شده:</h4>
-      <div *ngFor="let disc of basketData.discounts">
-        <span *ngIf="disc.percent">درصدی: {{ disc.percent }}%</span>
-        <span *ngIf="disc.amount">مبلغی: {{ disc.amount }} تومان</span>
-        <span>کد: {{ disc.code }}</span>
-        <span *ngIf="disc.type === 'product'"> (ویژه محصول)</span>
-      </div>
-    </div>
-  </div>
 </div>

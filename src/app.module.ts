@@ -19,7 +19,6 @@ import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ProductService } from './home/product-grid/services/product.service';
 import { CertificateComponent } from './home/certificate/certificate.component';
 import { SharedModule } from './shared/shared.module';
-import { FooterComponent } from './home/footer/footer.component';
 import { BasketComponent } from './basket/basket.component';
 
 
@@ -32,7 +31,6 @@ import { BasketComponent } from './basket/basket.component';
     ProductGridComponent,
     ProductDetailPageComponent,
     BlogSectionComponent,
-    FooterComponent,
     SignUpComponent,
     ProductDetailPageComponent,
     AlertComponent,

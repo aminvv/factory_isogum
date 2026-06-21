@@ -1,10 +1,11 @@
-// src/app/modules/basket/components/basket/basket.component.ts
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { BasketResponse, BasketSummary, CartItem } from './model/basket.model';
 import { BasketService } from './services/basket.service';
-import { BasketResponse } from './model/basket.model';
+import { BasketStateService } from './services/basket-state.service';
+import { AuthStateService } from '../auth/service/AuthStateSnapshot.service';
 
 @Component({
   selector: 'app-basket',
@@ -20,8 +21,17 @@ export class BasketComponent implements OnInit, OnDestroy {
   successMessage: string | null = null;
   private subscription = new Subscription();
 
+  // ---------- Cart dropdown-style state ----------
+  dropdownItems: CartItem[] = [];
+  isCartDropdownOpen = true; // این صفحه همیشه باز است، دراور کشویی نیست
+  loadingItems = false;
+  cartSummary: BasketSummary = { itemsCount: 0, totalPrice: 0, finalAmount: 0, avgDiscountPercent: 0 };
+
   constructor(
     private basketService: BasketService,
+    private basketStateService: BasketStateService,
+    private authStateService: AuthStateService,
+    private router: Router,
     private fb: FormBuilder
   ) {
     this.addProductForm = this.fb.group({
@@ -34,33 +44,14 @@ export class BasketComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadBasket();
-    // اشتراک‌گذاری برای به‌روزرسانی خودکار
-    this.subscription.add(
-      this.basketService.basket$.subscribe(data => {
-        this.basketData = data;
-      })
-    );
+
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  loadBasket(): void {
-    this.loading = true;
-    this.basketService.getBasket().subscribe({
-      next: () => {
-        this.loading = false;
-        this.clearMessages();
-      },
-      error: (err) => {
-        this.loading = false;
-        this.handleError(err);
-      }
-    });
-  }
-
+  // ================= Form actions (قدیمی، فرم تست) =================
   addProduct(): void {
     if (this.addProductForm.invalid) return;
     this.loading = true;
@@ -69,6 +60,7 @@ export class BasketComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.showSuccess('محصول با موفقیت به سبد خرید اضافه شد');
         this.addProductForm.reset({ productId: '', quantity: 1 });
+        this.basketStateService.refresh();
       },
       error: (err) => {
         this.loading = false;
@@ -85,6 +77,7 @@ export class BasketComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.showSuccess('کد تخفیف با موفقیت اعمال شد');
         this.discountForm.reset();
+        this.basketStateService.refresh();
       },
       error: (err) => {
         this.loading = false;
@@ -105,34 +98,7 @@ export class BasketComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.showSuccess('کد تخفیف با موفقیت حذف شد');
         this.discountForm.reset();
-      },
-      error: (err) => {
-        this.loading = false;
-        this.handleError(err);
-      }
-    });
-  }
-
-  removeItem(productId: number): void {
-    this.loading = true;
-    this.basketService.removeFromBasket(productId).subscribe({
-      next: () => {
-        this.loading = false;
-        this.showSuccess('یک عدد از محصول کاهش یافت');
-      },
-      error: (err) => {
-        this.loading = false;
-        this.handleError(err);
-      }
-    });
-  }
-
-  removeItemById(basketItemId: number): void {
-    this.loading = true;
-    this.basketService.removeFromBasketById(basketItemId).subscribe({
-      next: () => {
-        this.loading = false;
-        this.showSuccess('آیتم از سبد خرید حذف شد');
+        this.basketStateService.refresh();
       },
       error: (err) => {
         this.loading = false;
@@ -158,9 +124,6 @@ export class BasketComponent implements OnInit, OnDestroy {
     setTimeout(() => (this.successMessage = null), 3000);
   }
 
-  private clearMessages(): void {
-    this.errorMessage = null;
-    this.successMessage = null;
-  }
-  
+  // ================= Cart item helpers (همان منطق navbar) =================
+
 }

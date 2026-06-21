@@ -77,7 +77,6 @@ export class BasketStateService {
     const finalAmount = items.reduce((sum, i) => sum + (i.finalPrice ?? i.price ?? 0) * i.quantity, 0);
     const avgDiscountPercent = totalPrice > 0 ? ((totalPrice - finalAmount) / totalPrice) * 100 : 0;
 
-    console.log('[basket] refreshGuestSummary =', { totalPrice, finalAmount, avgDiscountPercent });
 
     const cartItems: CartItem[] = items.map((item: any) => ({
       id: item.productId,
@@ -102,6 +101,10 @@ export class BasketStateService {
   reset(): void {
     this.summarySubject.next(EMPTY_SUMMARY);
     this.itemsSubject.next([]);
+      if (!this.isLoggedIn()) {
+    this.guestBasketService.clearCart(); 
+  
+  }
   }
 
   fetchBasket(): Observable<CartItem[]> {

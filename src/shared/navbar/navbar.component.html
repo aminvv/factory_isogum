@@ -47,73 +47,15 @@
     <div class="navbar-actions">
 
       <!-- Cart -->
-      <div class="cart-wrapper" (mouseenter)="onCartMouseEnter()" (mouseleave)="onCartMouseLeave()">
-        <button class="icon-btn" (click)="onCartIconClick()" aria-label="سبد خرید">
+      <div class="cart-wrapper" (click)="!isCheckoutPage && goToBasket()" (mouseenter)="!isCheckoutPage &&onCartMouseEnter()"
+        (mouseleave)="!isCheckoutPage && onCartMouseLeave()">
+        <button class="icon-btn" (click)="!isCheckoutPage &&  onCartIconClick()" aria-label="سبد خرید">
           <i class="fas fa-shopping-cart"></i>
           <span class="badge" *ngIf="cartSummary.itemsCount > 0">{{ cartSummary.itemsCount |persianNumber }}</span>
         </button>
 
-        <div class="dropdown cart-dropdown" *ngIf="isCartDropdownOpen">
-          <div class="dropdown-header">
-            <span class="dropdown-header-title">خلاصه سبد خرید شما</span>
-            <span class="dropdown-header-count" *ngIf="cartSummary.itemsCount > 0">
-              {{ cartSummary.itemsCount |persianNumber }} کالا
-            </span>
-          </div>
-
-          <div class="dropdown-body">
-            <div class="state-text" *ngIf="loadingItems">در حال بارگذاری...</div>
-            <div class="state-text" *ngIf="!loadingItems && dropdownItems.length === 0">سبد خرید شما خالی است</div>
-
-            <div class="cart-item" *ngFor="let item of dropdownItems">
-              <img class="cart-item-image" *ngIf="item.image" [src]="item.image" [alt]="item.name"  (click)="goToProductDetail(item)"/>
-              <div class="cart-item-image-placeholder" *ngIf="!item.image"></div>
-
-              <div class="cart-item-info">
-                <span class="cart-item-title">{{ item.name }}</span>
-                <div class="cart-item-qty-control-price-row">
-
-                  <div class="cart-item-price-row">
-                    <ng-container *ngIf="item.discountType">
-                      <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
-                      <span class="cart-item-discount-label">
-                        <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue |
-                          persianNumber}}</ng-container>
-                        <ng-container *ngIf="item.discountType === 'amount'">{{ item.discountValue | persianNumber }}
-                          تخفیف تومان</ng-container>
-                      </span>
-                    </ng-container>
-                    <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
-                  </div>
-                  <div class="qty-control">
-                    <button *ngIf="item.quantity >1" type="button" class="qty-btn minus"
-                      (click)="decreaseItemQuantity(item)" [attr.aria-label]="'کم کردن یک عدد از ' + item.name">−</button>
-                    <button *ngIf="item.quantity === 1" (click)="decreaseItemQuantity(item)" class="btn-remove">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
-                    <span class="qty-value">{{ item.quantity }}</span>
-                    <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)"
-                      [attr.aria-label]="'اضافه کردن یک عدد ' + item.name">+</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="dropdown-footer" *ngIf="dropdownItems.length > 0">
-            <button class="primary-btn" (click)="goToCheckout()">ثبت سفارش</button>
-
-            <div class="cart-total">
-              <div class="cart-total-row" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
-                <span class="cart-total-old">{{ cartSummary.totalPrice | persianNumber }} تومان</span>
-                <span class="cart-total-discount">٪{{ cartSummary.avgDiscountPercent | number: '1.0-0' | persianNumber}}
-                </span>
-
-              </div>
-              <span class="cart-total-new">{{ cartSummary.finalAmount | persianNumber }} تومان</span>
-            </div>
-          </div>
-        </div>
+        <app-checkout-basket-cart mode="dropdown" [isCartDropdownOpen]="isCartDropdownOpen">
+        </app-checkout-basket-cart>
       </div>
 
       <!-- Auth -->

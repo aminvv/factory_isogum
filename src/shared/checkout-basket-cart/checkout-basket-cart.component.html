@@ -1,0 +1,174 @@
+
+
+
+<app-navbar *ngIf="mode === 'page'"></app-navbar>
+
+<!-- ===================== سبد خرید (حالت صفحه) ===================== -->
+<div class="cart-wrapper" [class.page-mode]="mode === 'page'" [class.dropdown-mode]="mode === 'dropdown'">
+
+  <!-- دراپ‌داون / صفحه -->
+  <div class="cart-dropdown" *ngIf="isCartDropdownOpen || mode === 'page'">
+
+    <!-- هدر -->
+    <div class="dropdown-header" *ngIf="mode === 'dropdown'">
+      <span class="dropdown-header-title">سبد خرید شما</span>
+      <span class="dropdown-header-count" *ngIf="cartSummary.itemsCount > 0">
+        {{ cartSummary.itemsCount | persianNumber }} کالا
+      </span>
+
+    </div>
+
+    <!-- بدنه اصلی -->
+    <div class="dropdown-body">
+
+      <!-- ===== حالت صفحه (Page) ===== -->
+      <ng-container *ngIf="mode === 'page'">
+
+        <!-- لیست کالاها (سمت راست) -->
+        <div class="cart-items-list">
+          <div class="dropdown-header">
+            <span class="dropdown-header-title">سبد خرید شما</span>
+            <div class="all-btn--count">
+              <span class="dropdown-header-count" *ngIf="cartSummary.itemsCount > 0">
+                {{ cartSummary.itemsCount | persianNumber }} کالا
+              </span>
+              <button class="clear-all-btn" (click)="clearAllItems()" *ngIf="dropdownItems.length > 0"
+                title="حذف همه کالاها">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+          <div class="state-text" *ngIf="loadingItems">در حال بارگذاری...</div>
+          <div class="state-text" *ngIf="!loadingItems && dropdownItems.length === 0">سبد خرید شما خالی است</div>
+
+
+          <div class="cart-item" *ngFor="let item of dropdownItems">
+            <img class="cart-item-image" *ngIf="item.image" [src]="item.image" [alt]="item.name"
+              (click)="goToProductDetail(item)" />
+            <div class="cart-item-image-placeholder" *ngIf="!item.image"></div>
+
+            <div class="cart-item-info">
+              <span class="cart-item-title">{{ item.name }}</span>
+              <div class="cart-item-qty-control-price-row">
+              </div>
+            </div>
+            <div>
+              <div class="cart-item-price-row">
+                <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
+                <ng-container *ngIf="item.discountType">
+                  <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
+                </ng-container>
+                <span class="cart-item-discount-label" *ngIf="item.discountType">
+                  <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue | persianNumber
+                    }}</ng-container>
+                  <ng-container *ngIf="item.discountType === 'amount'">{{ item.discountValue | persianNumber }} تومان
+                    تخفیف</ng-container>
+                </span>
+              </div>
+
+              <div class="qty-control">
+                <button *ngIf="item.quantity > 1" type="button" class="qty-btn minus"
+                  (click)="decreaseItemQuantity(item)">−</button>
+                <button *ngIf="item.quantity === 1" (click)="decreaseItemQuantity(item)" class="btn-remove">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- باکس جزئیات پرداخت (سمت چپ) -->
+        <div class="order-summary-box" *ngIf="dropdownItems.length > 0">
+          <div class="summary-title">جزئیات پرداخت</div>
+
+          <div class="summary-row">
+            <span class="label">مجموع قیمت کالاها ({{ cartSummary.itemsCount }} کالا)</span>
+            <span class="value">{{ cartSummary.totalPrice | persianNumber }} تومان</span>
+          </div>
+
+          <div class="summary-row summary-row-Profit" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
+            <span class="label">سود شما از خرید</span>
+            <span class="value discount">{{ (cartSummary.totalPrice - cartSummary.finalAmount) | persianNumber }}
+              تومان</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span>مجموع سبد خرید</span>
+            <span class="price">{{ cartSummary.finalAmount | persianNumber }} تومان</span>
+          </div>
+
+          <button class="primary-btn" (click)="goToCheckout()">ثبت سفارش</button>
+
+          <div class="summary-note">
+            مبلغ سفارش هنوز پرداخت نشده و در صورت اتمام موجودی، کالاها از سبد حذف می‌شوند.
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ===== حالت Dropdown (همان حالت قبلی) ===== -->
+      <ng-container *ngIf="mode === 'dropdown'">
+        <!-- لیست آیتم‌ها برای dropdown -->
+        <div class="state-text" *ngIf="loadingItems">در حال بارگذاری...</div>
+        <div class="state-text" *ngIf="!loadingItems && dropdownItems.length === 0">سبد خرید شما خالی است</div>
+
+        <div class="cart-item" *ngFor="let item of dropdownItems">
+          <img class="cart-item-image" *ngIf="item.image" [src]="item.image" [alt]="item.name"
+            (click)="goToProductDetail(item)" />
+          <div class="cart-item-image-placeholder" *ngIf="!item.image"></div>
+          <div class="cart-item-info">
+            <span class="cart-item-title">{{ item.name }}</span>
+            <div class="cart-item-qty-control-price-row">
+              <div class="cart-item-price-row">
+                <ng-container *ngIf="item.discountType">
+                  <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
+                  <span class="cart-item-discount-label">
+                    <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue | persianNumber
+                      }}</ng-container>
+                    <ng-container *ngIf="item.discountType === 'amount'">{{ item.discountValue | persianNumber }} تومان
+                      تخفیف</ng-container>
+                  </span>
+                </ng-container>
+                <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
+              </div>
+              <div class="qty-control">
+                <button *ngIf="item.quantity > 1" type="button" class="qty-btn minus"
+                  (click)="decreaseItemQuantity(item)">−</button>
+                <button *ngIf="item.quantity === 1" (click)="decreaseItemQuantity(item)" class="btn-remove">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </ng-container>
+    </div>
+    <ng-container *ngIf="mode === 'dropdown'">
+
+      <!-- فوتر dropdown -->
+      <div class="dropdown-footer" *ngIf="dropdownItems.length > 0">
+        <button class="primary-btn" (click)="goToCheckout()">ثبت سفارش</button>
+        <div class="cart-total">
+          <div class="cart-total-row" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
+            <span class="cart-total-old">{{ cartSummary.totalPrice | persianNumber }} تومان</span>
+            <span class="cart-total-discount">٪{{ cartSummary.avgDiscountPercent | number: '1.0-0' | persianNumber
+              }}</span>
+          </div>
+          <span class="cart-total-new">{{ cartSummary.finalAmount | persianNumber }} تومان</span>
+        </div>
+      </div>
+    </ng-container>
+
+
+
+  </div>
+</div>
+
+<app-footer *ngIf="mode === 'page'"></app-footer>

@@ -10,32 +10,38 @@ import { CommentComponent } from './product-comment.page/comment.component';
 import { RelatedProductsComponent } from './related-products.component/related-products.component';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
+import { CheckoutBasketCartComponent } from './checkout-basket-cart/checkout-basket-cart.component';
+import { FooterComponent } from '../home/footer/footer.component';
 
 @NgModule({
   declarations: [
     CommentComponent,
-    RelatedProductsComponent,  
-    NavbarComponent, 
-    JalaliPipe,         
-    PersianNumberPipe,  
-    SafeHtmlPipe        
+    RelatedProductsComponent,
+    NavbarComponent,
+    JalaliPipe,
+    PersianNumberPipe,
+    SafeHtmlPipe,
+    CheckoutBasketCartComponent,
+    FooterComponent, 
     
   ],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
-    ReactiveFormsModule,   
-
+    ReactiveFormsModule,
+    
   ],
   exports: [
     JalaliPipe,
     PersianNumberPipe,
     SafeHtmlPipe,
-    RelatedProductsComponent,   
+    RelatedProductsComponent,
     NavbarComponent,
     CommentComponent,
-    RouterModule      
+    RouterModule,
+    CheckoutBasketCartComponent,
+    FooterComponent, 
   ]
 })
 export class SharedModule { }

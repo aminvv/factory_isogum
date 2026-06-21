@@ -38,7 +38,6 @@ export class ProductGridComponent implements AfterViewInit, OnInit {
         this.products = res.products;
         this.totalProducts = res.pagination.totalCount;
         this.hasMoreProducts = this.products.length < this.totalProducts;
-        console.log('📦 Products loaded:', this.products);
         this.isLoading = false;
       },
       error: (err) => {
