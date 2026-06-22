@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { BasketService } from '../../basket/services/basket.service';
 import { GuestBasketService } from './guest-basket.service';
@@ -16,6 +16,9 @@ export class BasketStateService {
   private summarySubject = new BehaviorSubject<BasketSummary>(EMPTY_SUMMARY);
   private readonly itemsSubject = new BehaviorSubject<CartItem[]>([]);
 
+
+  private quantityErrorSubject = new Subject<{ itemId: number; message: string } | null>();
+  readonly quantityError$ = this.quantityErrorSubject.asObservable();
   readonly loading$: Observable<boolean> = this.loadingSubject.asObservable();
   readonly drawerOpen$: Observable<boolean> = this.drawerOpenSubject.asObservable();
   summary$ = this.summarySubject.asObservable();
@@ -71,40 +74,54 @@ export class BasketStateService {
     });
   }
 
-  private refreshGuestSummary(): void {
-    const items = this.guestBasketService.getCart();
-    const totalPrice = items.reduce((sum, i) => sum + (i.price || 0) * i.quantity, 0);
-    const finalAmount = items.reduce((sum, i) => sum + (i.finalPrice ?? i.price ?? 0) * i.quantity, 0);
-    const avgDiscountPercent = totalPrice > 0 ? ((totalPrice - finalAmount) / totalPrice) * 100 : 0;
+private refreshGuestSummary(): void {
+  const items = this.guestBasketService.getCart();
+
+  const totalPrice = items.reduce(
+    (sum, i) => sum + (i.price || 0) * i.quantity,
+    0
+  );
+
+  const finalAmount = items.reduce(
+    (sum, i) => sum + (i.finalPrice ?? i.price ?? 0) * i.quantity,
+    0
+  );
+
+  const avgDiscountPercent =
+    totalPrice > 0
+      ? ((totalPrice - finalAmount) / totalPrice) * 100
+      : 0;
 
 
-    const cartItems: CartItem[] = items.map((item: any) => ({
-      id: item.productId,
-      slug: item.slug || '',
-      name: item.productName || 'نام محصول',
-      image: item.image || 'assets/default.jpg',
-      price: item.price || 0,
-      discountType: item.discountType || null,
-      discountValue: item.discountValue || 0,
-      quantity: item.quantity,
-    }));
-    this.itemsSubject.next(cartItems);
+  const cartItems: CartItem[] = items.map((item: any) => ({
+    id: item.productId,
+    slug: item.slug || '',
+    name: item.productName || 'نام محصول',
+    image: item.image || 'assets/default.jpg',
+    price: item.price || 0,
+    discountType: item.discountType || null,
+    discountValue: item.discountValue || 0,
+    quantity: item.quantity,
+    stock: item.stock ?? 100000,
+  }));
 
-    this.summarySubject.next({
-      itemsCount: items.length,
-      totalPrice,
-      finalAmount,
-      avgDiscountPercent,
-    });
-  }
+  this.itemsSubject.next(cartItems);
+
+  this.summarySubject.next({
+    itemsCount: items.length,
+    totalPrice,
+    finalAmount,
+    avgDiscountPercent,
+  });
+}
 
   reset(): void {
     this.summarySubject.next(EMPTY_SUMMARY);
     this.itemsSubject.next([]);
-      if (!this.isLoggedIn()) {
-    this.guestBasketService.clearCart(); 
-  
-  }
+    if (!this.isLoggedIn()) {
+      this.guestBasketService.clearCart();
+
+    }
   }
 
   fetchBasket(): Observable<CartItem[]> {
@@ -128,57 +145,138 @@ export class BasketStateService {
     ) as unknown as Observable<CartItem[]>;
   }
 
-  mapBasketDtoToCartItem(dto: BasketProduct): CartItem {
-    const percent = dto.discountPercent != null ? Number(dto.discountPercent) : 0;
-    const amount = dto.discountAmount != null ? Number(dto.discountAmount) : 0;
+mapBasketDtoToCartItem(dto: BasketProduct): CartItem {
 
-    let discountType: BasketDiscountKind = null;
-    let discountValue = 0;
+  const percent = dto.discountPercent != null
+    ? Number(dto.discountPercent)
+    : 0;
 
-    if (percent > 0) {
-      discountType = 'percent';
-      discountValue = percent;
-    } else if (amount > 0) {
-      discountType = 'amount';
-      discountValue = amount;
-    }
+  const amount = dto.discountAmount != null
+    ? Number(dto.discountAmount)
+    : 0;
 
-    return {
-      id: dto.id || 0,
-      slug: dto.slug || '',
-      name: dto.title || 'نام محصول',
-      image: dto.image || 'assets/default.jpg',
-      price: Number(dto.originalPrice || dto.finalPrice || 0),
-      discountType,
-      discountValue,
-      quantity: dto.quantity || 1,
-    };
+
+  let discountType: BasketDiscountKind = null;
+  let discountValue = 0;
+
+
+  if (percent > 0) {
+    discountType = 'percent';
+    discountValue = percent;
+
+  } else if (amount > 0) {
+    discountType = 'amount';
+    discountValue = amount;
   }
 
-  changeQuantity(itemId: number, delta: 1 | -1): void {
-    const current = this.itemsSubject.value;
-    const target = current.find((i) => i.id === itemId);
-    if (!target) {
-      console.warn('[basket] changeQuantity: item not found', itemId);
-      return;
-    }
 
-    const nextQty = target.quantity + delta;
-    const previousSnapshot = [...current];
-    console.log('[basket] changeQuantity', { itemId, delta, nextQty });
+  return {
+    id: dto.id || 0,
+    slug: dto.slug || '',
+    name: dto.title || 'نام محصول',
+    image: dto.image || 'assets/default.jpg',
+    price: Number(dto.originalPrice || dto.finalPrice || 0),
+    discountType,
+    discountValue,
+    quantity: dto.quantity || 1,
+    stock: dto.stock ?? 100000
+  };
+}
 
-    if (nextQty < 1) {
-      this.itemsSubject.next(current.filter((i) => i.id !== itemId));
-      this.removeItemOnServer(itemId, previousSnapshot);
-      return;
-    }
 
-    const updated = current.map((i) =>
-      i.id === itemId ? { ...i, quantity: nextQty } : i,
+
+changeQuantity(itemId: number, delta: 1 | -1): void {
+  const current = this.itemsSubject.value;
+
+  const target = current.find((i) => i.id === itemId);
+
+  if (!target) {
+    console.warn('[basket] changeQuantity: item not found', itemId);
+    return;
+  }
+
+  const nextQty = target.quantity + delta;
+  const previousSnapshot = [...current];
+
+
+  if (nextQty < 1) {
+    this.itemsSubject.next(
+      current.filter((i) => i.id !== itemId)
     );
-    this.itemsSubject.next(updated);
-    this.updateQuantityOnServer(itemId, nextQty, previousSnapshot);
+
+    this.removeItemOnServer(itemId, previousSnapshot);
+    return;
   }
+
+
+  if (delta === 1 && nextQty > (target.stock ?? 100000)) {
+    this.quantityErrorSubject.next({
+      itemId,
+      message: `حداکثر ${target.stock} عدد موجود است`
+    });
+    return;
+  }
+
+
+  // تغییر لحظه‌ای UI
+  const updated = current.map((i) =>
+    i.id === itemId
+      ? { ...i, quantity: nextQty }
+      : i
+  );
+
+  this.itemsSubject.next(updated);
+
+
+
+  if (this.isLoggedIn()) {
+
+    if (delta === 1) {
+
+      // افزایش تعداد
+      this.basketService.addToBasket({
+        productId: itemId,
+        quantity: 1
+      }).subscribe({
+        next: () => this.refreshFromServer(),
+
+        error: (err) => {
+          console.error('addToBasket error', err);
+          this.itemsSubject.next(previousSnapshot);
+        }
+      });
+
+
+    } else {
+
+      // کاهش تعداد
+      this.basketService.updateQuantity(
+        itemId,
+        nextQty
+      ).subscribe({
+        next: () => this.refreshFromServer(),
+
+        error: (err) => {
+          console.error('updateQuantity error', err);
+          this.itemsSubject.next(previousSnapshot);
+        }
+      });
+
+    }
+
+
+  } else {
+
+    // مهمان
+    this.guestBasketService.updateQuantity(
+      itemId,
+      nextQty
+    );
+
+    this.refreshGuestSummary();
+
+  }
+}
 
   private updateQuantityOnServer(
     itemId: number,

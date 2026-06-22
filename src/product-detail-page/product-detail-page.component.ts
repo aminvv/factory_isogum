@@ -5,6 +5,7 @@ import { CommentStats } from '../shared/product-comment.page/model/comment.model
 import { BasketService } from '../basket/services/basket.service';
 import { AddToBasketDto } from '../basket/model/basket.model';
 import { GuestBasketService } from '../basket/services/guest-basket.service';
+import { BasketStateService } from '../basket/services/basket-state.service';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -51,6 +52,8 @@ export class ProductDetailPageComponent implements OnInit {
   averageCommentRatingFromComments: number = 0;
   activeTab: string = 'specs';
 
+  currentQuantityInCart: number = 0
+
   private persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
   constructor(
@@ -58,6 +61,7 @@ export class ProductDetailPageComponent implements OnInit {
     private productService: ProductDetailService,
     private basketService: BasketService,
     private guestBasketService: GuestBasketService,
+    private basketStateService: BasketStateService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
@@ -71,8 +75,17 @@ export class ProductDetailPageComponent implements OnInit {
         this.cdr.markForCheck();
       }
     });
+
+
     this.updateDisplay();
+
+
+    this.basketStateService.items$.subscribe(items => {
+      const found = items.find(i => i.id === this.product?.id);
+      this.currentQuantityInCart = found?.quantity || 0;
+    });
   }
+
 
   loadProduct(id: string): void {
     this.productService.getProductById(id).subscribe({
@@ -237,38 +250,59 @@ export class ProductDetailPageComponent implements OnInit {
 
 
 
-  addToCart(): void {
 
-    if (!this.product) return
+
+
+  addToCart(): void {
+    if (!this.product) return;
+    const items = this.basketStateService.currentItems; 
+    const found = items.find(i => i.id === this.product?.id);
+    this.currentQuantityInCart = found?.quantity || 0;
+
+    const totalAfterAdd = this.currentQuantityInCart + this.quantity;
+
+
+    if (totalAfterAdd > this.product.quantity) {
+      const available = this.product.quantity - this.currentQuantityInCart;
+      if (available <= 0) {
+        this.quantityError = `این محصول به حداکثر تعداد در سبد رسیده`;
+      } else {
+        this.quantityError = `تنها ${available} عدد دیگر قابل افزودن است`;
+      }
+      this.cdr.markForCheck();
+      return;
+    }
+
     if (this.quantity > this.product.quantity) {
       this.quantityError = `حداکثر ${this.product.quantity} عدد موجود است`;
-      this.cdr.markForCheck()
-      return
+      this.cdr.markForCheck();
+      return;
     }
+
     const dto: AddToBasketDto = {
       productId: this.product.id,
       quantity: this.quantity
     };
-    const isLoggedIn = sessionStorage.getItem('accessToken')
-    if (isLoggedIn) {
 
+    const isLoggedIn = sessionStorage.getItem('accessToken');
+    if (isLoggedIn) {
       this.basketService.addToBasket(dto).subscribe({
-        next: (response) => {
+        next: () => {
           alert('محصول به سبد خرید اضافه شد');
           this.quantityError = '';
-          this.cdr.markForCheck()
+          this.basketStateService.refresh();
+          this.cdr.markForCheck();
         },
         error: (err) => {
-          const errorMessage = err.Error?.message || 'خطا در افزودن به سبد خرید';
-          this.quantityError = errorMessage;
-          console.error(err);
+          this.quantityError = err.error?.message || 'خطا در افزودن به سبد خرید';
           this.cdr.markForCheck();
         }
-      })
+      });
     } else {
-      const discount = this.product.discounts?.[0]; // یا هرجوری تخفیف معتبر رو پیدا می‌کنی
+      const discount = this.product.discounts?.[0];
       const discountType = discount?.percent ? 'percent' : (discount?.amount ? 'amount' : null);
       const discountValue = discount?.percent ? Number(discount.percent) : Number(discount?.amount || 0);
+
       this.guestBasketService.addToCart({
         productId: this.product.id,
         quantity: this.quantity,
@@ -278,11 +312,13 @@ export class ProductDetailPageComponent implements OnInit {
         image: this.product.image?.[0]?.url,
         discountType,
         discountValue,
-      })
+        stock: this.product.quantity,
+      });
+
       alert('محصول به سبد خرید اضافه شد');
+      this.quantityError = '';
+      this.cdr.markForCheck();
     }
-
-
   }
 
   // ---------- تبدیل اعداد ----------

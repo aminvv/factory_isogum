@@ -20,6 +20,7 @@ export interface BasketProduct {
   finalPrice: number;
   quantity: number;
   image?: string; 
+  stock?: number
 }
 
 export interface BasketDiscount {
@@ -41,16 +42,16 @@ export interface BasketResponse {
 }
 
 
-
 export interface CartItem {
   id: number;
   slug: string;
   name: string;
-  image: string| undefined;
-  price: number; 
+  image: string | undefined;
+  price: number;
   discountType: BasketDiscountKind;
   discountValue: number;
   quantity: number;
+  stock: number;
 }
 
 

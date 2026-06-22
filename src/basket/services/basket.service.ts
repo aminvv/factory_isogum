@@ -53,13 +53,10 @@ export class BasketService {
     );
   }
 
-  // حذف یک واحد از محصول با استفاده از productId (بدن درخواست)
-  removeFromBasket(productId: number): Observable<any> {
-    return this.http.delete(`${API_CONFIG.baseUrl}/removeFromBasket`, { body: { productId } }).pipe(
-      tap(() => this.refreshBasket())
-    );
-  }
-
+removeFromBasket(productId: number): Observable<any> {
+  return this.http.delete(`${API_CONFIG.baseUrl}/removeFromBasket`, { body: { productId } });
+}
+ 
   // حذف کامل یک آیتم از سبد خرید با استفاده از id رکورد سبد
   removeFromBasketById(id: number): Observable<any> {
     return this.http.delete(`${API_CONFIG.baseUrl}/removeFromBasketById/${id}`).pipe(

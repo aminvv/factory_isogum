@@ -144,6 +144,56 @@
   font-size: 0.9rem;
 }
 
+
+
+/* در فایل استایل کامپوننت */
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: all 0.3s ease;
+  margin: 20px 0;
+}
+
+.empty-cart-icon {
+  font-size: 72px;
+  color: #d1d5db;
+  margin-bottom: 12px;
+}
+
+.empty-cart-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.empty-cart-desc {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: #fff;
+  padding: 10px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.btn-primary:hover {
+  background-color: #2563eb;
+}
+
 /* ---------- هر آیتم سبد ---------- */
 .page-mode .cart-items-list {
   border: #c8c9ca solid 0.8px;

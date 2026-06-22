@@ -19,6 +19,7 @@ export class CheckoutBasketCartComponent implements OnInit {
   cartSummary: BasketSummary = { itemsCount: 0, totalPrice: 0, finalAmount: 0, avgDiscountPercent: 0 };
   dropdownItems: CartItem[] = [];
   private subscription = new Subscription();
+  quantityErrors: { [itemId: number]: string } = {};
 
   constructor(
     private basketService: BasketService,
@@ -41,6 +42,17 @@ export class CheckoutBasketCartComponent implements OnInit {
         this.cartSummary = summary;
       })
     );
+
+
+
+
+      this.basketStateService.quantityError$.subscribe(err => {
+    if (err) {
+      this.quantityErrors[err.itemId] = err.message;
+      setTimeout(() => delete this.quantityErrors[err.itemId], 3000);
+    }
+  });
+
 
     this.basketStateService.refresh();
   }
@@ -74,7 +86,10 @@ export class CheckoutBasketCartComponent implements OnInit {
     this.basketStateService.changeQuantity(item.id, -1);
   }
 
-  goToProductDetail(item: CartItem): void {
+  goToProductDetail(item: CartItem,event:Event): void {
+    if(event){
+      event.stopPropagation()
+    }
     if (item.id) {
       this.router.navigate(['/productDetail', item.id]);
     } else if (item.slug) {

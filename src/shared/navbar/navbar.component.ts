@@ -154,6 +154,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       discountType,
       discountValue,
       quantity: dto.quantity,
+      stock:dto.stock ||100000
     };
   }
 
@@ -183,6 +184,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
         discountType: i.discountType || null,
         discountValue: i.discountValue || 0,
         quantity: i.quantity,
+        stock: i.stock ?? 100000,
+        
       }));
       this.loadingItems = false;
     }

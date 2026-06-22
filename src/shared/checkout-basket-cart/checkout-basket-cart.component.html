@@ -1,6 +1,3 @@
-
-
-
 <app-navbar *ngIf="mode === 'page'"></app-navbar>
 
 <!-- ===================== سبد خرید (حالت صفحه) ===================== -->
@@ -39,12 +36,19 @@
             </div>
           </div>
           <div class="state-text" *ngIf="loadingItems">در حال بارگذاری...</div>
-          <div class="state-text" *ngIf="!loadingItems && dropdownItems.length === 0">سبد خرید شما خالی است</div>
-
+          <!-- در قالب (template) -->
+          <div *ngIf="!loadingItems && dropdownItems.length === 0" class="empty-cart">
+            <div class="empty-cart-icon">
+              <i class="fas fa-shopping-basket"></i>
+            </div>
+            <h3 class="empty-cart-title">سبد خرید شما خالی است</h3>
+            <p class="empty-cart-desc">همین حالا خرید کنید و از تخفیف‌های ویژه بهره‌مند شوید</p>
+            <a routerLink="/" class="btn btn-primary">مشاهده محصولات</a>
+          </div>
 
           <div class="cart-item" *ngFor="let item of dropdownItems">
             <img class="cart-item-image" *ngIf="item.image" [src]="item.image" [alt]="item.name"
-              (click)="goToProductDetail(item)" />
+              (click)="goToProductDetail(item, $event)" />
             <div class="cart-item-image-placeholder" *ngIf="!item.image"></div>
 
             <div class="cart-item-info">
@@ -74,6 +78,9 @@
                 </button>
                 <span class="qty-value">{{ item.quantity }}</span>
                 <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)">+</button>
+                <span class="qty-error" *ngIf="quantityErrors[item.id]">
+                  {{ quantityErrors[item.id] }}
+                </span>
               </div>
             </div>
           </div>
@@ -115,9 +122,9 @@
         <div class="state-text" *ngIf="loadingItems">در حال بارگذاری...</div>
         <div class="state-text" *ngIf="!loadingItems && dropdownItems.length === 0">سبد خرید شما خالی است</div>
 
-        <div class="cart-item" *ngFor="let item of dropdownItems">
+        <div class="cart-item" *ngFor="let item of dropdownItems" (click)="$event.stopPropagation()">
           <img class="cart-item-image" *ngIf="item.image" [src]="item.image" [alt]="item.name"
-            (click)="goToProductDetail(item)" />
+            (click)="goToProductDetail(item, $event)" />
           <div class="cart-item-image-placeholder" *ngIf="!item.image"></div>
           <div class="cart-item-info">
             <span class="cart-item-title">{{ item.name }}</span>
@@ -136,12 +143,17 @@
               </div>
               <div class="qty-control">
                 <button *ngIf="item.quantity > 1" type="button" class="qty-btn minus"
-                  (click)="decreaseItemQuantity(item)">−</button>
-                <button *ngIf="item.quantity === 1" (click)="decreaseItemQuantity(item)" class="btn-remove">
+                  (click)="decreaseItemQuantity(item) ;$event.stopPropagation()">−</button>
+                <button *ngIf="item.quantity === 1" (click)="decreaseItemQuantity(item); $event.stopPropagation()"
+                  class="btn-remove">
                   <i class="fas fa-trash-alt"></i>
                 </button>
                 <span class="qty-value">{{ item.quantity }}</span>
-                <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)">+</button>
+                <button type="button" class="qty-btn plus"
+                  (click)="increaseItemQuantity(item); $event.stopPropagation()">+</button>
+                                  <span class="qty-error" *ngIf="quantityErrors[item.id]">
+                  {{ quantityErrors[item.id] }}
+                </span>
               </div>
             </div>
           </div>
