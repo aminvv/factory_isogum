@@ -15,6 +15,19 @@
   box-sizing: border-box;
 }
 
+
+*:active,
+*:focus,
+*:focus-visible,
+*:active,
+*:focus,
+*:focus-visible {
+  outline: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+
 html {
   overflow-x: hidden;
 }

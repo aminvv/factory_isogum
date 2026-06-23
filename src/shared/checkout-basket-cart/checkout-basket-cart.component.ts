@@ -5,6 +5,7 @@ import { BasketStateService } from '../../basket/services/basket-state.service';
 import { AuthStateService } from '../../auth/service/AuthStateSnapshot.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { GuestBasketService } from '../../basket/services/guest-basket.service';
 
 @Component({
   selector: 'app-checkout-basket-cart',
@@ -24,6 +25,7 @@ export class CheckoutBasketCartComponent implements OnInit {
   constructor(
     private basketService: BasketService,
     private basketStateService: BasketStateService,
+    private guestBasketService: GuestBasketService,
     private authStateService: AuthStateService,
     private router: Router,
   ) { }
@@ -46,11 +48,15 @@ export class CheckoutBasketCartComponent implements OnInit {
 
 
 
-      this.basketStateService.quantityError$.subscribe(err => {
-    if (err) {
-      this.quantityErrors[err.itemId] = err.message;
-      setTimeout(() => delete this.quantityErrors[err.itemId], 3000);
-    }
+this.basketStateService.quantityError$.subscribe(err => {
+  if (err) {
+    this.quantityErrors = { ...this.quantityErrors, [err.itemId]: err.message };
+    setTimeout(() => {
+      const updated = { ...this.quantityErrors };
+      delete updated[err.itemId];
+      this.quantityErrors = updated;
+    }, 1000);
+  }
   });
 
 
@@ -110,13 +116,25 @@ export class CheckoutBasketCartComponent implements OnInit {
   }
 
 
-  clearAllItems(): void {
+clearAllItems(): void {
   if (this.dropdownItems.length === 0) return;
-  
-  // اگر می‌خوای با تأیید کاربر باشد
+
   if (confirm('آیا مطمئن هستید که همه کالاها را حذف کنید؟')) {
-    this.basketStateService.reset()
-}}
+    const isLoggedIn = !!sessionStorage.getItem('accessToken');
+
+    if (isLoggedIn) {
+      this.basketService.clearBasket().subscribe({
+        next: () => {
+          this.basketStateService.reset();
+        },
+        error: (err) => console.error('خطا در حذف سبد خرید', err)
+      });
+    } else {
+      this.guestBasketService.clearCart();
+      this.basketStateService.reset();
+    }
+  }
+}
 
 
 }

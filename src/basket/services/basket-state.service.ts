@@ -248,21 +248,14 @@ changeQuantity(itemId: number, delta: 1 | -1): void {
 
 
     } else {
-
-      // کاهش تعداد
-      this.basketService.updateQuantity(
-        itemId,
-        nextQty
-      ).subscribe({
-        next: () => this.refreshFromServer(),
-
-        error: (err) => {
-          console.error('updateQuantity error', err);
-          this.itemsSubject.next(previousSnapshot);
-        }
-      });
-
+  this.basketService.removeFromBasket(itemId).subscribe({
+    next: () => this.refreshFromServer(),
+    error: (err) => {
+      console.error('removeFromBasket error', err);
+      this.itemsSubject.next(previousSnapshot);
     }
+  });
+}
 
 
   } else {

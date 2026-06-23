@@ -53,8 +53,10 @@
 
             <div class="cart-item-info">
               <span class="cart-item-title">{{ item.name }}</span>
-              <div class="cart-item-qty-control-price-row">
-              </div>
+
+                            <span class="quantity-error" *ngIf="quantityErrors[item.id]">
+                {{ quantityErrors[item.id] }}
+              </span>
             </div>
             <div>
               <div class="cart-item-price-row">
@@ -78,10 +80,8 @@
                 </button>
                 <span class="qty-value">{{ item.quantity }}</span>
                 <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)">+</button>
-                <span class="qty-error" *ngIf="quantityErrors[item.id]">
-                  {{ quantityErrors[item.id] }}
-                </span>
               </div>
+
             </div>
           </div>
         </div>
@@ -127,7 +127,12 @@
             (click)="goToProductDetail(item, $event)" />
           <div class="cart-item-image-placeholder" *ngIf="!item.image"></div>
           <div class="cart-item-info">
-            <span class="cart-item-title">{{ item.name }}</span>
+            <div class="cart-item-title">
+              <span>{{ item.name }}</span>
+              <span class="quantity-error" *ngIf="quantityErrors[item.id]" $event.stopPropagation()>
+                {{ quantityErrors[item.id] }}
+              </span>
+            </div>
             <div class="cart-item-qty-control-price-row">
               <div class="cart-item-price-row">
                 <ng-container *ngIf="item.discountType">
@@ -151,10 +156,8 @@
                 <span class="qty-value">{{ item.quantity }}</span>
                 <button type="button" class="qty-btn plus"
                   (click)="increaseItemQuantity(item); $event.stopPropagation()">+</button>
-                                  <span class="qty-error" *ngIf="quantityErrors[item.id]">
-                  {{ quantityErrors[item.id] }}
-                </span>
               </div>
+
             </div>
           </div>
         </div>
