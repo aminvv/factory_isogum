@@ -90,6 +90,8 @@ this.basketStateService.quantityError$.subscribe(err => {
 
   decreaseItemQuantity(item: CartItem): void {
     this.basketStateService.changeQuantity(item.id, -1);
+    console.log("item.id",item.id);
+    
   }
 
   goToProductDetail(item: CartItem,event:Event): void {
@@ -107,13 +109,13 @@ this.basketStateService.quantityError$.subscribe(err => {
     return this.authStateService.isLoggedIn();
   }
 
-  goToCheckout(): void {
-    if (this.isLoggedIn()) {
-      this.router.navigate(['/checkout/address']);
-    } else {
-      this.router.navigate(['/signup']);
-    }
+goToCheckout(): void {
+  if (this.isLoggedIn()) {
+    this.router.navigate(['/checkout/shipping']);
+  } else {
+    this.router.navigate(['/signup'], { queryParams: { redirect: 'checkout' } });
   }
+}
 
 
 clearAllItems(): void {

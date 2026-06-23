@@ -7,6 +7,7 @@ import { ProductDetailPageComponent } from './product-detail-page/product-detail
 import { AlertComponent } from './alert/alert.component';
 import { BasketComponent } from './basket/basket.component';
 import { CheckoutBasketCartComponent } from './shared/checkout-basket-cart/checkout-basket-cart.component';
+import { ShippingComponent } from './shared/shipping/shipping.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -14,6 +15,8 @@ const routes: Routes = [
   { path: 'signup', component: SignUpComponent },
   { path: 'productDetail/:id', component: ProductDetailPageComponent },
   { path: 'checkout', component: CheckoutBasketCartComponent },
+  { path: 'checkout/shipping', component: ShippingComponent },
+  // { path: 'checkout/payment', component: PaymentResultComponent },
 
 ];
 

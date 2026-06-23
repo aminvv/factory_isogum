@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CheckoutBasketCartComponent } from './checkout-basket-cart/checkout-basket-cart.component';
 import { FooterComponent } from '../home/footer/footer.component';
+import { ShippingComponent } from './shipping/shipping.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { FooterComponent } from '../home/footer/footer.component';
     NavbarComponent,
     JalaliPipe,
     PersianNumberPipe,
+    ShippingComponent,
     SafeHtmlPipe,
     CheckoutBasketCartComponent,
     FooterComponent, 

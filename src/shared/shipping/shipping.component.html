@@ -1,0 +1,221 @@
+<!-- ============================================================ -->
+<!-- checkout/shipping/shipping.component.html                    -->
+<!-- ============================================================ -->
+<app-navbar></app-navbar>
+
+<div class="checkout-page" dir="rtl">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/">خانه</a>
+    <span>/</span>
+    <a routerLink="/basket">سبد خرید</a>
+    <span>/</span>
+    <span class="active">آدرس و ارسال</span>
+  </nav>
+
+  <div class="checkout-layout">
+
+    <!-- ===== ستون چپ: آدرس ===== -->
+    <div class="checkout-main">
+
+      <!-- لیست آدرس‌های ذخیره‌شده -->
+      <section class="section-card" *ngIf="addresses.length > 0 && !showAddressForm">
+        <h2 class="section-title">آدرس تحویل</h2>
+
+        <div class="address-card" *ngFor="let addr of addresses" [class.selected]="selectedAddressId === addr.id"
+          (click)="selectAddress(addr.id)">
+          <div class="address-radio">
+            <input type="radio" [checked]="selectedAddressId === addr.id" readonly />
+          </div>
+          <div class="address-info">
+            <p class="address-main">{{ addr.province }}، {{ addr.city }}، {{ addr.street }}
+              <span *ngIf="addr.plaque"> پلاک {{ addr.plaque }}</span>
+            </p>
+            <p class="address-secondary">کد پستی: {{ addr.postalCode }}</p>
+            <span class="badge-default" *ngIf="addr.isDefault">پیش‌فرض</span>
+          </div>
+          <div class="address-actions" (click)="$event.stopPropagation()">
+            <button class="btn-icon" (click)="openEditForm(addr)" title="ویرایش">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-icon danger" (click)="deleteAddress(addr.id)" title="حذف">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn-outline" (click)="openNewAddressForm()">
+          <i class="fas fa-plus"></i> افزودن آدرس جدید
+        </button>
+      </section>
+
+      <!-- فرم آدرس (ایجاد / ویرایش) -->
+      <section class="section-card" *ngIf="showAddressForm">
+        <h2 class="section-title">{{ editingAddress ? 'ویرایش آدرس' : 'آدرس جدید' }}</h2>
+
+        <form [formGroup]="addressForm" (ngSubmit)="submitAddress()" class="address-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>استان <span class="required">*</span></label>
+              <input type="text" formControlName="province" placeholder="مثال: تهران" />
+              <span class="field-error"
+                *ngIf="addressForm.get('province')?.invalid && addressForm.get('province')?.touched">
+                استان الزامی است
+              </span>
+            </div>
+            <div class="form-group">
+              <label>شهر <span class="required">*</span></label>
+              <input type="text" formControlName="city" placeholder="مثال: تهران" />
+              <span class="field-error" *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched">
+                شهر الزامی است
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>آدرس کامل (خیابان، کوچه) <span class="required">*</span></label>
+            <input type="text" formControlName="street" placeholder="مثال: خیابان ولیعصر، کوچه بهار، ..." />
+            <span class="field-error" *ngIf="addressForm.get('street')?.invalid && addressForm.get('street')?.touched">
+              آدرس الزامی است
+            </span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>کد پستی <span class="required">*</span></label>
+              <input type="text" formControlName="postalCode" placeholder="۱۰ رقم" />
+              <span class="field-error"
+                *ngIf="addressForm.get('postalCode')?.invalid && addressForm.get('postalCode')?.touched">
+                کد پستی الزامی است
+              </span>
+            </div>
+            <div class="form-group">
+              <label>پلاک / واحد</label>
+              <input type="text" formControlName="plaque" placeholder="اختیاری" />
+            </div>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" formControlName="isDefault" />
+              تنظیم به عنوان آدرس پیش‌فرض
+            </label>
+          </div>
+
+          <div class="error-msg" *ngIf="addressError">{{ addressError }}</div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="addressForm.invalid || addressLoading">
+              <span *ngIf="!addressLoading">ذخیره آدرس</span>
+              <span *ngIf="addressLoading">در حال ذخیره...</span>
+            </button>
+            <button type="button" class="btn-outline" (click)="cancelForm()" *ngIf="addresses.length > 0">
+              انصراف
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="section-card">
+        <h2 class="section-title">کالاهای سفارش</h2>
+
+        <div *ngIf="cartItems.length === 0" class="empty-msg">سبد خرید شما خالی است.</div>
+
+        <div class="cart-items-readonly">
+          <div class="cart-item-row" *ngFor="let item of cartItems">
+            <!-- تصویر -->
+            <img class="item-img" *ngIf="item.image" [src]="item.image" [alt]="item.name"
+              (click)="goToProductDetail(item, $event)" />
+            <div class="item-img-placeholder" *ngIf="!item.image"></div>
+
+            <!-- بخش اطلاعات (عنوان، قیمت، کنترل تعداد) -->
+            <div class="cart-item-info">
+              <div class="cart-item-title">{{ item.name }}</div>
+
+              <div class="cart-item-qty-control-price-row">
+                <!-- ردیف قیمت‌ها -->
+                <div class="cart-item-price-row">
+                  <ng-container *ngIf="item.discountType">
+                    <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
+                    <span class="cart-item-discount-label">
+                      <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue | persianNumber
+                        }}</ng-container>
+                      <ng-container *ngIf="item.discountType === 'amount'">{{ item.discountValue | persianNumber }}
+                        تومان تخفیف</ng-container>
+                    </span>
+                  </ng-container>
+                  <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
+                </div>
+
+                <!-- کنترل تعداد -->
+                <div class="qty-control">
+                  <button *ngIf="item.quantity > 1" type="button" class="qty-btn minus"
+                    (click)="decreaseItemQuantity(item)">−</button>
+                  <button *ngIf="item.quantity === 1" (click)="decreaseItemQuantity(item)" class="btn-remove">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                  <span class="qty-value">{{ item.quantity | persianNumber }}</span>
+                  <button type="button" class="qty-btn plus" (click)="increaseItemQuantity(item)">+</button>
+                </div>
+              </div>
+              <span class="quantity-error" *ngIf="quantityErrors[item.id]" $event.stopPropagation()>
+                {{ quantityErrors[item.id] }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===== ستون راست: خلاصه سفارش ===== -->
+    <aside class="order-summary">
+      <div class="summary-card">
+        <h2 class="section-title">خلاصه سفارش</h2>
+
+        <div class="summary-row">
+          <span>تعداد کالا</span>
+          <span>{{ cartSummary.itemsCount }} عدد</span>
+        </div>
+
+        <div class="summary-row" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
+          <span>قیمت بدون تخفیف</span>
+          <span class="old-price">{{ cartSummary.totalPrice | number }} تومان</span>
+        </div>
+
+        <div class="summary-row discount" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
+          <span>تخفیف</span>
+          <span class="discount-value">- {{ (cartSummary.totalPrice - cartSummary.finalAmount) | number }} تومان</span>
+        </div>
+
+        <div class="summary-row shipping-row">
+          <span>هزینه ارسال</span>
+          <span class="shipping-note">برعهده خریدار (پس‌کرایه)</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row total">
+          <span>مبلغ قابل پرداخت</span>
+          <span class="total-price">{{ cartSummary.finalAmount | number }} تومان</span>
+        </div>
+
+        <div class="error-msg" *ngIf="paymentError">{{ paymentError }}</div>
+
+        <button class="btn-submit" (click)="submitOrder()" [disabled]="!canSubmit">
+          <span *ngIf="!paymentLoading">ادامه و پرداخت</span>
+          <span *ngIf="paymentLoading">در حال پردازش...</span>
+        </button>
+
+        <p class="no-address-warning" *ngIf="!selectedAddressId">
+          <i class="fas fa-exclamation-circle"></i>
+          لطفاً ابتدا آدرس تحویل را انتخاب کنید
+        </p>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

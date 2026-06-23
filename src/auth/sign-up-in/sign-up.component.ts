@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../service/Auth.service';
 import { AlertService } from '../../alert/service/alert.service';
@@ -41,6 +41,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private cartSyncService: CartSyncService,
     private router: Router,
+    private route: ActivatedRoute,
     private authStateService: AuthStateService
   ) { }
 
@@ -247,6 +248,11 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       }
       setTimeout(() => this.router.navigate(['/']), 1500);
     });
+        const redirect = this.route.snapshot.queryParams['redirect'];
+    const target = redirect === 'checkout' ? '/checkout/shipping' : '/';
+    this.cartSyncService.syncGuestCartToServer().subscribe(() => {
+      setTimeout(() => this.router.navigate([target]), 1500);
+    });
   }
 
 
@@ -281,4 +287,10 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       });
     });
   }
+
+
+
+
+
+
 }

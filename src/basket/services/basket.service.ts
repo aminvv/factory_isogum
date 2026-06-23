@@ -68,7 +68,7 @@ export class BasketService {
 
   // حذف کامل یک آیتم از سبد خرید با استفاده از id رکورد سبد
   removeFromBasketById(id: number): Observable<any> {
-    return this.http.delete(`${API_CONFIG.baseUrl}/removeFromBasketById/${id}`).pipe(
+    return this.http.delete(`${API_CONFIG.baseUrl}/basket/removeFromBasketById/${id}`).pipe(
       tap(() => this.refreshBasket())
     );
   }

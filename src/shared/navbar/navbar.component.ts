@@ -147,6 +147,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     return {
       id: dto.id,
+      basketItemId:dto.basketItemId,
       slug: dto.slug,
       name: dto.title,
       image: dto.image,
@@ -177,6 +178,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       const guestItems: GuestCartItem[] = this.guestBasketService.getCart();
       this.dropdownItems = guestItems.map((i: any) => ({
         id: i.productId,
+        basketItemId:i.basketItemId,
         slug: '',
         name: i.productName || '—',
         image: i.image,

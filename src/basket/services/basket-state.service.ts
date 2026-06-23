@@ -74,46 +74,47 @@ export class BasketStateService {
     });
   }
 
-private refreshGuestSummary(): void {
-  const items = this.guestBasketService.getCart();
+  private refreshGuestSummary(): void {
+    const items = this.guestBasketService.getCart();
 
-  const totalPrice = items.reduce(
-    (sum, i) => sum + (i.price || 0) * i.quantity,
-    0
-  );
+    const totalPrice = items.reduce(
+      (sum, i) => sum + (i.price || 0) * i.quantity,
+      0
+    );
 
-  const finalAmount = items.reduce(
-    (sum, i) => sum + (i.finalPrice ?? i.price ?? 0) * i.quantity,
-    0
-  );
+    const finalAmount = items.reduce(
+      (sum, i) => sum + (i.finalPrice ?? i.price ?? 0) * i.quantity,
+      0
+    );
 
-  const avgDiscountPercent =
-    totalPrice > 0
-      ? ((totalPrice - finalAmount) / totalPrice) * 100
-      : 0;
+    const avgDiscountPercent =
+      totalPrice > 0
+        ? ((totalPrice - finalAmount) / totalPrice) * 100
+        : 0;
 
 
-  const cartItems: CartItem[] = items.map((item: any) => ({
-    id: item.productId,
-    slug: item.slug || '',
-    name: item.productName || 'نام محصول',
-    image: item.image || 'assets/default.jpg',
-    price: item.price || 0,
-    discountType: item.discountType || null,
-    discountValue: item.discountValue || 0,
-    quantity: item.quantity,
-    stock: item.stock ?? 100000,
-  }));
+    const cartItems: CartItem[] = items.map((item: any) => ({
+      id: item.productId,
+      basketItemId: item.basketItemId || 0,
+      slug: item.slug || '',
+      name: item.productName || 'نام محصول',
+      image: item.image || 'assets/default.jpg',
+      price: item.price || 0,
+      discountType: item.discountType || null,
+      discountValue: item.discountValue || 0,
+      quantity: item.quantity,
+      stock: item.stock ?? 100000,
+    }));
 
-  this.itemsSubject.next(cartItems);
+    this.itemsSubject.next(cartItems);
 
-  this.summarySubject.next({
-    itemsCount: items.length,
-    totalPrice,
-    finalAmount,
-    avgDiscountPercent,
-  });
-}
+    this.summarySubject.next({
+      itemsCount: items.length,
+      totalPrice,
+      finalAmount,
+      avgDiscountPercent,
+    });
+  }
 
   reset(): void {
     this.summarySubject.next(EMPTY_SUMMARY);
@@ -145,51 +146,49 @@ private refreshGuestSummary(): void {
     ) as unknown as Observable<CartItem[]>;
   }
 
-mapBasketDtoToCartItem(dto: BasketProduct): CartItem {
+  mapBasketDtoToCartItem(dto: BasketProduct): CartItem {
 
-  const percent = dto.discountPercent != null
-    ? Number(dto.discountPercent)
-    : 0;
+    const percent = dto.discountPercent != null
+      ? Number(dto.discountPercent)
+      : 0;
 
-  const amount = dto.discountAmount != null
-    ? Number(dto.discountAmount)
-    : 0;
-
-
-  let discountType: BasketDiscountKind = null;
-  let discountValue = 0;
+    const amount = dto.discountAmount != null
+      ? Number(dto.discountAmount)
+      : 0;
 
 
-  if (percent > 0) {
-    discountType = 'percent';
-    discountValue = percent;
+    let discountType: BasketDiscountKind = null;
+    let discountValue = 0;
 
-  } else if (amount > 0) {
-    discountType = 'amount';
-    discountValue = amount;
+
+    if (percent > 0) {
+      discountType = 'percent';
+      discountValue = percent;
+
+    } else if (amount > 0) {
+      discountType = 'amount';
+      discountValue = amount;
+    }
+
+
+    return {
+      id: dto.id || 0,
+      basketItemId: dto.basketItemId || 0,
+      slug: dto.slug || '',
+      name: dto.title || 'نام محصول',
+      image: dto.image || 'assets/default.jpg',
+      price: Number(dto.originalPrice || dto.finalPrice || 0),
+      discountType,
+      discountValue,
+      quantity: dto.quantity || 1,
+      stock: dto.stock ?? 100000
+    };
   }
-
-
-  return {
-    id: dto.id || 0,
-    slug: dto.slug || '',
-    name: dto.title || 'نام محصول',
-    image: dto.image || 'assets/default.jpg',
-    price: Number(dto.originalPrice || dto.finalPrice || 0),
-    discountType,
-    discountValue,
-    quantity: dto.quantity || 1,
-    stock: dto.stock ?? 100000
-  };
-}
-
 
 
 changeQuantity(itemId: number, delta: 1 | -1): void {
   const current = this.itemsSubject.value;
-
   const target = current.find((i) => i.id === itemId);
-
   if (!target) {
     console.warn('[basket] changeQuantity: item not found', itemId);
     return;
@@ -198,17 +197,7 @@ changeQuantity(itemId: number, delta: 1 | -1): void {
   const nextQty = target.quantity + delta;
   const previousSnapshot = [...current];
 
-
-  if (nextQty < 1) {
-    this.itemsSubject.next(
-      current.filter((i) => i.id !== itemId)
-    );
-
-    this.removeItemOnServer(itemId, previousSnapshot);
-    return;
-  }
-
-
+  // بررسی موجودی برای افزایش
   if (delta === 1 && nextQty > (target.stock ?? 100000)) {
     this.quantityErrorSubject.next({
       itemId,
@@ -217,57 +206,41 @@ changeQuantity(itemId: number, delta: 1 | -1): void {
     return;
   }
 
+  // به‌روزرسانی UI (خوش‌بینانه)
+  let newItems: CartItem[];
+  if (nextQty < 1) {
+    newItems = current.filter((i) => i.id !== itemId);
+  } else {
+    newItems = current.map((i) =>
+      i.id === itemId ? { ...i, quantity: nextQty } : i
+    );
+  }
+  this.itemsSubject.next(newItems);
 
-  // تغییر لحظه‌ای UI
-  const updated = current.map((i) =>
-    i.id === itemId
-      ? { ...i, quantity: nextQty }
-      : i
-  );
-
-  this.itemsSubject.next(updated);
-
-
-
+  // درخواست به سرور
   if (this.isLoggedIn()) {
-
     if (delta === 1) {
-
-      // افزایش تعداد
-      this.basketService.addToBasket({
-        productId: itemId,
-        quantity: 1
-      }).subscribe({
+      this.basketService.addToBasket({ productId: itemId, quantity: 1 }).subscribe({
         next: () => this.refreshFromServer(),
-
         error: (err) => {
           console.error('addToBasket error', err);
           this.itemsSubject.next(previousSnapshot);
         }
       });
-
-
     } else {
-  this.basketService.removeFromBasket(itemId).subscribe({
-    next: () => this.refreshFromServer(),
-    error: (err) => {
-      console.error('removeFromBasket error', err);
-      this.itemsSubject.next(previousSnapshot);
+      // کاهش: از متد removeFromBasket استفاده کن (با productId)
+      this.basketService.removeFromBasket(itemId).subscribe({
+        next: () => this.refreshFromServer(),
+        error: (err) => {
+          console.error('removeFromBasket error', err);
+          this.itemsSubject.next(previousSnapshot);
+        }
+      });
     }
-  });
-}
-
-
   } else {
-
-    // مهمان
-    this.guestBasketService.updateQuantity(
-      itemId,
-      nextQty
-    );
-
+    // حالت مهمان
+    this.guestBasketService.updateQuantity(itemId, nextQty);
     this.refreshGuestSummary();
-
   }
 }
 
@@ -305,7 +278,7 @@ changeQuantity(itemId: number, delta: 1 | -1): void {
       return;
     }
     this.http
-      .delete(`${API_CONFIG.baseUrl}/removeFromBasketById/${itemId}`)
+      .delete(`${API_CONFIG.baseUrl}/basket/removeFromBasketById/${itemId}`)
       .subscribe({
         next: () => this.refreshFromServer(),
         error: (err) => {

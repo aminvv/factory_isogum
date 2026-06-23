@@ -12,6 +12,7 @@ export interface AddDiscountDto {
 
 export interface BasketProduct {
   id: number;
+   basketItemId: number; 
   slug: string;
   title: string;
   originalPrice: number;
@@ -44,6 +45,7 @@ export interface BasketResponse {
 
 export interface CartItem {
   id: number;
+  basketItemId: number; 
   slug: string;
   name: string;
   image: string | undefined;
