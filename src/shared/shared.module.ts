@@ -13,6 +13,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { CheckoutBasketCartComponent } from './checkout-basket-cart/checkout-basket-cart.component';
 import { FooterComponent } from '../home/footer/footer.component';
 import { ShippingComponent } from './shipping/shipping.component';
+import { PaymentSuccessComponent } from './payment/payment-success/payment-success.component';
+import { PaymentFailedComponent } from './payment/payment-failed/payment-failed.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { ShippingComponent } from './shipping/shipping.component';
     ShippingComponent,
     SafeHtmlPipe,
     CheckoutBasketCartComponent,
-    FooterComponent, 
+    FooterComponent,
+    PaymentSuccessComponent,
+    PaymentFailedComponent, 
     
   ],
   imports: [

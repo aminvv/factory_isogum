@@ -1,0 +1,150 @@
+<div class="success-page" dir="rtl">
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>در حال دریافت اطلاعات سفارش...</p>
+    </div>
+
+    <!-- Error -->
+    <div class="error-state" *ngIf="error && !loading">
+        <div class="error-icon">✕</div>
+        <h2>خطا در دریافت اطلاعات</h2>
+        <p>اطلاعات سفارش یافت نشد.</p>
+        <button class="btn-primary" (click)="continueShopping()">بازگشت به فروشگاه</button>
+    </div>
+
+    <!-- Success Content -->
+    <div class="content" *ngIf="order && !loading">
+
+        <!-- Header -->
+        <div class="success-header">
+            <div class="check-circle">
+                <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="26" cy="26" r="25" stroke="currentColor" stroke-width="2" />
+                    <path d="M14 26L22 34L38 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h1>پرداخت موفق</h1>
+            <p class="subtitle">سفارش شما با موفقیت ثبت شد</p>
+            <div class="invoice-badge">
+                شماره فاکتور: <strong>{{ order.payment.invoice_number }}</strong>
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-grid">
+
+            <!-- Receiver Info -->
+            <div class="card">
+                <div class="card-label">تحویل گیرنده</div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="icon">👤</span>
+                        <span>{{ order.user.firstName }} {{ order.user.lastName }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon">📞</span>
+                        <span>{{ order.user.mobile |persianNumber }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="card">
+                <div class="card-label">آدرس ارسال</div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="icon">📍</span>
+                        <span>
+                            {{ order.shippingAddress.province }}، {{ order.shippingAddress.city }}،
+                            {{ order.shippingAddress.street }}
+                            <span *ngIf="order.shippingAddress.plaque">، پلاک {{ order.shippingAddress.plaque }}</span>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon">🏷️</span>
+                        <span>کدپستی: {{ order.shippingAddress.postalCode |persianNumber }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Info -->
+            <div class="card">
+                <div class="card-label">اطلاعات سفارش</div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="icon">🗂️</span>
+                        <span>کد سفارش: <strong>#{{ order.id }}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon">📦</span>
+                        <span>تعداد مرسوله: <strong>{{ totalQuantity }} عدد</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon">📅</span>
+                        <span>تاریخ ثبت: {{ formatDate(order.create_at) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Info -->
+            <div class="card">
+                <div class="card-label">خلاصه پرداخت</div>
+                <div class="card-body">
+                    <div class="price-row">
+                        <span>مبلغ کل</span>
+                        <span>{{ formatPrice(order.total_amount) }} تومان</span>
+                    </div>
+                    <div class="price-row discount" *ngIf="order.discount_amount > 0">
+                        <span>تخفیف</span>
+                        <span>- {{ formatPrice(order.discount_amount) }} تومان</span>
+                    </div>
+                    <div class="price-row final">
+                        <span>مبلغ پرداخت شده</span>
+                        <span>{{ formatPrice(order.final_amount) }} تومان</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Products List -->
+        <div class="products-section">
+            <div class="section-title">محصولات سفارش</div>
+            <div class="product-list">
+                <div class="product-item" *ngFor="let item of order.orderItems">
+                    <img [src]="item.product.image[0].url" [alt]="item.product.productName" class="product-img"
+                        onerror="this.src='assets/placeholder.png'" />
+                    <div class="product-info">
+                        <div class="product-name">{{ item.product.productName }}</div>
+                        <div class="product-code">کد: {{ item.product.productCode }}</div>
+                        <div class="product-meta">
+                            <span>🚚 {{ item.product.deliveryTime }}</span>
+                            <span>💰 {{ item.product.deliveryCost }}</span>
+                        </div>
+                    </div>
+                    <div class="product-qty">
+                        <span class="qty-label">تعداد</span>
+                        <span class="qty-value">{{ item.quantity }}</span>
+                    </div>
+                    <div class="product-price">
+                        {{ formatPrice(+item.price) }} تومان
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn-primary" (click)="trackOrder()">
+                پیگیری سفارش
+            </button>
+            <button class="btn-secondary" (click)="continueShopping()">
+               بازگشت به صفحه اصلی
+            </button>
+        </div>
+
+    </div>
+</div>
