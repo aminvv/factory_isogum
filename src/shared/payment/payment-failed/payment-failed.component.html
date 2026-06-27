@@ -1,34 +1,99 @@
 <div class="failed-page" dir="rtl">
-  <div class="content">
 
-    <!-- Icon -->
-    <div class="icon-wrap">
-      <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="26" cy="26" r="25" stroke="currentColor" stroke-width="2"/>
-        <path d="M17 17L35 35M35 17L17 35" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-      </svg>
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت اطلاعات...</p>
+  </div>
+
+  <div class="content" *ngIf="!loading">
+
+    <!-- Header -->
+    <div class="failed-header">
+      <div class="x-circle">
+        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="26" r="25" stroke="currentColor" stroke-width="2" />
+          <path d="M17 17L35 35M35 17L17 35" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </div>
+      <h1>متأسفانه پرداخت شما ناموفق بود!</h1>
+      <p class="subtitle">سفارش شما ثبت نشد</p>
+      <div class="order-badge" *ngIf="order">
+        شماره سفارش: <strong>#{{ order.id }}</strong>
+      </div>
     </div>
 
-    <h1>پرداخت ناموفق</h1>
-    <p class="subtitle">متأسفانه پرداخت شما انجام نشد</p>
-
-    <!-- Reasons -->
-    <div class="reasons-card">
-      <div class="reasons-title">دلایل احتمالی:</div>
-      <ul>
-        <li>انصراف از پرداخت</li>
-        <li>موجودی کافی نبود</li>
-        <li>خطا در اتصال به درگاه بانکی</li>
-        <li>منقضی شدن زمان پرداخت</li>
-      </ul>
+    <!-- Notice -->
+    <div class="notice-box">
+      <i class="ti ti-info-circle"></i>
+      <p>چنانچه مبلغی از حساب شما کسر شده است، تا <strong>۷۲ ساعت آینده</strong> به حساب شما باز خواهد گشت.</p>
     </div>
 
-    <p class="note">مبلغی از حساب شما کسر نشده است.</p>
+    <!-- Details Grid -->
+    <div class="cards-grid" *ngIf="order">
+
+      <!-- Payment Details -->
+      <div class="card">
+        <div class="card-label">جزئیات پرداخت</div>
+        <div class="card-body">
+          <div class="info-row">
+            <i class="ti ti-building-bank icon"></i>
+            <span class="row-label">درگاه</span>
+            <span class="row-val">پرداخت اینترنتی</span>
+          </div>
+          <div class="info-row">
+            <i class="ti ti-hash icon"></i>
+            <span class="row-label">شماره پیگیری</span>
+            <span class="row-val">{{ order.payment.invoice_number }}</span>
+          </div>
+          <div class="info-row">
+            <i class="ti ti-calendar icon"></i>
+            <span class="row-label">تاریخ</span>
+            <span class="row-val">{{ formatDate(order.create_at) }}</span>
+          </div>
+          <div class="info-row">
+            <i class="ti ti-receipt icon"></i>
+            <span class="row-label">مبلغ</span>
+            <span class="row-val">{{ formatPrice(order.payment.amount) }} تومان</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reasons -->
+      <div class="card">
+        <div class="card-label">دلایل احتمالی</div>
+        <div class="card-body reasons">
+          <div class="reason-item">
+            <i class="ti ti-x reason-icon"></i>
+            <span>انصراف از پرداخت</span>
+          </div>
+          <div class="reason-item">
+            <i class="ti ti-x reason-icon"></i>
+            <span>موجودی کافی نبود</span>
+          </div>
+          <div class="reason-item">
+            <i class="ti ti-x reason-icon"></i>
+            <span>خطا در اتصال به درگاه بانکی</span>
+          </div>
+          <div class="reason-item">
+            <i class="ti ti-x reason-icon"></i>
+            <span>منقضی شدن زمان پرداخت</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
 
     <!-- Actions -->
     <div class="actions">
-      <button class="btn-primary" (click)="tryAgain()">تلاش مجدد</button>
-      <button class="btn-secondary" (click)="continueShopping()">بازگشت به فروشگاه</button>
+      <button class="btn-retry" (click)="tryAgain()">
+        <i class="ti ti-refresh"></i>
+        پرداخت دوباره
+      </button>
+      <button class="btn-secondary" (click)="continueShopping()">
+        <i class="ti ti-arrow-right"></i>
+        بازگشت به فروشگاه
+      </button>
     </div>
 
   </div>
