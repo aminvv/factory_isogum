@@ -1,1 +1,198 @@
-<p>order-detail works!</p>
+<div class="order-detail" dir="rtl">
+
+  <!-- Loading -->
+  <div class="state-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت اطلاعات...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="state-box" *ngIf="error && !loading">
+    <i class="ti ti-alert-circle"></i>
+    <p>خطا در دریافت اطلاعات سفارش</p>
+    <button class="back-btn" (click)="goBack()">بازگشت</button>
+  </div>
+
+  <ng-container *ngIf="order && !loading">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <button class="back-btn" (click)="goBack()">
+        <i class="ti ti-arrow-right"></i> بازگشت
+      </button>
+      <div class="header-info">
+        <h2>سفارش #{{ order.id }}</h2>
+        <span class="badge" [ngClass]="statusColor[order.status]">
+          {{ statusMap[order.status] || order.status }}
+        </span>
+      </div>
+      <span class="order-date">{{ formatDate(order.create_at) }}</span>
+    </div>
+
+    <!-- Progress Bar (فقط برای سفارشات جاری) -->
+    <div class="progress-section" *ngIf="!['pending','canceled'].includes(order.status)">
+      <div class="steps">
+        <div class="step" *ngFor="let step of steps; let i = index"
+          [class.done]="i < currentStepIndex"
+          [class.active]="i === currentStepIndex">
+          <div class="step-circle">
+            <i class="ti ti-check" *ngIf="i < currentStepIndex"></i>
+            <span *ngIf="i >= currentStepIndex">{{ i + 1 }}</span>
+          </div>
+          <div class="step-label">{{ statusMap[step] }}</div>
+          <div class="step-line" *ngIf="i < steps.length - 1"
+            [class.done]="i < currentStepIndex"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-grid">
+
+      <!-- Right Col -->
+      <div class="right-col">
+
+        <!-- Products -->
+        <div class="card">
+          <div class="card-title">
+            <i class="ti ti-package"></i> محصولات سفارش
+          </div>
+          <div class="product-list">
+            <div class="product-row" *ngFor="let item of order.orderItems">
+              <img [src]="item.product.image[0].url"
+                [alt]="item.product.productName"
+                class="product-img"
+                onerror="this.src='assets/placeholder.png'" />
+              <div class="product-info">
+                <div class="product-name">{{ item.product.productName }}</div>
+                <div class="product-code">{{ item.product.productCode }}</div>
+                <div class="product-tags">
+                  <span class="tag"><i class="ti ti-truck"></i> {{ item.product.deliveryTime }}</span>
+                  <span class="tag"><i class="ti ti-coin"></i> {{ item.product.deliveryCost }}</span>
+                  <span class="tag green" *ngIf="item.product.returnable"><i class="ti ti-refresh"></i> قابل مرجوع</span>
+                  <span class="tag blue" *ngIf="item.product.insurance"><i class="ti ti-shield"></i> بیمه</span>
+                </div>
+              </div>
+              <div class="product-right">
+                <div class="qty-box">{{ item.quantity }}</div>
+                <div class="item-price">{{ formatPrice(+item.price) }} تومان</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Receiver & Address -->
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title"><i class="ti ti-user"></i> تحویل گیرنده</div>
+            <div class="info-list">
+              <div class="info-row">
+                <i class="ti ti-user-circle"></i>
+                <span>{{ order.user.firstName }} {{ order.user.lastName }}</span>
+              </div>
+              <div class="info-row">
+                <i class="ti ti-phone"></i>
+                <span>{{ order.user.mobile }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="ti ti-map-pin"></i> آدرس ارسال</div>
+            <div class="info-list">
+              <div class="info-row">
+                <i class="ti ti-map"></i>
+                <span>{{ order.shippingAddress.province }}، {{ order.shippingAddress.city }}</span>
+              </div>
+              <div class="info-row">
+                <i class="ti ti-road"></i>
+                <span>{{ order.shippingAddress.street }}<span *ngIf="order.shippingAddress.plaque">، پلاک {{ order.shippingAddress.plaque }}</span></span>
+              </div>
+              <div class="info-row">
+                <i class="ti ti-mailbox"></i>
+                <span>کدپستی: {{ order.shippingAddress.postalCode }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Left Col: Summary -->
+      <div class="left-col">
+
+        <div class="card summary-card">
+          <div class="card-title"><i class="ti ti-receipt"></i> خلاصه پرداخت</div>
+
+          <div class="summary-rows">
+            <div class="summary-row">
+              <span>مبلغ کل</span>
+              <span>{{ formatPrice(order.total_amount) }} تومان</span>
+            </div>
+            <div class="summary-row disc" *ngIf="order.discount_amount > 0">
+              <span>تخفیف</span>
+              <span>- {{ formatPrice(order.discount_amount) }} تومان</span>
+            </div>
+            <div class="summary-row">
+              <span>هزینه ارسال</span>
+              <span class="free">رایگان</span>
+            </div>
+            <div class="summary-total">
+              <span>مبلغ نهایی</span>
+              <span>{{ formatPrice(order.final_amount) }} تومان</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="card-title"><i class="ti ti-credit-card"></i> اطلاعات پرداخت</div>
+          <div class="info-list">
+            <div class="info-row">
+              <i class="ti ti-building-bank"></i>
+              <span class="row-label">درگاه</span>
+              <span>پرداخت اینترنتی</span>
+            </div>
+            <div class="info-row">
+              <i class="ti ti-hash"></i>
+              <span class="row-label">شماره فاکتور</span>
+              <span>{{ order.payment.invoice_number }}</span>
+            </div>
+            <div class="info-row" *ngIf="order.payment.refId">
+              <i class="ti ti-fingerprint"></i>
+              <span class="row-label">کد پیگیری</span>
+              <span>{{ order.payment.refId }}</span>
+            </div>
+            <div class="info-row">
+              <i class="ti ti-circle-check"></i>
+              <span class="row-label">وضعیت</span>
+              <span class="paid" *ngIf="order.payment.status">پرداخت شده</span>
+              <span class="unpaid" *ngIf="!order.payment.status">پرداخت نشده</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="order-stats">
+            <div class="stat">
+              <div class="stat-val">{{ totalQuantity }}</div>
+              <div class="stat-label">تعداد کالا</div>
+            </div>
+            <div class="stat-sep"></div>
+            <div class="stat">
+              <div class="stat-val">{{ order.orderItems.length }}</div>
+              <div class="stat-label">نوع کالا</div>
+            </div>
+            <div class="stat-sep"></div>
+            <div class="stat">
+              <div class="stat-val">{{ formatDate(order.create_at) }}</div>
+              <div class="stat-label">تاریخ ثبت</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+</div>

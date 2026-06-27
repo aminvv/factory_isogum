@@ -34,7 +34,7 @@
       <!-- Order Header -->
       <div class="order-header">
         <div class="order-header-right">
-          <span class="order-id">سفارش #{{ order.id }}</span>
+          <span class="order-id">سفارش #{{ order.id |persianNumber}}</span>
           <span class="sep">|</span>
           <span class="order-date">{{ formatDate(order.create_at) }}</span>
         </div>
@@ -77,7 +77,7 @@
           </div>
           <div class="summary-row disc" *ngIf="order.discount_amount > 0">
             <span>تخفیف</span>
-            <span>- {{ formatPrice(order.discount_amount) }} تومان</span>
+            <span> {{ formatPrice(order.discount_amount) }} تومان</span>
           </div>
           <div class="summary-row shipping">
             <span>ارسال</span>
