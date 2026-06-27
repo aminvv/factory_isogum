@@ -1,0 +1,108 @@
+<div class="order-list" dir="rtl">
+
+  <div class="page-header">
+    <h2 class="page-title">سفارش‌های من</h2>
+    <p class="page-sub">پیگیری و مدیریت سفارشات</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab" *ngFor="let tab of tabs"
+      [class.active]="activeTab === tab.key"
+      (click)="activeTab = tab.key">
+      {{ tab.label }}
+      <span class="tab-count">{{ countByTab(tab.key) }}</span>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="state-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت سفارش‌ها...</p>
+  </div>
+
+  <!-- Empty -->
+  <div class="state-box" *ngIf="!loading && filteredOrders.length === 0">
+    <i class="ti ti-package-off"></i>
+    <p>سفارشی در این بخش وجود ندارد</p>
+  </div>
+
+  <!-- Orders -->
+  <div class="orders" *ngIf="!loading && filteredOrders.length > 0">
+    <div class="order-card" *ngFor="let order of filteredOrders">
+
+      <!-- Order Header -->
+      <div class="order-header">
+        <div class="order-header-right">
+          <span class="order-id">سفارش #{{ order.id }}</span>
+          <span class="sep">|</span>
+          <span class="order-date">{{ formatDate(order.create_at) }}</span>
+        </div>
+        <span class="badge" [ngClass]="statusColor[order.status]">
+          {{ statusMap[order.status] || order.status }}
+        </span>
+      </div>
+
+      <!-- Order Body -->
+      <div class="order-body">
+
+        <!-- Product List -->
+        <div class="product-table">
+          <div class="table-head">
+            <span>محصول</span>
+            <span>تعداد</span>
+            <span>قیمت</span>
+          </div>
+          <div class="table-row" *ngFor="let item of order.orderItems">
+            <div class="product-cell">
+              <img [src]="item.product.image[0].url"
+                [alt]="item.product.productName"
+                class="product-img"
+                onerror="this.src='assets/placeholder.png'" />
+              <span class="product-name">{{ item.product.productName }}</span>
+            </div>
+            <div class="qty-cell">
+              <span class="qty-box">{{ item.quantity |persianNumber}}</span>
+            </div>
+            <div class="price-cell">{{ formatPrice(+item.price) }} تومان</div>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+          <div class="summary-title">خلاصه سفارش</div>
+          <div class="summary-row">
+            <span>مبلغ کل</span>
+            <span>{{ formatPrice(order.total_amount) }} تومان</span>
+          </div>
+          <div class="summary-row disc" *ngIf="order.discount_amount > 0">
+            <span>تخفیف</span>
+            <span>- {{ formatPrice(order.discount_amount) }} تومان</span>
+          </div>
+          <div class="summary-row shipping">
+            <span>ارسال</span>
+            <span class="free">رایگان</span>
+          </div>
+          <div class="summary-total">
+            <span>مبلغ نهایی</span>
+            <span>{{ formatPrice(order.final_amount) }} تومان</span>
+          </div>
+          <div class="payment-status">
+            <span class="paid" *ngIf="order.payment && order.payment.status">
+              <i class="ti ti-circle-check"></i> پرداخت شده
+            </span>
+            <span class="unpaid" *ngIf="!order.payment || !order.payment.status">
+              <i class="ti ti-clock"></i> در انتظار پرداخت
+            </span>
+          </div>
+          <button class="detail-btn" (click)="goToDetail(order.id)">
+            <i class="ti ti-eye"></i> مشاهده جزئیات
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -15,6 +15,13 @@ import { FooterComponent } from '../home/footer/footer.component';
 import { ShippingComponent } from './shipping/shipping.component';
 import { PaymentSuccessComponent } from './payment/payment-success/payment-success.component';
 import { PaymentFailedComponent } from './payment/payment-failed/payment-failed.component';
+import { ProfileComponent } from '../profile/profile.component';
+import { OrderListComponent } from './orders/order-list/order-list.component';
+import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
+import { WishlistComponent } from './wishlist/wishlist/wishlist.component';
+import { AccountInfoComponent } from './account-info/account-info/account-info.component';
+import { AddressListComponent } from './addresses/address-list/address-list.component';
+import { CommentsListComponent } from './comments/comments-list/comments-list.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +35,14 @@ import { PaymentFailedComponent } from './payment/payment-failed/payment-failed.
     CheckoutBasketCartComponent,
     FooterComponent,
     PaymentSuccessComponent,
-    PaymentFailedComponent, 
+    PaymentFailedComponent,
+    ProfileComponent,
+    OrderListComponent,
+    OrderDetailComponent,
+    WishlistComponent,
+    AccountInfoComponent,
+    AddressListComponent,
+    CommentsListComponent, 
     
   ],
   imports: [

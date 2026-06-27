@@ -1,0 +1,53 @@
+<div class="profile-page" dir="rtl">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <!-- User Info -->
+    <div class="user-card">
+      <div class="avatar">
+        <i class="ti ti-user"></i>
+      </div>
+      <div class="user-info">
+        <div class="user-name">{{ user?.firstName }} {{ user?.lastName }}</div>
+        <div class="user-mobile">{{ user?.mobile }}</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="nav">
+      <a class="nav-item" routerLink="orders" routerLinkActive="active">
+        <i class="ti ti-package"></i>
+        <span>سفارش‌ها</span>
+      </a>
+      <a class="nav-item" routerLink="addresses" routerLinkActive="active">
+        <i class="ti ti-map-pin"></i>
+        <span>آدرس‌ها</span>
+      </a>
+      <a class="nav-item" routerLink="wishlist" routerLinkActive="active">
+        <i class="ti ti-heart"></i>
+        <span>علاقه‌مندی‌ها</span>
+      </a>
+      <a class="nav-item" routerLink="comments" routerLinkActive="active">
+        <i class="ti ti-message"></i>
+        <span>دیدگاه‌ها</span>
+      </a>
+      <a class="nav-item" routerLink="account" routerLinkActive="active">
+        <i class="ti ti-user-circle"></i>
+        <span>اطلاعات حساب</span>
+      </a>
+      <div class="divider"></div>
+      <button class="nav-item logout" (click)="logout()">
+        <i class="ti ti-logout"></i>
+        <span>خروج از حساب</span>
+      </button>
+    </nav>
+
+  </aside>
+
+  <!-- Content -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
