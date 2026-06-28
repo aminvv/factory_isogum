@@ -286,6 +286,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/signup']);
       return;
+    }else{
+      this.router.navigate(['/profile']);
+      return;
     }
     if (this.isMobile) {
       this.isAuthDropdownOpen = !this.isAuthDropdownOpen;

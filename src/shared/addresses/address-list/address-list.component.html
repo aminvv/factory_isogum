@@ -15,61 +15,55 @@
     <div class="spinner"></div>
     <p>در حال دریافت آدرس‌ها...</p>
   </div>
+<div class="empty"></div>
+  <!-- List -->
+  <div class="list" *ngIf="!loading">
 
-  <!-- Empty -->
-  <div class="state-box" *ngIf="!loading && addresses.length === 0 && !showForm">
-    <i class="ti ti-map-pin-off"></i>
-    <p>هنوز آدرسی ثبت نکرده‌اید</p>
-    <button class="add-btn" (click)="openAdd()">
-      <i class="ti ti-plus"></i> افزودن اولین آدرس
-    </button>
-  </div>
-
-  <!-- Address Cards -->
-  <div class="addresses" *ngIf="!loading && addresses.length > 0">
     <div class="address-card" *ngFor="let addr of addresses" [class.default]="addr.isDefault">
-
-      <div class="card-header">
-        <div class="card-icon">
+      <div class="card-top">
+        <div class="icon">
           <i class="ti ti-map-pin"></i>
         </div>
-        <div class="card-meta">
-          <div class="location">{{ addr.province }}، {{ addr.city }}</div>
-          <div class="street">{{ addr.street }}<span *ngIf="addr.plaque">، پلاک {{ addr.plaque }}</span></div>
+        <div class="meta">
+          <div class="loc">{{ addr.province }}، {{ addr.city }}</div>
+          <div class="str">{{ addr.street }}<span *ngIf="addr.plaque">، پلاک {{ addr.plaque }}</span></div>
         </div>
-        <span class="default-badge" *ngIf="addr.isDefault">
-          <i class="ti ti-star-filled"></i> پیش‌فرض
+        <span class="def-badge" *ngIf="addr.isDefault">
+          <i class="ti ti-star"></i> پیش‌فرض
         </span>
       </div>
-
-      <div class="card-body">
+      <div class="card-mid">
         <div class="info-row">
           <i class="ti ti-mailbox"></i>
           <span>کدپستی: {{ addr.postalCode }}</span>
         </div>
       </div>
-
-      <div class="card-footer">
-        <button class="edit-btn" (click)="openEdit(addr)">
+      <div class="card-foot">
+        <button class="btn-edit" (click)="openEdit(addr)">
           <i class="ti ti-edit"></i> ویرایش
         </button>
-        <button class="delete-btn" (click)="deleteAddress(addr.id)">
+        <button class="btn-del" (click)="deleteAddress(addr.id)">
           <i class="ti ti-trash"></i> حذف
         </button>
       </div>
-
     </div>
+
+    <!-- Add new card -->
+    <div class="add-card" (click)="openAdd()">
+      <i class="ti ti-plus"></i>
+      <span>افزودن آدرس جدید</span>
+    </div>
+
   </div>
 
-  <!-- Form -->
-  <div class="form-overlay" *ngIf="showForm" (click)="cancel()"></div>
-  <div class="form-drawer" *ngIf="showForm">
-    <div class="form-header">
+  <!-- Form Modal -->
+  <div class="overlay" *ngIf="showForm" (click)="cancel()"></div>
+  <div class="drawer" *ngIf="showForm">
+    <div class="drawer-header">
       <h3>{{ editingAddress ? 'ویرایش آدرس' : 'افزودن آدرس جدید' }}</h3>
       <button class="close-btn" (click)="cancel()"><i class="ti ti-x"></i></button>
     </div>
-
-    <div class="form-body">
+    <div class="drawer-body">
       <div class="form-row">
         <div class="field">
           <label>استان</label>
@@ -80,12 +74,10 @@
           <input [(ngModel)]="form.city" placeholder="مثال: تهران" />
         </div>
       </div>
-
       <div class="field">
         <label>خیابان / آدرس کامل</label>
         <input [(ngModel)]="form.street" placeholder="خیابان، کوچه، ..." />
       </div>
-
       <div class="form-row">
         <div class="field">
           <label>کدپستی</label>
@@ -96,14 +88,12 @@
           <input [(ngModel)]="form.plaque" placeholder="اختیاری" />
         </div>
       </div>
-
       <div class="field checkbox-field">
         <input type="checkbox" id="isDefault" [(ngModel)]="form.isDefault" />
         <label for="isDefault">تنظیم به عنوان آدرس پیش‌فرض</label>
       </div>
     </div>
-
-    <div class="form-footer">
+    <div class="drawer-footer">
       <button class="save-btn" (click)="saveAddress()">
         <i class="ti ti-check"></i>
         {{ editingAddress ? 'ذخیره تغییرات' : 'افزودن آدرس' }}
