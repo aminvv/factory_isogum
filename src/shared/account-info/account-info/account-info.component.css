@@ -72,6 +72,16 @@
     font-size: 18px;
 }
 
+
+.empty {
+  display: flex;
+  gap: 4px;
+  background: #ffffff8c;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 22px;
+}
+
 .page-header{
     text-align: right;
 }

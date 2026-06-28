@@ -1,0 +1,278 @@
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.wishlist {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.page-title {
+    text-align: right;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.page-sub {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+.count-badge {
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+/* State */
+.state-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    padding: 3rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    color: #9ca3af;
+}
+
+.spinner {
+    width: 34px;
+    height: 34px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #1d4ed8;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.state-box i {
+    font-size: 40px;
+    color: #d1d5db;
+}
+
+.state-box p {
+    font-size: 14px;
+}
+
+
+
+.empty {
+  display: flex;
+  gap: 4px;
+  background: #ffffff8c;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 22px;
+}
+
+/* List */
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+/* Card */
+.product-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.product-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 2px 10px rgba(29, 78, 216, .06);
+}
+
+/* Image */
+.img-wrap {
+    width: 120px;
+    flex-shrink: 0;
+    position: relative;
+    cursor: pointer;
+    background: #f9fafb;
+}
+
+.img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.out-of-stock {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Info */
+.product-info {
+    flex: 1;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    min-width: 0;
+}
+
+.product-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    text-align: right;
+    cursor: pointer;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-name:hover {
+    color: #1d4ed8;
+}
+
+/* Stars */
+.stars {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.stars i {
+    font-size: 14px;
+    color: #d1d5db;
+}
+
+.stars i.filled {
+    color: #f59e0b;
+}
+
+.rating-val {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-right: 4px;
+}
+
+/* Footer */
+.product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    gap: .75rem;
+}
+
+.price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.price span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #9ca3af;
+}
+
+.actions {
+    display: flex;
+    gap: 6px;
+}
+
+.buy-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 26px;
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s;
+}
+
+.buy-btn:hover:not(:disabled) {
+    background: #1e40af;
+}
+
+.buy-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.buy-btn i {
+    font-size: 15px;
+}
+
+.remove-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fef2f2;
+    color: #dc2626;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .15s;
+}
+
+.remove-btn:hover {
+    background: #fee2e2;
+}
+
+.remove-btn i {
+    font-size: 16px;
+}
+
+@media (max-width: 500px) {
+    .img-wrap {
+        width: 90px;
+    }
+
+    .product-footer {
+        flex-wrap: wrap;
+    }
+}

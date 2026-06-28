@@ -288,7 +288,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }else{
       this.router.navigate(['/profile']);
-      return;
     }
     if (this.isMobile) {
       this.isAuthDropdownOpen = !this.isAuthDropdownOpen;

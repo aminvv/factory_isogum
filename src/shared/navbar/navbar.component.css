@@ -282,7 +282,7 @@
 /* ---------- دراپ‌داون‌های عمومی ---------- */
 .dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + -9px);
   left: 0;
   right: auto;
   background: #fff;

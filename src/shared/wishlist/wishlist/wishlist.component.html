@@ -1,1 +1,70 @@
-<p>wishlist works!</p>
+<div class="wishlist" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">علاقه‌مندی‌ها</h2>
+      <p class="page-sub">محصولاتی که ذخیره کرده‌اید</p>
+    </div>
+    <span class="count-badge" *ngIf="!loading">{{ items.length |persianNumber}} محصول</span>
+  </div>
+  <div class="empty"></div>
+
+  <!-- Loading -->
+  <div class="state-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت...</p>
+  </div>
+
+  <!-- Empty -->
+  <div class="state-box" *ngIf="!loading && items.length === 0">
+    <i class="ti ti-heart-off"></i>
+    <p>هنوز محصولی به علاقه‌مندی‌ها اضافه نکرده‌اید</p>
+  </div>
+
+  <!-- List -->
+  <div class="list" *ngIf="!loading && items.length > 0">
+    <div class="product-card" *ngFor="let item of items">
+
+      <!-- Image -->
+      <div class="img-wrap" (click)="goToProduct(item.product.slug)">
+        <img [src]="item.product.image[0]?.url"
+          [alt]="item.product.productName"
+          onerror="this.src='assets/placeholder.png'" />
+        <span class="out-of-stock" *ngIf="item.product.quantity === 0">ناموجود</span>
+      </div>
+
+      <!-- Info -->
+      <div class="product-info">
+        <div class="product-name" (click)="goToProduct(item.product.slug)">
+          {{ item.product.productName }}
+        </div>
+
+        <!-- Stars -->
+        <div class="stars">
+          <i *ngFor="let s of stars(item.product.rating)"
+            class="ti"
+            [class.ti-star-filled]="s <= ratingNum(item.product.rating)"
+            [class.ti-star]="s > ratingNum(item.product.rating)"
+            [class.filled]="s <= ratingNum(item.product.rating)">
+          </i>
+          <span class="rating-val">{{ item.product.rating |persianNumber}}</span>
+        </div>
+
+        <div class="product-footer">
+          <div class="price">{{ formatPrice(item.product.price) }} <span>تومان</span></div>
+          <div class="actions">
+            <button class="buy-btn" [disabled]="item.product.quantity === 0"
+              (click)="goToProduct(item.product.slug)">
+              <i class="ti ti-shopping-cart"></i>
+              {{ item.product.quantity === 0 ? 'ناموجود' : 'مشاهده' }}
+            </button>
+            <button class="remove-btn" (click)="remove(item.product.id)">
+              <i class="ti ti-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
