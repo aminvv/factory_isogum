@@ -1,1 +1,111 @@
-<p>account-info works!</p>
+<div class="account-info" dir="rtl">
+
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">اطلاعات حساب کاربری</h2>
+      <p class="page-sub">مشاهده و ویرایش اطلاعات شخصی</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="state-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت اطلاعات...</p>
+  </div>
+
+  <ng-container *ngIf="!loading && user">
+
+    <!-- Success message -->
+    <div class="success-msg" *ngIf="successMsg">
+      <i class="ti ti-circle-check"></i> {{ successMsg }}
+    </div>
+
+    <!-- Avatar + Name -->
+    <div class="profile-card">
+      <div class="avatar">
+        {{ (user.firstName || '؟')[0] }}{{ (user.lastName || '')[0] }}
+      </div>
+      <div class="profile-meta">
+        <div class="profile-name">
+          {{ user.firstName || '' }} {{ user.lastName || '' }}
+          <span class="role-badge">{{ user.role === 'user' ? 'کاربر عادی' : user.role }}</span>
+        </div>
+        <div class="profile-mobile">{{ user.mobile }}</div>
+      </div>
+      <button class="edit-btn" (click)="toggleEdit()">
+        <i class="ti" [class.ti-edit]="!editMode" [class.ti-x]="editMode"></i>
+        {{ editMode ? 'انصراف' : 'ویرایش' }}
+      </button>
+    </div>
+
+    <!-- View Mode -->
+    <div class="info-card" *ngIf="!editMode">
+      <div class="card-title"><i class="ti ti-user"></i> اطلاعات شخصی</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">نام</div>
+          <div class="info-val">{{ user.firstName || '—' }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">نام خانوادگی</div>
+          <div class="info-val">{{ user.lastName || '—' }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">شماره موبایل</div>
+          <div class="info-val">{{ user.mobile || '—' }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">نقش</div>
+          <div class="info-val">{{ user.role === 'user' ? 'کاربر عادی' : user.role }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">تاریخ عضویت</div>
+          <div class="info-val">{{ formatDate(user.create_at) }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">آخرین ورود</div>
+          <div class="info-val">{{ formatDate(user.last_login) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <div class="info-card" *ngIf="editMode">
+      <div class="card-title"><i class="ti ti-edit"></i> ویرایش اطلاعات</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>نام</label>
+          <input [(ngModel)]="form.firstName" placeholder="نام خود را وارد کنید" />
+        </div>
+        <div class="field">
+          <label>نام خانوادگی</label>
+          <input [(ngModel)]="form.lastName" placeholder="نام خانوادگی خود را وارد کنید" />
+        </div>
+        <div class="field full">
+          <label>شماره موبایل</label>
+          <input [(ngModel)]="form.mobile" placeholder="09xxxxxxxxx" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="save-btn" (click)="save()" [disabled]="saving">
+          <i class="ti ti-check"></i>
+          {{ saving ? 'در حال ذخیره...' : 'ذخیره تغییرات' }}
+        </button>
+        <button class="cancel-btn" (click)="toggleEdit()">انصراف</button>
+      </div>
+    </div>
+
+    <!-- Security Card -->
+    <div class="info-card security">
+      <div class="card-title"><i class="ti ti-shield"></i> امنیت حساب</div>
+      <div class="security-row">
+        <div class="security-info">
+          <div class="security-label">ورود با OTP</div>
+          <div class="security-sub">حساب شما با رمز یکبار مصرف محافظت می‌شود</div>
+        </div>
+        <span class="active-badge"><i class="ti ti-circle-check"></i> فعال</span>
+      </div>
+    </div>
+
+  </ng-container>
+</div>
