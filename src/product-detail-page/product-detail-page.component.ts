@@ -6,6 +6,7 @@ import { BasketService } from '../basket/services/basket.service';
 import { AddToBasketDto } from '../basket/model/basket.model';
 import { GuestBasketService } from '../basket/services/guest-basket.service';
 import { BasketStateService } from '../basket/services/basket-state.service';
+import { WishlistService } from '../shared/wishlist/wishlist/Wishlist.service';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -21,6 +22,9 @@ export class ProductDetailPageComponent implements OnInit {
   product?: Product;
   private intervalId: any = null;
   quantityError: string = '';
+
+
+  isWishlisted = false;
 
   // Gallery
   selectedImageIndex = 0;
@@ -63,6 +67,7 @@ export class ProductDetailPageComponent implements OnInit {
     private guestBasketService: GuestBasketService,
     private basketStateService: BasketStateService,
     private cdr: ChangeDetectorRef,
+    private wishlistService: WishlistService,
     private ngZone: NgZone
   ) { }
 
@@ -87,11 +92,37 @@ export class ProductDetailPageComponent implements OnInit {
   }
 
 
+  checkWishlist(productId: number) {
+    const token = sessionStorage.getItem('accessToken');
+    if (!token) return;
+    this.wishlistService.check(productId).subscribe({
+      next: (res) => { this.isWishlisted = res.isWishlisted; this.cdr.markForCheck(); }
+    });
+  }
+
+
+  toggleWishlist() {
+    if (!this.product) return;
+    const token = sessionStorage.getItem('accessToken');
+    if (!token) { alert('برای افزودن به علاقه‌مندی‌ها لاگین کنید'); return; }
+
+    if (this.isWishlisted) {
+      this.wishlistService.remove(this.product.id).subscribe({
+        next: () => { this.isWishlisted = false; this.cdr.markForCheck(); }
+      });
+    } else {
+      this.wishlistService.add(this.product.id).subscribe({
+        next: () => { this.isWishlisted = true; this.cdr.markForCheck(); }
+      });
+    }
+  }
+
   loadProduct(id: string): void {
     this.productService.getProductById(id).subscribe({
       next: (res) => {
         this.product = { ...res };
         this.setCurrentImage();
+        this.checkWishlist(res.id);
 
         this.productService.getProductDiscounts(res.id).subscribe({
           next: (discounts: Discount[]) => {
@@ -255,7 +286,7 @@ export class ProductDetailPageComponent implements OnInit {
 
   addToCart(): void {
     if (!this.product) return;
-    const items = this.basketStateService.currentItems; 
+    const items = this.basketStateService.currentItems;
     const found = items.find(i => i.id === this.product?.id);
     this.currentQuantityInCart = found?.quantity || 0;
 

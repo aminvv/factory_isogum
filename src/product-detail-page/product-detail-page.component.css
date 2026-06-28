@@ -1110,7 +1110,17 @@
 }
 
 
-
+.wishlist-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: #fff; color: #6b7280;
+  border: 1.5px solid #e5e7eb; border-radius: 9px;
+  padding: 10px 16px; font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: inherit; width: 100%;
+  transition: all .15s; margin-top: 8px;
+}
+.wishlist-btn:hover { border-color: #fca5a5; color: #dc2626; }
+.wishlist-btn.active { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
+.wishlist-btn i { font-size: 16px; }
 
 
 

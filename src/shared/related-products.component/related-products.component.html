@@ -13,7 +13,11 @@
         <div class="product-image">
           <img [src]="product.image?.[0]?.url || 'assets/default-product.jpg'" [alt]="product.productName">
 
-
+            <button class="wishlist-icon-btn" 
+    (click)="toggleWishlist(product.id); $event.stopPropagation()"
+    [class.active]="isProductWishlisted(product.id)">
+    <i class="fas fa-heart"></i>
+  </button>
           <span class="badge-discount" *ngIf="product.hasDiscount && product.discountPercent">
             {{ product.discountPercent | persianNumber }}٪
           </span>
@@ -43,6 +47,7 @@
             <div class="final-price">
               {{ (product.finalPrice || product.price) | persianNumber }}
               <small>تومان</small>
+              
             </div>
           </div>
 
