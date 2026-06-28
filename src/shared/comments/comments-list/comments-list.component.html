@@ -1,1 +1,110 @@
-<p>comments-list works!</p>
+<div class="comments-list" dir="rtl">
+
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">دیدگاه‌های من</h2>
+      <p class="page-sub">دیدگاه‌هایی که ثبت کرده‌اید</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="state-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت دیدگاه‌ها...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'product'" (click)="activeTab = 'product'">
+        <i class="ti ti-package"></i> دیدگاه محصولات
+        <span class="tab-count">{{ productComments.length |persianNumber }}</span>
+      </button>
+      <button class="tab" [class.active]="activeTab === 'blog'" (click)="activeTab = 'blog'">
+        <i class="ti ti-article"></i> دیدگاه مقالات
+        <span class="tab-count">{{ blogComments.length |persianNumber }}</span>
+      </button>
+    </div>
+
+    <!-- Product Comments -->
+    <div class="list" *ngIf="activeTab === 'product'">
+
+      <div class="state-box" *ngIf="productComments.length === 0">
+        <i class="ti ti-message-off"></i>
+        <p>هنوز دیدگاهی برای محصولات ثبت نکرده‌اید</p>
+      </div>
+
+      <div class="comment-card" *ngFor="let comment of productComments">
+        <div class="card-top" (click)="goToProduct(comment.product.slug)">
+          <img [src]="comment.product.image[0]?.url" [alt]="comment.product.productName"
+            class="product-img" onerror="this.src='assets/placeholder.png'" />
+          <div class="product-meta">
+            <div class="product-name">{{ comment.product.productName }}</div>
+            <div class="product-link">مشاهده محصول <i class="ti ti-arrow-left"></i></div>
+          </div>
+          <span class="status-badge" [class.accepted]="comment.accepted" [class.pending]="!comment.accepted">
+            <i class="ti ti-circle-check" *ngIf="comment.accepted"></i>
+            <i class="ti ti-clock" *ngIf="!comment.accepted"></i>
+            {{ comment.accepted ? 'تایید شده' : 'در انتظار' }}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="stars" *ngIf="comment.rating">
+            <i *ngFor="let s of stars(comment.rating)" class="ti"
+              [class.ti-star]="s > (comment.rating || 0)"
+              [class.ti-star-filled]="s <= (comment.rating || 0)"
+              [class.filled]="s <= (comment.rating || 0)">
+            </i>
+            <span class="rating-val">{{ comment.rating |persianNumber }} از ۵</span>
+          </div>
+          <p class="comment-text">{{ comment.text }}</p>
+          <div class="comment-date"><i class="ti ti-calendar"></i> {{ formatDate(comment.created_at) }}</div>
+        </div>
+        <div class="card-foot">
+          <button class="del-btn" (click)="deleteProductComment(comment.id)">
+            <i class="ti ti-trash"></i> حذف دیدگاه
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Blog Comments -->
+    <div class="list" *ngIf="activeTab === 'blog'">
+
+      <div class="state-box" *ngIf="blogComments.length === 0">
+        <i class="ti ti-message-off"></i>
+        <p>هنوز دیدگاهی برای مقالات ثبت نکرده‌اید</p>
+      </div>
+
+      <div class="comment-card" *ngFor="let comment of blogComments">
+        <div class="card-top" (click)="goToBlog(comment.blog.slug)">
+          <img [src]="comment.blog.thumbnail[0]?.url || 'assets/placeholder.png'"
+            [alt]="comment.blog.title" class="product-img"
+            onerror="this.src='assets/placeholder.png'" />
+          <div class="product-meta">
+            <div class="product-name">{{ comment.blog.title }}</div>
+            <div class="product-link">مشاهده مقاله <i class="ti ti-arrow-left"></i></div>
+          </div>
+          <span class="status-badge" [class.accepted]="comment.accepted" [class.pending]="!comment.accepted">
+            <i class="ti ti-circle-check" *ngIf="comment.accepted"></i>
+            <i class="ti ti-clock" *ngIf="!comment.accepted"></i>
+            {{ comment.accepted ? 'تایید شده' : 'در انتظار' }}
+          </span>
+        </div>
+        <div class="card-body">
+          <p class="comment-text">{{ comment.text }}</p>
+          <div class="comment-date"><i class="ti ti-calendar"></i> {{ formatDate(comment.created_at) }}</div>
+        </div>
+        <div class="card-foot">
+          <button class="del-btn" (click)="deleteBlogComment(comment.id)">
+            <i class="ti ti-trash"></i> حذف دیدگاه
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-container>
+</div>

@@ -1,0 +1,293 @@
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.comments-list {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.page-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.page-sub {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 4px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    border: none;
+    background: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+}
+
+.tab i {
+    font-size: 16px;
+}
+
+.tab:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.tab.active {
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+.tab-count {
+    background: #f3f4f6;
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.tab.active .tab-count {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* State */
+.state-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    padding: 3rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    color: #9ca3af;
+}
+
+.spinner {
+    width: 34px;
+    height: 34px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #1d4ed8;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.state-box i {
+    font-size: 40px;
+    color: #d1d5db;
+}
+
+.state-box p {
+    font-size: 14px;
+}
+.page-header{
+    text-align: right;
+}
+
+/* List */
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+/* Card */
+.comment-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.comment-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 2px 10px rgba(29, 78, 216, .06);
+}
+
+.card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1.25rem .875rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background .15s;
+}
+
+.card-top:hover {
+    background: #f9fafb;
+}
+
+.product-img {
+    width: 52px;
+    height: 52px;
+    border-radius: 9px;
+    border: 1px solid #e5e7eb;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.product-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.product-name {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+    color: #111827;
+}
+
+.product-link {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    color: #1d4ed8;
+    margin-top: 3px;
+}
+
+.product-link i {
+    font-size: 12px;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+.status-badge.accepted {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge.pending {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.status-badge i {
+    font-size: 13px;
+}
+
+.card-body {
+    padding: .875rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    gap: .6rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.stars i {
+    font-size: 16px;
+    color: #d1d5db;
+}
+
+.stars i.filled {
+    color: #f59e0b;
+}
+
+.rating-val {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-right: 4px;
+}
+
+.comment-text {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.comment-date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.comment-date i {
+    font-size: 13px;
+}
+
+.card-foot {
+    padding: .75rem 1.25rem;
+}
+
+.del-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #fef2f2;
+    color: #dc2626;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s;
+}
+
+.del-btn:hover {
+    background: #fee2e2;
+}
+
+.del-btn i {
+    font-size: 15px;
+}
