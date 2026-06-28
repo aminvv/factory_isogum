@@ -1,245 +1,153 @@
-/* افزودن پشتیبانی کامل از RTL */
-ul {
-  margin: 0px;
-  padding: 0px;
-  list-style: none;
-}
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
 
-.footer-section {
-  background: #151414;
-  position: relative;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.footer {
+  background: #111827;
+  color: #e5e7eb;
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
   direction: rtl;
-  text-align: right;
+  padding: 3rem 2rem 0;
 }
 
-.footer-cta {
-  border-bottom: 1px solid #373636;
+/* Top */
+.top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 0.5px solid #374151;
 }
 
-.single-cta i {
-  color: #ff5e14;
-  font-size: 30px;
-  float: right; /* تغییر به راست برای RTL */
-  margin-top: 8px;
-}
-
-.cta-text {
-  padding-right: 15px; /* راست به جای چپ */
-  display: inline-block;
-}
-
-.cta-text h4 {
+.brand-name {
+  font-size: 18px;
+  font-weight: 500;
   color: #fff;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: .5rem;
 }
 
-.cta-text span {
-  color: #757575;
-  font-size: 15px;
+.brand-desc {
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 1rem;
 }
 
-.footer-content {
-  position: relative;
-  z-index: 2;
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 1.25rem;
 }
 
-.footer-logo {
-  margin-bottom: 30px;
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #9ca3af;
 }
 
-.footer-logo img {
-  max-width: 200px;
+.contact-row i { font-size: 15px; color: #6b7280; flex-shrink: 0; }
+
+.socials { display: flex; gap: 8px; }
+
+.social-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: #1f2937; border: 0.5px solid #374151;
+  display: flex; align-items: center; justify-content: center;
+  color: #9ca3af; font-size: 17px; cursor: pointer;
+  text-decoration: none; transition: all .15s;
+}
+.social-btn:hover { background: #374151; color: #fff; }
+
+/* Link Columns */
+.col-title {
+  font-size: 13px; font-weight: 500; color: #fff;
+  margin-bottom: .875rem; letter-spacing: .03em;
+}
+.col-links { display: flex; flex-direction: column; gap: .5rem; }
+.col-link {
+  font-size: 13px; color: #9ca3af;
+  text-decoration: none; cursor: pointer;
+  transition: color .15s;
+}
+.col-link:hover { color: #fff; }
+
+/* Newsletter */
+.newsletter-text {
+  font-size: 13px; color: #9ca3af;
+  line-height: 1.6; margin-bottom: .875rem;
+}
+.newsletter-form { display: flex; gap: 6px; }
+.newsletter-input {
+  flex: 1; background: #1f2937;
+  border: 0.5px solid #374151; border-radius: 8px;
+  padding: 8px 12px; font-size: 13px; color: #fff;
+  outline: none; font-family: inherit;
+}
+.newsletter-input:focus { border-color: #1d4ed8; }
+.newsletter-btn {
+  background: #1d4ed8; color: #fff; border: none;
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: inherit;
+  white-space: nowrap; transition: background .15s;
+}
+.newsletter-btn:hover { background: #1e40af; }
+.newsletter-success {
+  display: flex; align-items: center; gap: 6px;
+  color: #16a34a; font-size: 13px;
+}
+.newsletter-success i { font-size: 16px; }
+
+/* Mid */
+.mid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 0.5px solid #374151;
 }
 
-.footer-text p {
-  margin-bottom: 14px;
-  font-size: 14px;
-  color: #7e7e7e;
-  line-height: 28px;
+.section-label {
+  font-size: 12px; color: #6b7280;
+  margin-bottom: .875rem; letter-spacing: .04em;
 }
 
-.footer-social-icon span {
-  color: #fff;
-  display: block;
-  font-size: 20px;
-  font-weight: 700;
-  font-family: "Poppins", sans-serif;
-  margin-bottom: 20px;
+.trust-logos, .payment-logos {
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
 }
 
-.footer-social-icon a {
-  color: #fff;
-  font-size: 16px;
-  margin-left: 15px; /* فاصله از راست به چپ */
-  display: inline-block;
+.trust-badge, .payment-badge {
+  background: #1f2937; border: 0.5px solid #374151;
+  border-radius: 8px; padding: 8px 14px;
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; color: #9ca3af;
+}
+.trust-badge i { font-size: 18px; color: #16a34a; }
+.payment-badge i { font-size: 16px; color: #6b7280; }
+.payment-badge.secure i { color: #16a34a; }
+
+/* Bottom */
+.bottom {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 0;
+  flex-wrap: wrap; gap: .5rem;
+}
+.copy { font-size: 12px; color: #6b7280; }
+.bottom-links {
+  display: flex; gap: 1.25rem;
+  font-size: 12px; color: #6b7280;
 }
 
-.footer-social-icon i {
-  height: 40px;
-  width: 40px;
-  text-align: center;
-  line-height: 38px;
-  border-radius: 50%;
+/* Responsive */
+@media (max-width: 900px) {
+  .top { grid-template-columns: 1fr 1fr; }
 }
-
-.facebook-bg {
-  background: #3b5998;
-}
-.twitter-bg {
-  background: #55acee;
-}
-.instagram-bg {
-  background: #e4405f;
-}
-.linkedin-bg {
-  background: #0077b5;
-}
-
-.footer-widget-heading h3 {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 40px;
-  position: relative;
-}
-
-.footer-widget-heading h3::before {
-  content: "";
-  position: absolute;
-  right: 0; /* راست به جای چپ */
-  bottom: -15px;
-  height: 2px;
-  width: 50px;
-  background: #ff5e14;
-}
-
-.footer-widget ul li {
-  display: inline-block;
-  float: right; /* RTL */
-  width: 50%;
-  margin-bottom: 12px;
-}
-
-.footer-widget ul li a:hover {
-  color: #ff5e14;
-  padding-right: 5px; /* افکت حرکت به راست */
-}
-
-.footer-widget ul li a {
-  color: #878787;
-  text-transform: capitalize;
-  transition: 0.2s;
-}
-
-.subscribe-form {
-  position: relative;
-  overflow: hidden;
-}
-
-.subscribe-form input {
-  width: 100%;
-  padding: 14px 28px;
-  background: #2e2e2e;
-  border: 1px solid #2e2e2e;
-  color: #fff;
-  border-radius: 30px 0 0 30px; /* برای RTL برعکس می‌شود ولی دکمه سمت چپ است */
-}
-
-.subscribe-form button {
-  position: absolute;
-  left: 0; /* برای RTL دکمه در سمت چپ قرار می‌گیرد */
-  top: 0;
-  background: #ff5e14;
-  padding: 13px 20px;
-  border: 1px solid #ff5e14;
-  border-radius: 0 30px 30px 0;
-  cursor: pointer;
-}
-
-.subscribe-form button i {
-  color: #fff;
-  font-size: 22px;
-  transform: rotate(6deg); /* تغییر جزئی جهت آیکون */
-}
-
-/* پیام خبرنامه */
-.subscribe-message {
-  font-size: 12px;
-  margin-top: 10px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  text-align: center;
-}
-.subscribe-message.success {
-  background: #1f5a2e;
-  color: #c6f7d0;
-}
-.subscribe-message.error {
-  background: #7a2e2e;
-  color: #ffc9c9;
-}
-
-.copyright-area {
-  background: #202020;
-  padding: 25px 0;
-}
-
-.copyright-text p {
-  margin: 0;
-  font-size: 14px;
-  color: #878787;
-}
-
-.copyright-text p a {
-  color: #ff5e14;
-}
-
-.footer-menu li {
-  display: inline-block;
-  margin-right: 20px; /* راست به جای چپ */
-}
-
-.footer-menu li:hover a {
-  color: #ff5e14;
-}
-
-.footer-menu li a {
-  font-size: 14px;
-  color: #878787;
-}
-
-/* تنظیمات واکنش‌گرایی برای RTL */
-@media (max-width: 768px) {
-  .single-cta i {
-    float: none;
-    display: block;
-    margin-bottom: 10px;
-  }
-  .cta-text {
-    padding-right: 0;
-    text-align: center;
-    display: block;
-  }
-  .footer-widget ul li {
-    float: none;
-    width: 100%;
-    text-align: center;
-  }
-  .footer-widget-heading h3::before {
-    right: 50%;
-    transform: translateX(50%);
-  }
-  .subscribe-form input {
-    border-radius: 30px;
-  }
-  .subscribe-form button {
-    left: auto;
-    right: 0;
-    border-radius: 30px;
-    margin-top: 5px;
-    position: relative;
-    width: 100%;
-  }
+@media (max-width: 560px) {
+  .top { grid-template-columns: 1fr; }
+  .mid { grid-template-columns: 1fr; }
+  .bottom { flex-direction: column; align-items: flex-start; }
 }

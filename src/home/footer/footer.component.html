@@ -1,115 +1,102 @@
-<footer class="footer-section" dir="rtl">
-  <div class="container">
-    <div class="footer-cta pt-5 pb-5">
-      <div class="row">
-        <div class="col-xl-4 col-md-4 mb-30">
-          <div class="single-cta">
-            <i class="fas fa-map-marker-alt"></i>
-            <div class="cta-text">
-              <h4>آدرس ما</h4>
-              <span>تهران، خیابان ولیعصر، نبش خیابان فلان، پلاک ۱۲۳</span>
-            </div>
-          </div>
+<footer class="footer" dir="rtl" *ngIf="settings">
+
+  <!-- Top Section -->
+  <div class="top">
+
+    <!-- Brand -->
+    <div class="brand-col">
+      <div class="brand-name">{{ settings.siteName }}</div>
+      <div class="brand-desc" *ngIf="settings.siteDescription">{{ settings.siteDescription }}</div>
+      <div class="contact-info">
+        <div class="contact-row" *ngIf="settings.phone">
+          <i class="ti ti-phone"></i>
+          <span>{{ settings.phone }}</span>
         </div>
-        <div class="col-xl-4 col-md-4 mb-30">
-          <div class="single-cta">
-            <i class="fas fa-phone"></i>
-            <div class="cta-text">
-              <h4>تماس با ما</h4>
-              <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
-            </div>
-          </div>
+        <div class="contact-row" *ngIf="settings.email">
+          <i class="ti ti-mail"></i>
+          <span>{{ settings.email }}</span>
         </div>
-        <div class="col-xl-4 col-md-4 mb-30">
-          <div class="single-cta">
-            <i class="far fa-envelope-open"></i>
-            <div class="cta-text">
-              <h4>پست الکترونیک</h4>
-              <span>info&#64;mysite.com</span>
-            </div>
-          </div>
+        <div class="contact-row" *ngIf="settings.address">
+          <i class="ti ti-map-pin"></i>
+          <span>{{ settings.address }}</span>
+        </div>
+      </div>
+      <div class="socials" *ngIf="socialLinks.length > 0">
+        <a *ngFor="let s of socialLinks" [href]="s.url" target="_blank"
+          class="social-btn" [attr.aria-label]="s.label">
+          <i class="ti" [ngClass]="s.icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer Link Columns -->
+    <div class="link-col" *ngFor="let col of settings.footerLinks">
+      <div class="col-title">{{ col.title }}</div>
+      <div class="col-links">
+        <a class="col-link" *ngFor="let link of col.links" [routerLink]="link.url">
+          {{ link.label }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="newsletter-col" *ngIf="settings.newsletterEnabled">
+      <div class="col-title">خبرنامه</div>
+      <div class="newsletter-text">{{ settings.newsletterText }}</div>
+      <div class="newsletter-success" *ngIf="newsletterSent">
+        <i class="ti ti-circle-check"></i> با موفقیت عضو شدید
+      </div>
+      <div class="newsletter-form" *ngIf="!newsletterSent">
+        <input class="newsletter-input" [(ngModel)]="newsletterEmail"
+          placeholder="ایمیل شما" type="email" />
+        <button class="newsletter-btn" (click)="subscribeNewsletter()">عضویت</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mid Section: Trust + Payment -->
+  <div class="mid">
+
+    <div class="trust-section">
+      <div class="section-label">نمادهای اعتماد</div>
+      <div class="trust-logos">
+        <div class="trust-badge" *ngIf="settings.enamad" [innerHTML]="settings.enamad"></div>
+        <div class="trust-badge placeholder" *ngIf="!settings.enamad">
+          <i class="ti ti-shield-check"></i>
+          <span>نماد اعتماد الکترونیکی</span>
+        </div>
+        <div class="trust-badge" *ngIf="settings.samandehi" [innerHTML]="settings.samandehi"></div>
+        <div class="trust-badge placeholder" *ngIf="!settings.samandehi">
+          <i class="ti ti-certificate"></i>
+          <span>ساماندهی</span>
         </div>
       </div>
     </div>
-    <div class="footer-content pt-5 pb-5">
-      <div class="row">
-        <div class="col-xl-4 col-lg-4 mb-50">
-          <div class="footer-widget">
-            <div class="footer-logo">
-              <a href="/"><img src="https://i.ibb.co/QDy827D/ak-logo.png" class="img-fluid" alt="لوگو"></a>
-            </div>
-            <div class="footer-text">
-              <p>ما با تکیه بر تجربه و تخصص، خدماتی مدرن و باکیفیت را به مشتریان خود ارائه می‌دهیم. هدف ما جلب رضایت شماست.</p>
-            </div>
-            <div class="footer-social-icon">
-              <span>ما را دنبال کنید</span>
-              <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
-              <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-              <a href="#"><i class="fab fa-instagram instagram-bg"></i></a>
-              <a href="#"><i class="fab fa-linkedin-in linkedin-bg"></i></a>
-            </div>
-          </div>
+
+    <div class="payment-section">
+      <div class="section-label">درگاه‌های پرداخت</div>
+      <div class="payment-logos">
+        <div class="payment-badge" *ngFor="let gw of settings.paymentGateways">
+          <i class="ti ti-credit-card"></i>
+          <span>{{ paymentGatewayLabels[gw] || gw }}</span>
         </div>
-        <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
-          <div class="footer-widget">
-            <div class="footer-widget-heading">
-              <h3>لینک‌های مفید</h3>
-            </div>
-            <ul>
-              <li><a href="#">خانه</a></li>
-              <li><a href="#">درباره ما</a></li>
-              <li><a href="#">خدمات</a></li>
-              <li><a href="#">نمونه کارها</a></li>
-              <li><a href="#">تماس با ما</a></li>
-              <li><a href="#">وبلاگ</a></li>
-              <li><a href="#">تیم ما</a></li>
-              <li><a href="#">سوالات متداول</a></li>
-              <li><a href="#">حریم خصوصی</a></li>
-              <li><a href="#">شرایط استفاده</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
-          <div class="footer-widget">
-            <div class="footer-widget-heading">
-              <h3>خبرنامه</h3>
-            </div>
-            <div class="footer-text mb-25">
-              <p>با عضویت در خبرنامه، از آخرین مقالات و تخفیف‌ها با خبر شوید.</p>
-            </div>
-            <div class="subscribe-form">
-              <form (ngSubmit)="onSubscribe()" #subscribeForm="ngForm">
-                <input type="email" name="email" [(ngModel)]="email" placeholder="آدرس ایمیل شما" required email>
-                <button type="submit"><i class="fab fa-telegram-plane"></i></button>
-              </form>
-              <div *ngIf="messageText" class="subscribe-message" [class.success]="messageType === 'success'" [class.error]="messageType === 'error'">
-                {{ messageText }}
-              </div>
-            </div>
-          </div>
+        <div class="payment-badge secure">
+          <i class="ti ti-lock"></i>
+          <span>پرداخت امن</span>
         </div>
       </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom -->
+  <div class="bottom">
+    <div class="copy">© {{ currentYear }} {{ settings.siteName }} — تمام حقوق محفوظ است</div>
+    <div class="bottom-links">
+      <span *ngIf="settings.phone">{{ settings.phone }}</span>
+      <span *ngIf="settings.email">{{ settings.email }}</span>
     </div>
   </div>
-  <div class="copyright-area">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-6 col-lg-6 text-center text-lg-right">
-          <div class="copyright-text">
-            <p>تمامی حقوق متعلق به {{ currentYear }} | طراحی و توسعه توسط <a href="#">شرکت نمونه</a></p>
-          </div>
-        </div>
-        <div class="col-xl-6 col-lg-6 d-none d-lg-block text-left">
-          <div class="footer-menu">
-            <ul>
-              <li><a href="#">خانه</a></li>
-              <li><a href="#">قوانین</a></li>
-              <li><a href="#">حریم خصوصی</a></li>
-              <li><a href="#">راهنما</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+
 </footer>
