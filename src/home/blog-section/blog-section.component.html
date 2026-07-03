@@ -1,112 +1,91 @@
 <div id="blog-section">
 	<div class="container">
-
 		<div class="row">
 
 			<div class="col-xs-12 col-sm-6 col-md-4">
-
 				<div class="blog-section-intro">
-
 					<h2>مطالب ما را بخوانید</h2>
 					<p>در این بخش می‌توانید جدیدترین مقالات، نکات فنی و آموزش‌های مربوط به نصب و نگهداری ایزوگام را
 						مطالعه کنید.</p>
-
 				</div>
-
 			</div>
 
-			<div class="col-xs-12 col-sm-6 col-md-4">
-
-				<a class="blog-item first" href="#" title="نکات مهم نصب ایزوگام">
+			<div class="col-xs-12 col-sm-6 col-md-4" *ngIf="blogs[0]">
+				<a class="blog-item first" (click)="goToBlog(blogs[0].id)" [title]="blogs[0].title" style="cursor:pointer">
 					<div class="blog-item-img">
-						<img src="https://ik.imagekit.io/9tnlivadc/torch-on-installation-1153x800-1-1024x710.jpg?updatedAt=1762861808343"
-							alt="ایزوگام" />
+						<img [src]="getImage(blogs[0])" [alt]="blogs[0].title" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Blog'" />
 					</div>
 					<div class="blog-item-content">
-						<span class="blog-item-label">مقاله</span>
+						<span class="blog-item-label">{{ blogs[0].category }}</span>
 						<span class="blog-item-date">
-							<span class="blog-item-date-day">30</span>
-							<span class="blog-item-date-month">شهریور</span>
+							<span class="blog-item-date-day">{{ formatDate(blogs[0].create_at).day }}</span>
+							<span class="blog-item-date-month">{{ formatDate(blogs[0].create_at).month }}</span>
 						</span>
-						<h3>اصول صحیح نصب ایزوگام برای طول عمر بیشتر</h3>
-						<p>در این مطلب به مهم‌ترین نکاتی که هنگام نصب ایزوگام باید رعایت شود اشاره می‌کنیم...</p>
+						<h3>{{ blogs[0].title }}</h3>
+						<p>{{ blogs[0].description }}</p>
 					</div>
 				</a>
-
 			</div>
 
-			<div class="col-xs-12 col-sm-6 col-md-4">
-
-				<a class="blog-item second" href="#" title="تفاوت ایزوگام‌ها">
+			<div class="col-xs-12 col-sm-6 col-md-4" *ngIf="blogs[1]">
+				<a class="blog-item second" (click)="goToBlog(blogs[1].id)" [title]="blogs[1].title" style="cursor:pointer">
 					<div class="blog-item-img">
-						<img src="https://ik.imagekit.io/9tnlivadc/1000_F_250020935_eZtSipW4jjR0Rt6u3s34X0xq4gmEEGBi.jpg?updatedAt=1762862487993"
-							alt="ایزوگام" />
+						<img [src]="getImage(blogs[1])" [alt]="blogs[1].title" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Blog'" />
 					</div>
 					<div class="blog-item-content">
-						<span class="blog-item-label">خبر</span>
+						<span class="blog-item-label">{{ blogs[1].category }}</span>
 						<span class="blog-item-date">
-							<span class="blog-item-date-day">18</span>
-							<span class="blog-item-date-month">مرداد</span>
+							<span class="blog-item-date-day">{{ formatDate(blogs[1].create_at).day }}</span>
+							<span class="blog-item-date-month">{{ formatDate(blogs[1].create_at).month }}</span>
 						</span>
-						<h3>شناخت تفاوت ایزوگام پلیمری و دمیده</h3>
-						<p>ایزوگام‌ها در دو نوع پلیمری و دمیده تولید می‌شوند. در این مقاله تفاوت‌ها و مزایای هرکدام
-							بررسی شده است...</p>
+						<h3>{{ blogs[1].title }}</h3>
+						<p>{{ blogs[1].description }}</p>
 					</div>
 				</a>
-
 			</div>
 
-			<div class="col-xs-12 col-sm-6 col-md-4">
-
-				<a class="blog-item third" href="#" title="نگهداری ایزوگام">
+			<div class="col-xs-12 col-sm-6 col-md-4" *ngIf="blogs[2]">
+				<a class="blog-item third" (click)="goToBlog(blogs[2].id)" [title]="blogs[2].title" style="cursor:pointer">
 					<div class="blog-item-img">
-						<img src="https://ik.imagekit.io/9tnlivadc/images%20(2).jpeg?updatedAt=1762862956726"
-							alt="ایزوگام" />
+						<img [src]="getImage(blogs[2])" [alt]="blogs[2].title" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Blog'" />
 					</div>
 					<div class="blog-item-content">
-						<span class="blog-item-label">مقاله</span>
+						<span class="blog-item-label">{{ blogs[2].category }}</span>
 						<span class="blog-item-date">
-							<span class="blog-item-date-day">09</span>
-							<span class="blog-item-date-month">مرداد</span>
+							<span class="blog-item-date-day">{{ formatDate(blogs[2].create_at).day }}</span>
+							<span class="blog-item-date-month">{{ formatDate(blogs[2].create_at).month }}</span>
 						</span>
-						<h3>روش‌های نگهداری و افزایش عمر ایزوگام</h3>
-						<p>با رعایت چند نکته ساده می‌توانید عمر ایزوگام پشت‌بام یا سرویس‌ها را تا چند سال افزایش دهید...
-						</p>
+						<h3>{{ blogs[2].title }}</h3>
+						<p>{{ blogs[2].description }}</p>
 					</div>
 				</a>
-
 			</div>
 
-			<div class="col-xs-12 col-sm-6 col-md-4">
-
-				<a class="blog-item fourth" href="#" title="قیمت روز ایزوگام">
+			<div class="col-xs-12 col-sm-6 col-md-4" *ngIf="blogs[3]">
+				<a class="blog-item fourth" (click)="goToBlog(blogs[3].id)" [title]="blogs[3].title" style="cursor:pointer">
 					<div class="blog-item-img">
-						<img src="https://ik.imagekit.io/9tnlivadc/DeWatermark.ai_1756214417956-removebg-preview.png?updatedAt=1757764793633"
-							alt="ایزوگام" />
+						<img [src]="getImage(blogs[3])" [alt]="blogs[3].title" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Blog'" />
 					</div>
 					<div class="blog-item-content">
-						<span class="blog-item-label">خبر</span>
+						<span class="blog-item-label">{{ blogs[3].category }}</span>
 						<span class="blog-item-date">
-							<span class="blog-item-date-day">7</span>
-							<span class="blog-item-date-month">تیر</span>
+							<span class="blog-item-date-day">{{ formatDate(blogs[3].create_at).day }}</span>
+							<span class="blog-item-date-month">{{ formatDate(blogs[3].create_at).month }}</span>
 						</span>
-						<h3>آخرین قیمت ایزوگام در بازار امروز</h3>
-						<p>در این بخش می‌توانید از جدیدترین تغییرات قیمت ایزوگام و عوامل مؤثر بر افزایش یا کاهش آن مطلع
-							شوید...</p>
+						<h3>{{ blogs[3].title }}</h3>
+						<p>{{ blogs[3].description }}</p>
 					</div>
 				</a>
-
 			</div>
 
 			<div class="col-xs-12 col-sm-6 col-md-4">
-
 				<div class="buttonContainer">
-					<a class="button" href="#" title="نمایش بیشتر"><span>نمایش بیشتر</span></a>
+					<a class="button" (click)="goToArticles()" title="نمایش بیشتر" style="cursor:pointer">
+						<span>نمایش بیشتر</span>
+					</a>
 				</div>
-
 			</div>
 
 		</div>
-
 	</div>
 </div>

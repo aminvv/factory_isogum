@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomePageComponent } from './home/home-page/home-page.component';
-import { ArticlesComponent } from './articles/articles/articles.component';
 import { SignUpComponent } from './auth/sign-up-in/sign-up.component';
 import { ProductDetailPageComponent } from './product-detail-page/product-detail-page.component';
 import { CheckoutBasketCartComponent } from './shared/checkout-basket-cart/checkout-basket-cart.component';
@@ -15,10 +14,11 @@ import { AddressListComponent } from './shared/addresses/address-list/address-li
 import { CommentsListComponent } from './shared/comments/comments-list/comments-list.component';
 import { WishlistComponent } from './shared/wishlist/wishlist/wishlist.component';
 import { AccountInfoComponent } from './shared/account-info/account-info/account-info.component';
+import { ArticleDetailComponent } from './shared/articles/article-detail/article-detail.component';
+import { ArticlesComponent } from './shared/articles/articles.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
-  { path: 'articles', component: ArticlesComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'productDetail/:id', component: ProductDetailPageComponent },
   { path: 'checkout', component: CheckoutBasketCartComponent },
@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'payment/failedUrl', component: PaymentFailedComponent },
 
 
-    {
+  {
     path: 'profile',
     component: ProfileComponent,
     children: [
@@ -41,6 +41,8 @@ const routes: Routes = [
     ]
   },
 
+  { path: 'articles', component: ArticlesComponent },
+  { path: 'articles/:id', component: ArticleDetailComponent },
 ];
 
 @NgModule({

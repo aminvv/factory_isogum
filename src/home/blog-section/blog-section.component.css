@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700);
 
 * {
-	font-family: 'Source Sans Pro', Verdana, Helvetica, Arial, Tahoma, sans-serif;
+	 font-family: 'Vazirmatn', Tahoma, sans-serif;
 }
 
 h2 {
@@ -179,12 +179,12 @@ a.button:hover {
 
 
 .blog-item-img img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	/* مثل background-size: cover */
-	object-position: center;
-	display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* ← از cover به contain عوض کن */
+  object-position: center;
+  display: block;
+  background-color: #f3f4f6; /* ← پشت عکس خاکستری */
 }
 
 .blog-item-img.video {}
@@ -214,10 +214,12 @@ a.button:hover {
 }
 
 #blog-section .blog-item-img {
-	position: absolute;
-	left: 5px;
-	top: 0;
-	height: 240px;
+  position: absolute;
+  left: 5px;
+  top: 0;
+  height: 330px;
+  width: calc(100% - 10px);
+  overflow: hidden;
 }
 
 #blog-section .blog-item.first .blog-item-img {
@@ -226,7 +228,7 @@ a.button:hover {
 
 .blog-item-content {
 	position: relative;
-	padding: 35px 20px 30px 65px;
+	padding: 62px 20px 30px 65px;
 	background-color: #fff;
 	-moz-box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.1);
 	-webkit-box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.1);
@@ -236,7 +238,32 @@ a.button:hover {
 	-ms-transition: all .3s ease-in-out;
 	-o-transition: all .3s ease-in-out;
 	transition: all .3s ease-in-out;
+	min-height: 160px;
+	overflow: hidden;
 }
+
+
+
+.blog-item-content h3 {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	text-align: right;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.blog-item-content p {
+	margin-bottom: 0;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+
 
 #blog-section .blog-item-content {
 	left: -5px;
@@ -254,7 +281,7 @@ a.button:hover {
 .blog-item-label {
 	position: absolute;
 	left: 20px;
-	top: -15px;
+	top: 2px;
 	display: inline-block;
 	padding: 3px 10px;
 	font-size: 14px;

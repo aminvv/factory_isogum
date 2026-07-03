@@ -1,56 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { API_CONFIG } from '../../common/api/api.config';
+
+interface Blog {
+  id: number;
+  title: string;
+  description: string;
+  slug: string;
+  category: string;
+  thumbnail: Array<{ url: string; publicId: string }>;
+  create_at: string;
+}
 
 @Component({
   selector: 'app-blog-section',
   templateUrl: './blog-section.component.html',
   styleUrls: ['./blog-section.component.css'],
 })
-export class BlogSectionComponent {
-  posts = [
-    {
-      img: 'https://picsum.photos/id/1018/600/400',
-      tag: 'BLOG',
-      day: '30',
-      month: 'Sept',
-      title: 'Nulla vehicula porttitor lorem',
-      excerpt: 'Curabitur sagittis mauris ex, non congue enim sagittis et...',
-      link: '#'
-    },
-    {
-      img: 'https://picsum.photos/id/1024/600/400',
-      tag: 'NEWS',
-      day: '18',
-      month: 'Aug',
-      title: 'In quis neque sed velit sodales interdum',
-      excerpt: 'Sed id turpis auctor, vulputate turpis fringilla, volutpat mi...',
-      link: '#'
-    },
-    {
-      img: 'https://picsum.photos/id/1024/600/400',
-      tag: 'NEWS',
-      day: '18',
-      month: 'Aug',
-      title: 'In quis neque sed velit sodales interdum',
-      excerpt: 'Sed id turpis auctor, vulputate turpis fringilla, volutpat mi...',
-      link: '#'
-    },
-    {
-      img: 'https://picsum.photos/id/1024/600/400',
-      tag: 'NEWS',
-      day: '18',
-      month: 'Aug',
-      title: 'In quis neque sed velit sodales interdum',
-      excerpt: 'Sed id turpis auctor, vulputate turpis fringilla, volutpat mi...',
-      link: '#'
-    },
-    {
-      img: 'https://picsum.photos/id/1027/600/400',
-      tag: 'BLOG',
-      day: '09',
-      month: 'Aug',
-      title: 'Sed a nulla a felis imperdiet vestibulum',
-      excerpt: 'Donec blandit vestibulum ipsum, eu viverra purus tempus at...',
-      link: '#'
-    }
-  ];
-}
+export class BlogSectionComponent implements OnInit {
+  blogs: Blog[] = [];
+  loading = true;
+
+  constructor(private http: HttpClient, private router: Router) {}
+
+  ngOnInit() {
+    this.http.get<{ blog: Blog[] }>(`${API_CONFIG.baseUrl}/blog/get-blogs?page=1&limit=4`).subscribe({
+      next: (res) => { this.blogs = res.blog; this.loading = false; },
+      error: () => { this.loading = false; },
+    });
+  }
+
+  goToBlog(id: number) {
+    this.router.navigate(['/articles', id]);
+  }
+
+  goToArticles() {
+    this.router.navigate(['/articles']);
+  }
+
+  formatDate(dateStr: string): { day: string; month: string } {
+    const date = new Date(dateStr);
+    const day = date.toLocaleDateString('fa-IR', { day: 'numeric' });
+    const month = date.toLocaleDateString('fa-IR', { month: 'long' });
+    return { day, month };
+  }
+
+  getImage(blog: Blog): string {
+    return blog.thumbnail?.[0]?.url || 'assets/default-blog.jpg';
+  }
+} 

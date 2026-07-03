@@ -1,0 +1,70 @@
+<app-navbar></app-navbar>
+
+<div class="articles-page" dir="rtl">
+
+  <!-- Header -->
+  <div class="page-hero">
+    <div class="hero-content">
+      <h1>مقالات و اخبار</h1>
+      <p>جدیدترین مطالب، نکات فنی و آموزش‌های مربوط به ایزوگام</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت مقالات...</p>
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="!loading && blogs.length === 0">
+    <i class="ti ti-article-off"></i>
+    <p>مقاله‌ای یافت نشد</p>
+  </div>
+
+  <!-- Grid -->
+  <div class="articles-container" *ngIf="!loading && blogs.length > 0">
+    <div class="articles-grid">
+      <div class="article-card" *ngFor="let blog of blogs" (click)="goToDetail(blog.id)">
+
+        <div class="card-img">
+          <img [src]="getImage(blog)" [alt]="blog.title"
+            onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250?text=Blog'" />
+          <span class="category-badge">{{ blog.category }}</span>
+        </div>
+
+        <div class="card-body">
+          <div class="card-date">
+            <i class="ti ti-calendar"></i>
+            {{ formatDate(blog.create_at) }}
+          </div>
+          <h3 class="card-title">{{ blog.title }}</h3>
+          <p class="card-desc">{{ blog.description }}</p>
+          <div class="read-more">
+            بیشتر بخوانید <i class="ti ti-arrow-left"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button class="page-btn" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+        <i class="ti ti-chevron-right"></i>
+      </button>
+      <button class="page-btn" *ngFor="let p of pages"
+        [class.active]="p === currentPage"
+        (click)="changePage(p)">
+        {{ p }}
+      </button>
+      <button class="page-btn" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+        <i class="ti ti-chevron-left"></i>
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<app-footer></app-footer>

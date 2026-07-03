@@ -22,6 +22,8 @@ import { WishlistComponent } from './wishlist/wishlist/wishlist.component';
 import { AccountInfoComponent } from './account-info/account-info/account-info.component';
 import { AddressListComponent } from './addresses/address-list/address-list.component';
 import { CommentsListComponent } from './comments/comments-list/comments-list.component';
+import { ArticleDetailComponent } from './articles/article-detail/article-detail.component';
+import { ArticlesComponent } from './articles/articles.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { CommentsListComponent } from './comments/comments-list/comments-list.co
     WishlistComponent,
     AccountInfoComponent,
     AddressListComponent,
-    CommentsListComponent, 
+    CommentsListComponent,
+    ArticlesComponent,
+    ArticleDetailComponent, 
     
   ],
   imports: [

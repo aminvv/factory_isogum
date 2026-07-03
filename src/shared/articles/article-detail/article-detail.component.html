@@ -1,0 +1,135 @@
+<app-navbar></app-navbar>
+
+<div class="article-detail" dir="rtl">
+
+    <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <ng-container *ngIf="!loading && blog">
+
+        <!-- Hero Image -->
+        <div class="hero-img">
+            <img [src]="getImage()" [alt]="blog.title"
+                onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=Blog'" />
+            <div class="hero-overlay">
+                <div class="hero-meta">
+                    <span class="category-badge">{{ blog.category }}</span>
+                    <span class="date"><i class="ti ti-calendar"></i> {{ formatDate(blog.create_at) }}</span>
+                </div>
+                <h1>{{ blog.title }}</h1>
+            </div>
+        </div>
+
+        <div class="content-wrap">
+
+            <!-- Back -->
+            <button class="back-btn" (click)="goBack()">
+                <i class="ti ti-arrow-right"></i> بازگشت به مقالات
+            </button>
+
+            <!-- Article Body -->
+            <div class="article-body">
+                <p class="article-desc">{{ blog.description }}</p>
+                <div class="article-content" [innerHTML]="blog.content"></div>
+            </div>
+
+            <!-- Comments -->
+            <div class="comments-section">
+                <h2 class="section-title">
+                    <i class="ti ti-message"></i>
+                    دیدگاه‌ها ({{ comments.length }})
+                </h2>
+
+                <!-- Comment List -->
+                <div class="comment-list" *ngIf="comments.length > 0">
+                    <div class="comment-item" *ngFor="let comment of comments">
+                        <div class="comment-avatar">
+                            {{ getAuthor(comment)[0] }}
+                        </div>
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-author">
+                                    {{ getAuthor(comment) }}
+                                </span>
+                                <span class="comment-date">
+                                    {{ formatDate(comment.created_at) }}
+                                </span>
+                            </div>
+                            <p class="comment-text">
+                                {{ comment.text }}
+                            </p>
+
+                            <!-- Replies -->
+                            <div class="comment-actions">
+
+                                <button class="reply-btn" (click)="toggleReply(comment.id)">
+
+                                    <i class="ti ti-arrow-back-up"></i>
+
+                                    {{ replyingTo === comment.id ? 'انصراف' : 'پاسخ' }}
+
+                                </button>
+
+                            </div>
+
+                            <div class="reply-form" *ngIf="replyingTo === comment.id">
+
+                                <textarea [(ngModel)]="replyText" rows="3" placeholder="پاسخ خود را بنویسید...">
+    </textarea>
+
+                                <button class="submit-btn" (click)="submitReply(comment.id)"
+                                    [disabled]="!replyText.trim()">
+
+                                    ثبت پاسخ
+
+                                </button>
+
+                            </div>
+                            <div class="reply-list" *ngIf="comment.children && comment.children.length">
+                                <div class="reply-item" *ngFor="let reply of comment.children">
+                                    <div class="reply-avatar">
+                                        {{ getAuthor(reply)[0] }}
+                                    </div>
+                                    <div class="reply-body">
+                                        <div class="comment-header">
+                                            <span class="comment-author">
+                                                {{ getAuthor(reply) }}
+                                            </span>
+                                            <span class="comment-date">
+                                                {{ formatDate(reply.created_at) }}
+                                            </span>
+                                        </div>
+                                        <p class="comment-text">
+                                            {{ reply.text }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="no-comments" *ngIf="comments.length === 0">
+                    <i class="ti ti-message-off"></i>
+                    <p>هنوز دیدگاهی ثبت نشده — اولین نفر باشید!</p>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <h3>ثبت دیدگاه</h3>
+                    <textarea [(ngModel)]="commentText" rows="4" placeholder="دیدگاه خود را بنویسید..."></textarea>
+                    <button class="submit-btn" (click)="submitComment()" [disabled]="submitting || !commentText.trim()">
+                        <i class="ti ti-send"></i>
+                        {{ submitting ? 'در حال ارسال...' : 'ثبت دیدگاه' }}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </ng-container>
+
+</div>
+
+<app-footer></app-footer>
