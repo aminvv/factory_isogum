@@ -1565,11 +1565,12 @@
 
     .quantity-selector {
         justify-content: center;
-        width: 100%;
+        width: 30%;
     }
 
     .add-to-cart-btn {
         width: 100%;
+        padding: 15px;
     }
 
     .badge-group {

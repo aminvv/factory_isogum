@@ -446,3 +446,264 @@ input:not([type="checkbox"]):focus {
 .cancel-btn:hover {
   background: #e5e7eb;
 }
+
+
+
+
+
+/* ===== ریسپانسیو برای صفحه آدرس‌ها ===== */
+/* بدون تغییر در کدهای اصلی، این بخش را به انتهای فایل CSS اضافه کنید */
+
+@media (max-width: 992px) {
+  .address-list {
+    padding: 0 1rem;
+  }
+
+  .address-card,
+  .add-card {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .page-title {
+    font-size: 16px;
+  }
+
+  .add-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .address-card {
+    border-radius: 10px;
+  }
+
+  .card-top {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0.9rem 1rem 0.7rem;
+  }
+
+  .icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .meta {
+    flex: 1 1 100%;
+  }
+
+  .loc {
+    font-size: 14px;
+  }
+
+  .str {
+    font-size: 12px;
+  }
+
+  .def-badge {
+    align-self: flex-start;
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .card-mid {
+    padding: 0 1rem 0.7rem;
+  }
+
+  .info-row {
+    font-size: 11px;
+  }
+
+  .card-foot {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0.7rem 1rem;
+  }
+
+  .btn-edit,
+  .btn-del {
+    flex: 1 1 calc(50% - 3px);
+    justify-content: center;
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .add-card {
+    padding: 1rem;
+    font-size: 13px;
+  }
+
+  .drawer {
+    max-width: 100%;
+    height: 75%;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .drawer-header h3 {
+    font-size: 14px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .field label {
+    font-size: 12px;
+  }
+
+  input:not([type="checkbox"]) {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .drawer-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0.8rem 1rem 1.2rem;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    flex: 1 1 100%;
+    height: 42px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .address-list {
+    padding: 0 0.5rem;
+  }
+
+  .page-title {
+    font-size: 15px;
+  }
+
+  .page-sub {
+    font-size: 12px;
+  }
+
+  .address-card {
+    border-radius: 8px;
+  }
+
+  .card-top {
+    padding: 0.7rem 0.8rem 0.5rem;
+  }
+
+  .icon {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .loc {
+    font-size: 13px;
+  }
+
+  .str {
+    font-size: 11px;
+  }
+
+  .def-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .card-mid {
+    padding: 0 0.8rem 0.5rem;
+  }
+
+  .info-row {
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .card-foot {
+    padding: 0.5rem 0.8rem;
+  }
+
+  .btn-edit,
+  .btn-del {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .add-card {
+    padding: 0.8rem;
+    font-size: 12px;
+  }
+
+  .drawer {
+    height: 80%;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .drawer-header {
+    padding: 0.7rem 0.9rem;
+  }
+
+  .drawer-body {
+    padding: 0.9rem;
+  }
+
+  .drawer-footer {
+    padding: 0.7rem 0.9rem 1rem;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    height: 38px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .address-card {
+    border-radius: 6px;
+  }
+
+  .card-top {
+    padding: 0.5rem 0.6rem 0.4rem;
+  }
+
+  .icon {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .loc {
+    font-size: 12px;
+  }
+
+  .str {
+    font-size: 10px;
+  }
+
+  .btn-edit,
+  .btn-del {
+    font-size: 10px;
+    padding: 5px 6px;
+  }
+
+  .drawer-body {
+    padding: 0.7rem;
+  }
+
+  input:not([type="checkbox"]) {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}

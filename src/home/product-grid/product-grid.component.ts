@@ -79,4 +79,5 @@ export class ProductGridComponent implements AfterViewInit, OnInit {
       });
     }
   }
+  
 }

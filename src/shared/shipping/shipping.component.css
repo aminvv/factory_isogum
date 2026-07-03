@@ -9,6 +9,7 @@
   font-family: 'IRANSans', 'Vazir', sans-serif;
   direction: rtl;
 }
+
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -17,39 +18,60 @@
   color: #6b7280;
   margin-bottom: 24px;
 }
-.breadcrumb a { color: #2563eb; text-decoration: none; }
-.breadcrumb .active { color: #111827; font-weight: 500; }
+
+.breadcrumb a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.breadcrumb .active {
+  color: #111827;
+  font-weight: 500;
+}
 
 /* دو ستونه روی دسکتاپ */
 .checkout-layout {
   display: flex;
   gap: 30px;
-  align-items: flex-start; /* برای sticky کارت */
+  align-items: flex-start;
+  /* برای sticky کارت */
   margin-top: 20px
 }
-.order-summary{
-  position: sticky; top: 17px; align-self: flex-start;
+
+.order-summary {
+  position: sticky;
+  top: 17px;
+  align-self: flex-start;
 }
 
 @media (max-width: 768px) {
   .checkout-layout {
     grid-template-columns: 1fr;
   }
-  .order-summary { order: -1; } /* خلاصه بالا بیاد در موبایل */
+
+  .order-summary {
+    order: -1;
+  }
+
+  /* خلاصه بالا بیاد در موبایل */
 }
 
 
 .checkout-main {
-  flex:4; /* حدود ۶۰% عرض */
-  min-width: 0; /* جلوگیری از سرریز */
+  flex: 4;
+  /* حدود ۶۰% عرض */
+  min-width: 0;
+  /* جلوگیری از سرریز */
 }
 
 
 .order-summary {
-  flex: 1.2; /* حدود ۴۰% عرض */
+  flex: 1.2;
+  /* حدود ۴۰% عرض */
   min-width: 480px;
   position: sticky;
-  top: 17px; /* فاصله از بالای صفحه (با احتساب هدر) */
+  top: 17px;
+  /* فاصله از بالای صفحه (با احتساب هدر) */
   align-self: flex-start;
 }
 
@@ -61,6 +83,7 @@
   padding: 20px;
   margin-bottom: 16px;
 }
+
 .section-title {
   font-size: 16px;
   font-weight: 600;
@@ -82,11 +105,33 @@
   cursor: pointer;
   transition: border-color 0.15s;
 }
-.address-card.selected { border-color: #2563eb; background: #eff6ff; }
-.address-card:hover { border-color: #93c5fd; }
-.address-info { flex: 1; }
-.address-main { font-size: 14px; color: #111827; margin: 0 0 4px; }
-.address-secondary { font-size: 12px; color: #6b7280; margin: 0; }
+
+.address-card.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.address-card:hover {
+  border-color: #93c5fd;
+}
+
+.address-info {
+  flex: 1;
+  text-align: right;
+}
+
+.address-main {
+  font-size: 14px;
+  color: #111827;
+  margin: 0 0 4px;
+}
+
+.address-secondary {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
 .badge-default {
   display: inline-block;
   font-size: 11px;
@@ -96,21 +141,59 @@
   border-radius: 10px;
   margin-top: 4px;
 }
-.address-actions { display: flex; gap: 6px; }
-.btn-icon {
-  width: 28px; height: 28px;
-  border: none; border-radius: 6px;
-  background: #f3f4f6;
-  cursor: pointer; font-size: 12px; color: #374151;
+
+.address-actions {
+  display: flex;
+  gap: 6px;
 }
-.btn-icon.danger { background: #fee2e2; color: #dc2626; }
+
+.btn-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: #f3f4f6;
+  cursor: pointer;
+  font-size: 12px;
+  color: #374151;
+}
+
+.btn-icon.danger {
+  background: #fee2e2;
+  color: #dc2626;
+}
 
 /* فرم آدرس */
-.address-form { display: flex; flex-direction: column; gap: 14px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
-.form-group { display: flex; flex-direction: column; gap: 4px; }
-.form-group label { font-size: 13px; font-weight: 500; color: #374151; }
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
 .form-group input[type="text"] {
   padding: 9px 12px;
   border: 1px solid #d1d5db;
@@ -118,14 +201,40 @@
   font-size: 14px;
   outline: none;
 }
-.form-group input:focus { border-color: #2563eb; }
-.required { color: #dc2626; }
-.field-error { font-size: 11px; color: #dc2626; }
-.checkbox-group label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
-.form-actions { display: flex; gap: 10px; }
+
+.form-group input:focus {
+  border-color: #2563eb;
+}
+
+.required {
+  color: #dc2626;
+}
+
+.field-error {
+  font-size: 11px;
+  color: #dc2626;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
 
 /* لیست محصولات (فقط نمایشی) */
-.cart-items-readonly { display: flex; flex-direction: column; gap: 12px; }
+.cart-items-readonly {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .cart-item-row {
   display: flex;
   align-items: center;
@@ -133,14 +242,56 @@
   padding-bottom: 12px;
   border-bottom: 1px solid #f3f4f6;
 }
-.cart-item-row:last-child { border-bottom: none; }
-.item-img { width: 56px; height: 56px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
-.item-img-placeholder { width: 56px; height: 56px; background: #f3f4f6; border-radius: 6px; flex-shrink: 0; }
-.item-name { flex: 1; font-size: 13px; color: #111827; }
-.item-qty { font-size: 12px; color: #6b7280; white-space: nowrap; }
-.item-price { text-align: left; white-space: nowrap; }
-.item-price .old-price { display: block; font-size: 11px; color: #9ca3af; text-decoration: line-through; }
-.item-price .final-price { font-size: 13px; font-weight: 600; color: #111827; }
+
+.cart-item-row:last-child {
+  border-bottom: none;
+}
+
+.item-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.item-img-placeholder {
+  width: 56px;
+  height: 56px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.item-name {
+  flex: 1;
+  font-size: 13px;
+  color: #111827;
+}
+
+.item-qty {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.item-price {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.item-price .old-price {
+  display: block;
+  font-size: 11px;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.item-price .final-price {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
 
 /* ---------- ردیف اصلی آیتم ---------- */
 .cart-item-row {
@@ -159,6 +310,7 @@
   border-radius: 8px;
   flex-shrink: 0;
 }
+
 .item-img-placeholder {
   width: 60px;
   height: 60px;
@@ -296,13 +448,13 @@
 
 
 .quantity-error {
-    font-size: 12px;
-    color: #dc2626;
-    margin-top: 7px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: flex-end;
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
 }
 
 
@@ -316,6 +468,7 @@
   position: sticky;
   top: 16px;
 }
+
 .summary-row {
   display: flex;
   justify-content: space-between;
@@ -324,45 +477,484 @@
   padding: 8px 0;
   color: #374151;
 }
-.summary-row.discount .discount-value { color: #16a34a; font-weight: 500; }
-.summary-row.shipping-row .shipping-note { font-size: 12px; color: #f59e0b; }
-.summary-divider { height: 1px; background: #e5e7eb; margin: 8px 0; }
-.summary-row.total { font-weight: 700; font-size: 15px; color: #111827; }
-.total-price { color: #2563eb; }
-.old-price { text-decoration: line-through; color: #9ca3af; }
+
+.summary-row.discount .discount-value {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.summary-row.shipping-row .shipping-note {
+  font-size: 12px;
+  color: #f59e0b;
+}
+
+.summary-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+.summary-row.total {
+  font-weight: 700;
+  font-size: 15px;
+  color: #111827;
+}
+
+.total-price {
+  color: #2563eb;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
 
 /* دکمه‌ها */
 .btn-primary {
-  background: #111827; color: #fff;
-  border: none; border-radius: 8px;
-  padding: 11px 20px; font-size: 14px; font-weight: 600;
-  cursor: pointer; width: 100%;
-}
-.btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
-.btn-primary:hover:not(:disabled) { background: #1f2937; }
-
-.btn-submit {
-  background: #2563eb; color: #fff;
-  border: none; border-radius: 8px;
-  padding: 13px; font-size: 15px; font-weight: 700;
-  cursor: pointer; width: 100%; margin-top: 12px;
-}
-.btn-submit:disabled { background: #93c5fd; cursor: not-allowed; }
-.btn-submit:hover:not(:disabled) { background: #1d4ed8; }
-
-.btn-outline {
-  background: transparent; color: #374151;
-  border: 1px solid #d1d5db; border-radius: 8px;
-  padding: 9px 16px; font-size: 13px;
+  background: #111827;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   width: 100%;
 }
-.btn-outline:hover { border-color: #9ca3af; }
 
-.error-msg { color: #dc2626; font-size: 13px; margin: 8px 0; }
-.empty-msg { color: #6b7280; font-size: 13px; }
+.btn-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.btn-submit {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 13px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.btn-submit:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-outline:hover {
+  border-color: #9ca3af;
+}
+
+.error-msg {
+  color: #dc2626;
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+.empty-msg {
+  color: #6b7280;
+  font-size: 13px;
+}
+
 .no-address-warning {
-  font-size: 12px; color: #f59e0b;
-  margin-top: 8px; text-align: center;
-  display: flex; align-items: center; justify-content: center; gap: 4px;
+  font-size: 12px;
+  color: #f59e0b;
+  margin-top: 8px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* ============================================================ */
+/* افزودنی‌های ریسپانسیو برای صفحه تسویه‌حساب                  */
+/* ============================================================ */
+
+/* تنظیمات پایه برای تبلت و موبایل */
+@media (max-width: 992px) {
+  .checkout-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .checkout-main {
+    flex: 1;
+    width: 100%;
+  }
+
+  .order-summary {
+    flex: 1;
+    min-width: unset;
+    width: 100%;
+    position: static;
+    order: -1;
+    /* خلاصه سفارش در بالا */
+  }
+
+  .summary-card {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-page {
+    padding: 12px 10px 30px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .section-card {
+    padding: 14px 12px;
+    border-radius: 8px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .address-card {
+    padding: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .address-info {
+    flex: 1 1 100%;
+  }
+
+  .address-main {
+    font-size: 13px;
+  }
+
+  .address-secondary {
+    font-size: 11px;
+  }
+
+  .badge-default {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+
+  .address-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .btn-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+  }
+
+  .form-group input[type="text"] {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  .checkbox-group label {
+    font-size: 12px;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions .btn-primary,
+  .form-actions .btn-outline {
+    flex: 1 1 100%;
+  }
+
+  /* آیتم‌های سبد */
+  .cart-item-row {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .item-img,
+  .item-img-placeholder {
+    width: 48px;
+    height: 48px;
+  }
+
+  .cart-item-info {
+    flex: 1 1 calc(100% - 60px);
+  }
+
+  .cart-item-title {
+    font-size: 0.8rem;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .cart-item-qty-control-price-row {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .cart-item-price-row {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .qty-control {
+    padding: 1px;
+  }
+
+  .qty-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.85rem;
+  }
+
+  .qty-value {
+    font-size: 0.75rem;
+    min-width: 20px;
+  }
+
+  .btn-remove {
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
+  }
+
+  .quantity-error {
+    font-size: 11px;
+  }
+
+  .summary-row {
+    font-size: 12px;
+    padding: 6px 0;
+  }
+
+  .summary-row.total {
+    font-size: 14px;
+  }
+
+  .total-price {
+    font-size: 14px;
+  }
+
+  .btn-primary,
+  .btn-submit {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .no-address-warning {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-page {
+    padding: 8px 6px 20px;
+  }
+
+  .breadcrumb {
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .section-card {
+    padding: 10px 8px;
+    border-radius: 6px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    padding-bottom: 8px;
+  }
+
+  .address-card {
+    padding: 8px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .address-main {
+    font-size: 12px;
+  }
+
+  .address-secondary {
+    font-size: 10px;
+  }
+
+  .address-actions {
+    justify-content: center;
+  }
+
+  .btn-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+  }
+
+  .form-group input[type="text"] {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .cart-item-row {
+    padding: 6px 0;
+  }
+
+  .item-img,
+  .item-img-placeholder {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cart-item-title {
+    font-size: 0.75rem;
+  }
+
+  .cart-item-old-price {
+    font-size: 0.6rem;
+  }
+
+  .cart-item-new-price {
+    font-size: 0.75rem;
+  }
+
+  .qty-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 0.75rem;
+  }
+
+  .qty-value {
+    font-size: 0.7rem;
+    min-width: 18px;
+  }
+
+  .btn-remove {
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+  }
+
+  .summary-row {
+    font-size: 11px;
+    padding: 5px 0;
+  }
+
+  .summary-row.total {
+    font-size: 13px;
+  }
+
+  .total-price {
+    font-size: 13px;
+  }
+
+  .btn-primary,
+  .btn-submit {
+    padding: 8px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .btn-outline {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .error-msg {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .checkout-page {
+    padding: 6px 4px 16px;
+  }
+
+  .section-title {
+    font-size: 12px;
+  }
+
+  .address-main {
+    font-size: 11px;
+  }
+
+  .cart-item-title {
+    font-size: 0.7rem;
+  }
+
+  .item-img,
+  .item-img-placeholder {
+    width: 34px;
+    height: 34px;
+  }
+
+  .qty-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 0.65rem;
+  }
+
+  .qty-value {
+    font-size: 0.65rem;
+    min-width: 16px;
+  }
+
+  .btn-remove {
+    width: 20px;
+    height: 20px;
+    font-size: 0.65rem;
+  }
+
+  .summary-row {
+    font-size: 10px;
+  }
+
+  .summary-row.total {
+    font-size: 12px;
+  }
+
+  .btn-primary,
+  .btn-submit {
+    font-size: 11px;
+    padding: 6px;
+  }
 }

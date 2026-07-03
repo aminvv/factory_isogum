@@ -74,7 +74,7 @@
                 </div>
               </div>
               <div class="product-right">
-                <div class="qty-box">{{ item.quantity }}</div>
+                <div class="qty-box">{{ item.quantity | persianNumber}}</div>
                 <div class="item-price">{{ formatPrice(+item.price) }} تومان</div>
               </div>
             </div>
@@ -173,17 +173,17 @@
 
           <div class="order-stats">
             <div class="stat">
-              <div class="stat-val">{{ totalQuantity }}</div>
+              <div class="stat-val">{{ totalQuantity | persianNumber}}</div>
               <div class="stat-label">تعداد کالا</div>
             </div>
             <div class="stat-sep"></div>
             <div class="stat">
-              <div class="stat-val">{{ order.orderItems.length }}</div>
+              <div class="stat-val">{{ order.orderItems.length | persianNumber}}</div>
               <div class="stat-label">نوع کالا</div>
             </div>
             <div class="stat-sep"></div>
             <div class="stat">
-              <div class="stat-val">{{ formatDate(order.create_at) }}</div>
+              <div class="stat-val">{{ formatDate(order.create_at)  | persianNumber}}</div>
               <div class="stat-label">تاریخ ثبت</div>
             </div>
           </div>
