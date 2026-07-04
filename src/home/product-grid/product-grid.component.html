@@ -1,36 +1,95 @@
-<section class="grid-section">
-  <div class="product-card" *ngFor="let product of products">
-    <a [routerLink]="['/productDetail', product.id]">
-      <img 
-        [src]="(product.image && product.image[0].url) || 'https://via.placeholder.com/300x200/323842/ffffff?text=بدون+عکس'" 
-        [alt]="product.productName" 
-      />
-      <div class="product-info">
-        <span class="brand">{{product.productCode}}</span>
-        <p class="product-name">{{product.productName}}</p>
-        <p class="description">{{product.description | slice:0:100}}...</p>
-        <div class="price-section">
-          <p class="price">{{product.price | currency:'IRR'}}</p>
-          <div class="cart-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
-              <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
-            </svg>
+<div class="product-grid-wrap" dir="rtl">
+
+  <!-- Loading skeleton -->
+  <section class="grid-section" *ngIf="isLoading && products.length === 0">
+    <div class="product-card skeleton" *ngFor="let i of [1,2,3,4,5,6]">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grid -->
+  <section class="grid-section" *ngIf="products.length > 0">
+    <div class="product-card" *ngFor="let product of products" (click)="goToDetail(product.id)"
+      [class.out-of-stock]="isOutOfStock(product)">
+
+      <!-- Image -->
+      <div class="img-wrap">
+        <img [src]="getImage(product)" [alt]="product.productName"
+          onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200/f3f4f6/9ca3af?text=بدون+عکس'" />
+        <span class="disc-badge" *ngIf="hasDiscount(product)">{{ getDiscountPercent(product) }}٪</span>
+        <div class="out-overlay" *ngIf="isOutOfStock(product)">ناموجود</div>
+      </div>
+
+      <!-- Body -->
+      <div class="body">
+        <!-- Stars -->
+
+
+        <div class="content-rating-name">
+            <p class="name">{{ product.productName }}</p>
+          <div class="stars" *ngIf="product.rating" dir="ltr"
+            style="display: flex; align-items: center; justify-content: flex-start;">
+            <span style="margin-left: 5px;">{{ product.rating |persianNumber}}</span>
+            <ng-container *ngFor="let s of getStars(product.rating)">
+              <i class="ti" [ngClass]="s" aria-hidden="true"></i>
+            </ng-container>
           </div>
         </div>
+        <div class="code">{{ product.productCode }}</div>
+
+
+        <!-- Feature tags -->
+        <div class="feat">
+          <span class="feat-tag" *ngIf="product.deliveryCost">
+            <i class="ti ti-truck" aria-hidden="true"></i>
+            {{ product.deliveryCost }}
+          </span>
+          <span class="feat-tag" *ngIf="product.insurance">
+            <i class="ti ti-shield" aria-hidden="true"></i> بیمه
+          </span>
+        </div>
+
+        <!-- Price + Cart -->
+        <div class="price-row">
+          <div class="prices">
+            <span class="old-price" *ngIf="hasDiscount(product)">
+              {{ formatPrice(product.price) }} تومان
+            </span>
+            <span class="final-price">
+              {{ formatPrice(getFinalPrice(product)) }}
+              <small>تومان</small>
+            </span>
+          </div>
+          <button class="cart-btn" (click)="addToCart($event, product)" [disabled]="isOutOfStock(product)"
+            [attr.aria-label]="isOutOfStock(product) ? 'ناموجود' : 'افزودن به سبد خرید'">
+            <i class="ti" [ngClass]="isOutOfStock(product) ? 'ti-shopping-cart-off' : 'ti-shopping-cart-plus'"
+              aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
-    </a>
+
+    </div>
+  </section>
+
+  <!-- Loading more -->
+  <div class="loading-more" *ngIf="isLoading && products.length > 0">
+    <div class="spinner"></div>
   </div>
-</section>
 
-<div *ngIf="isLoading" class="loading">در حال بارگذاری...</div>
+  <!-- Load More -->
+  <div class="load-more-wrap" *ngIf="!isLoading && hasMoreProducts && products.length > 0">
+    <button class="load-more-btn" (click)="loadMore()">محصولات بیشتر</button>
+  </div>
 
-<button *ngIf="!isLoading && hasMoreProducts && products.length > 0" 
-        (click)="loadMore()" 
-        class="load-more-btn">
-   محصولات بیشتر
-</button>
+  <!-- Empty -->
+  <div class="no-products" *ngIf="products.length === 0 && !isLoading">
+    <p>محصولی یافت نشد</p>
+  </div>
 
-<div *ngIf="products.length === 0 && !isLoading" class="no-products">
-  محصولی یافت نشد
 </div>

@@ -14,6 +14,9 @@ export interface Product {
   productName?: string;
   description?: string;
   price: number;
+  insurance: boolean;
+  deliveryCost: boolean;
+  rating: number;
   rollWeight?: number;
   thickness?: number;
   dimensions?: string;
