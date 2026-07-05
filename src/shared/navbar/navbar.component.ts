@@ -9,6 +9,9 @@ import { Product, ProductDetailService } from '../../product-detail-page/service
 import { GuestCartItem } from '../../basket/model/guest-basket.model';
 import { AuthStateService, AuthStateSnapshot } from '../../auth/service/AuthStateSnapshot.service';
 import { CartItem, BasketDiscountKind, BasketProduct, BasketSummary } from '../../basket/model/basket.model';
+import { AddressStateService } from '../shipping/services/address-state.service';
+import { Address } from '../shipping/model/address.model';
+import { AddressService } from '../shipping/services/address.service';
 
 @Component({
   selector: 'app-navbar',
@@ -23,6 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   dropdownItems: CartItem[] = [];
   isCartDropdownOpen = false;
   loadingItems = false;
+   hasSearched = false;
 
   // ---------- Auth ----------
   authState: AuthStateSnapshot = { isLoggedIn: false, user: null };
@@ -35,6 +39,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   searchLoading = false;
   private searchSubject = new Subject<string>();
   isMobile = false;
+  address: Address | null = null;
 
   constructor(
     private basketStateService: BasketStateService,
@@ -43,10 +48,39 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private authStateService: AuthStateService,
     private productService: ProductDetailService,
     private router: Router,
-  ) { }
+    private addressState: AddressStateService,
+      private addressService: AddressService,
+  ) {
+    this.addressState.address$.subscribe(addr => this.address = addr);
+  }
+
 
   ngOnInit(): void {
     this.checkIsMobile();
+
+
+
+
+
+    this.addressState.address$.subscribe(addr => {
+      this.address = addr;
+      console.log('📍 آدرس در نوار دریافت شد:', addr);
+    });
+
+    this.addressService.getAddresses().subscribe({
+      next: (list) => {
+        console.log('📦 لیست آدرس از سرور در نوار:', list);
+        if (list.length > 0) {
+          const def = list.find(a => a.isDefault) || list[0];
+          this.addressState.setAddress(def); 
+        }
+      },
+      error: (err) => {
+        console.error('خطا در دریافت آدرس در نوار:', err);
+      }
+    });
+
+
 
     this.basketStateService.summary$
       .pipe(takeUntil(this.destroy$))
@@ -81,6 +115,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.searchResults = res.products || [];
         this.searchLoading = false;
       });
+
   }
 
   ngOnDestroy(): void {
@@ -96,17 +131,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 
   goToProductDetail(item: CartItem): void {
-  if (item.id) {
-    this.router.navigate(['/productDetail', item.id]);
-  } else if (item.slug) {
-    this.router.navigate(['/product', item.slug]);
+    if (item.id) {
+      this.router.navigate(['/productDetail', item.id]);
+    } else if (item.slug) {
+      this.router.navigate(['/product', item.slug]);
+    }
   }
-}
 
   // ================= Search =================
   onSearchInput(): void {
     this.isSearchDropdownOpen = true;
     this.searchSubject.next(this.searchKeyword);
+    this.hasSearched = this.searchKeyword.trim().length >= 2; 
   }
 
   onSearchFocus(): void {
@@ -147,7 +183,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     return {
       id: dto.id,
-      basketItemId:dto.basketItemId,
+      basketItemId: dto.basketItemId,
       slug: dto.slug,
       name: dto.title,
       image: dto.image,
@@ -155,7 +191,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       discountType,
       discountValue,
       quantity: dto.quantity,
-      stock:dto.stock ||100000
+      stock: dto.stock || 100000
     };
   }
 
@@ -178,7 +214,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       const guestItems: GuestCartItem[] = this.guestBasketService.getCart();
       this.dropdownItems = guestItems.map((i: any) => ({
         id: i.productId,
-        basketItemId:i.basketItemId,
+        basketItemId: i.basketItemId,
         slug: '',
         name: i.productName || '—',
         image: i.image,
@@ -187,7 +223,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         discountValue: i.discountValue || 0,
         quantity: i.quantity,
         stock: i.stock ?? 100000,
-        
+
       }));
       this.loadingItems = false;
     }
@@ -249,9 +285,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
 
-   goToBasket(){
+  goToBasket() {
     this.router.navigate(['/checkout'])
-   }
+  }
 
   closeCartDropdown(): void {
     this.isCartDropdownOpen = false;
@@ -278,15 +314,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
 
-  get isCheckoutPage(){
-     return this.router.url.includes('/checkout')
+  get isCheckoutPage() {
+    return this.router.url.includes('/checkout')
   }
 
   onAuthIconClick(): void {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/signup']);
       return;
-    }else{
+    } else {
       this.router.navigate(['/profile']);
     }
     if (this.isMobile) {
@@ -308,4 +344,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.authStateService.logout();
     this.basketStateService.refresh();
   }
+
+
+
+  getFullAddress(addr: Address): string {
+  return `${addr.province}، ${addr.city}، ${addr.street}${addr.plaque ? '، پلاک ' + addr.plaque : ''}، کد پستی: ${addr.postalCode}`;
+}
 }

@@ -357,8 +357,7 @@
   background: #fff;
   border: 0.5px solid #e5e7eb;
   border-radius: 12px;
-  width: 100%;
-  /* ← حذف ۸۰٪ و جایگزینی با ۱۰۰٪ */
+  width: 80%;
   overflow: hidden;
   cursor: pointer;
   transition: transform .2s, box-shadow .2s;

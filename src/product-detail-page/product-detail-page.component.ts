@@ -7,6 +7,7 @@ import { AddToBasketDto } from '../basket/model/basket.model';
 import { GuestBasketService } from '../basket/services/guest-basket.service';
 import { BasketStateService } from '../basket/services/basket-state.service';
 import { WishlistService } from '../shared/wishlist/wishlist/Wishlist.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -90,6 +91,11 @@ export class ProductDetailPageComponent implements OnInit {
       this.currentQuantityInCart = found?.quantity || 0;
     });
   }
+
+
+
+
+
 
 
   checkWishlist(productId: number) {
@@ -210,6 +216,8 @@ export class ProductDetailPageComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
+
+
   private calculateDiscountFallback(): void {
     this.fallbackToActiveDiscount();
   }
@@ -275,8 +283,6 @@ export class ProductDetailPageComponent implements OnInit {
     document.body.style.overflow = '';
     this.cdr.markForCheck();
   }
-
-
 
 
 
@@ -467,9 +473,22 @@ export class ProductDetailPageComponent implements OnInit {
   }
 
   scrollTo(targetId: string): void {
-    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const map: Record<string, string> = {
+      specs: 'specs',
+      comments: 'comments',
+      questions: 'comments',
+      description: 'intro'
+    };
+    this.activeTab = map[targetId] || 'specs';
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      const fallback = document.getElementById('specs');
+      if (fallback) fallback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    this.cdr.markForCheck();
   }
-
   hasExtraSpecs(): boolean {
     return this.hasExtraSpecsFlag;
   }

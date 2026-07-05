@@ -102,7 +102,7 @@ export class PaymentSuccessComponent implements OnInit {
   }
 
   trackOrder() {
-    this.router.navigate(['/orders', this.orderId]);
+    this.router.navigate(['/profile/orders', this.orderId]);
   }
 
   continueShopping() {

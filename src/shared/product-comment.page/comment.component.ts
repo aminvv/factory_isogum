@@ -111,11 +111,11 @@ export class CommentComponent implements OnInit {
     });
   }
 
-  updateAverageRating(): void {
-    const ratings = this.comments.filter(c => c.rating && c.rating > 0).map(c => c.rating);
-    this.totalRatings = ratings.length;
-    this.averageRating = ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
-  }
+updateAverageRating(): void {
+  this.totalRatings = this.comments.length;  
+  const ratings = this.comments.filter(c => c.rating && c.rating > 0).map(c => c.rating);
+  this.averageRating = ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+}
 
   changePage(page: number): void {
     if (page < 1 || (this.pagination && page > this.pagination.pageCount)) return;

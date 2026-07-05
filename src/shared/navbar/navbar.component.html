@@ -1,93 +1,141 @@
-<nav class="navbar">
-  <div class="navbar-container">
+<nav class="navbar" dir="rtl">
 
-    <!-- Logo -->
-    <div class="navbar-brand">
-      <a routerLink="/">فروشگاه</a>
-    </div>
+  <div class="navbar-column">
+    <!-- Row 1 -->
+    <div class="nav-top">
+      <div class="nav-top-inner">
 
-    <!-- Main links -->
-    <ul class="navbar-links">
-      <li><a routerLink="/">صفحه اصلی</a></li>
-      <li><a routerLink="/products">محصولات</a></li>
-      <li><a routerLink="/blog">وبلاگ</a></li>
-      <li><a routerLink="/about-us">درباره ما</a></li>
-      <li><a routerLink="/contact-us">تماس با ما</a></li>
-    </ul>
-
-    <!-- Search -->
-    <div class="navbar-search">
-      <div class="search-box">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="جستجوی محصول..." [(ngModel)]="searchKeyword" (input)="onSearchInput()"
-          (focus)="onSearchFocus()" />
-      </div>
-
-      <div class="search-dropdown" *ngIf="isSearchDropdownOpen">
-
-        <div class="search-loading" *ngIf="searchLoading">در حال جستجو...</div>
-
-        <div class="search-empty"
-          *ngIf="!searchLoading && searchResults.length === 0 && searchKeyword.trim().length >= 2">
-          نتیجه‌ای یافت نشد
+        <!-- Logo -->
+        <div class="navbar-brand">
+          <a routerLink="/">فروشگاه</a>
         </div>
 
-        <div class="search-item" *ngFor="let product of searchResults" (click)="goToProduct(product)">
-          <img [src]="product.image?.[0]?.url || 'assets/default.jpg'" alt="{{ product.productName }}" />
-          <div class="search-item-info">
-            <span class="search-item-title">{{ product.productName }}</span>
-            <span class="search-item-price">{{ product.price | persianNumber }} تومان</span>
+        <!-- Search -->
+        <div class="navbar-search">
+          <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="جستجوی محصول..." [(ngModel)]="searchKeyword" (input)="onSearchInput()"
+              (focus)="onSearchFocus()" />
+          </div>
+
+          <div class="search-dropdown" *ngIf="isSearchDropdownOpen && searchKeyword.trim().length >= 2">
+
+            <div class="search-loading" *ngIf="searchLoading">در حال جستجو...</div>
+            <div class="search-empty"
+              *ngIf="!searchLoading && searchResults.length === 0 && searchKeyword.trim().length >= 2">
+              نتیجه‌ای یافت نشد
+            </div>
+            <div class="search-item" *ngFor="let product of searchResults" (click)="goToProduct(product)">
+              <img [src]="product.image?.[0]?.url || 'assets/default.jpg'" [alt]="product.productName" />
+              <div class="search-item-info">
+                <span class="search-item-title">{{ product.productName }}</span>
+                <span class="search-item-price">{{ product.price | persianNumber }} تومان</span>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- Actions -->
+        <div class="navbar-actions">
+
+          <!-- Cart -->
+          <div class="cart-wrapper" (mouseenter)="!isCheckoutPage && onCartMouseEnter()"
+            (mouseleave)="!isCheckoutPage && onCartMouseLeave()">
+            <button class="act-btn" (click)="!isCheckoutPage && onCartIconClick()" aria-label="سبد خرید">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="act-label"></span>
+              <span class="cart-count" *ngIf="cartSummary.itemsCount > 0">
+                {{ cartSummary.itemsCount | persianNumber }}
+              </span>
+            </button>
+            <app-checkout-basket-cart mode="dropdown" [isCartDropdownOpen]="isCartDropdownOpen">
+            </app-checkout-basket-cart>
+          </div>
+
+          <div class="divider-v"></div>
+
+          <!-- Auth -->
+          <div class="auth-wrapper" (mouseenter)="onAuthMouseEnter()" (mouseleave)="onAuthMouseLeave()">
+            <button class="act-btn auth-btn" (click)="onAuthIconClick()">
+              <i class="fas fa-user"></i>
+              <span class="act-label" *ngIf="authState.isLoggedIn">
+                {{ authState.user?.fullName || authState.user?.mobile || '' }}
+              </span>
+              <span class="act-label" *ngIf="!authState.isLoggedIn">ورود / ثبت‌نام</span>
+            </button>
+
+            <div class="auth-dropdown" *ngIf="isAuthDropdownOpen && authState.isLoggedIn">
+              <div class="dd-head">
+                <div class="dd-avatar">
+                  {{ (authState.user?.fullName || authState.user?.mobile || 'U')[0] }}
+                </div>
+                <div>
+                  <div class="dd-name">{{ authState.user?.fullName || 'کاربر' }}</div>
+                  <div class="dd-mobile">{{ authState.user?.mobile }}</div>
+                </div>
+              </div>
+              <div class="dd-links">
+                <button class="dropdown-link" (click)="goTo('/profile/orders')">
+                  <i class="fas fa-box"></i> سفارش‌ها
+                </button>
+                <button class="dropdown-link" (click)="goTo('/profile/addresses')">
+                  <i class="fas fa-map-marker-alt"></i> آدرس‌ها
+                </button>
+                <button class="dropdown-link" (click)="goTo('/profile/wishlist')">
+                  <i class="fas fa-heart"></i> علاقه‌مندی‌ها
+                </button>
+                <button class="dropdown-link" (click)="goTo('/profile/comments')">
+                  <i class="fas fa-comment-dots"></i> نظرات
+                </button>
+                <button class="dropdown-link" (click)="goTo('/profile/account')">
+                  <i class="fas fa-user-cog"></i> اطلاعات حساب
+                </button>
+                <div class="dd-divider"></div>
+                <button class="dropdown-link logout" (click)="logout()">
+                  <i class="fas fa-sign-out-alt"></i> خروج از حساب
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
 
-    <!-- Actions -->
-    <div class="navbar-actions">
-
-      <!-- Cart -->
-      <div class="cart-wrapper" (click)="!isCheckoutPage && goToBasket()" (mouseenter)="!isCheckoutPage &&onCartMouseEnter()"
-        (mouseleave)="!isCheckoutPage && onCartMouseLeave()">
-        <button class="icon-btn" (click)="!isCheckoutPage &&  onCartIconClick()" aria-label="سبد خرید">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="badge" *ngIf="cartSummary.itemsCount > 0">{{ cartSummary.itemsCount |persianNumber }}</span>
-        </button>
-
-        <app-checkout-basket-cart mode="dropdown" [isCartDropdownOpen]="isCartDropdownOpen">
-        </app-checkout-basket-cart>
+    <!-- Row 2 -->
+    <div class="nav-bottom">
+      <div class="nav-bottom-inner">
+        <ul class="navbar-links">
+          <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+              <i class="fas fa-home"></i> صفحه اصلی
+            </a></li>
+          <li><a routerLink="/products" routerLinkActive="active">
+              <i class="fas fa-boxes"></i> محصولات
+            </a></li>
+          <li><a routerLink="/articles" routerLinkActive="active">
+              <i class="fas fa-newspaper"></i> مقالات
+            </a></li>
+          <li><a routerLink="/about-us" routerLinkActive="active">
+              <i class="fas fa-info-circle"></i> درباره ما
+            </a></li>
+          <li><a routerLink="/contact-us" routerLinkActive="active">
+              <i class="fas fa-phone"></i> تماس با ما
+            </a></li>
+        </ul>
       </div>
-
-      <!-- Auth -->
-      <div class="auth-wrapper" (mouseenter)="onAuthMouseEnter()" (mouseleave)="onAuthMouseLeave()">
-        <button class="icon-btn auth-btn" (click)="onAuthIconClick()">
-          <i class="fas fa-user"></i>
-          <span class="auth-label" *ngIf="authState.isLoggedIn">
-            {{ authState.user?.fullName || authState.user?.mobile || 'حساب من' }}
+      <div class="navbar-address-wrapper" *ngIf="address; ">
+        <div class="navbar-address">
+          <span class="address-prefix"> آدرس تحویل:</span>
+          <i class="fas fa-location-dot"></i>
+          <span class="address-label">
+            {{ address.city }}، {{ address.street }}
+            <span *ngIf="address.plaque">، پلاک {{ address.plaque }}</span>
           </span>
-          <span class="auth-label" *ngIf="!authState.isLoggedIn">ورود / ثبت‌نام</span>
-        </button>
-
-        <div class="dropdown auth-dropdown" *ngIf="isAuthDropdownOpen && authState.isLoggedIn">
-          <button class="dropdown-link" routerLink="orders">
-            <i class="fas fa-box"></i> سفارش‌ها
-          </button>
-          <button class="dropdown-link"  routerLink="addresses">
-            <i class="fas fa-map-marker-alt"></i> آدرس‌ها
-          </button>
-          <button class="dropdown-link"  routerLink="comments">
-            <i class="fas fa-comment"></i> نظرات
-          </button>
-          <button class="dropdown-link"  routerLink="wishlist">
-            <i class="fas fa-comment"></i> علاقه‌مندی‌ها
-          </button>
-          <button class="dropdown-link logout" (click)="logout()">
-            <i class="fas fa-sign-out-alt"></i> خروج از حساب
-          </button>
         </div>
       </div>
 
-    </div>
 
+    </div>
   </div>
 </nav>

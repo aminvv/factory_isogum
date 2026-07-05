@@ -24,6 +24,7 @@ import { AddressListComponent } from './addresses/address-list/address-list.comp
 import { CommentsListComponent } from './comments/comments-list/comments-list.component';
 import { ArticleDetailComponent } from './articles/article-detail/article-detail.component';
 import { ArticlesComponent } from './articles/articles.component';
+import { AddressStateService } from './shipping/services/address-state.service';
 
 @NgModule({
   declarations: [
@@ -46,15 +47,15 @@ import { ArticlesComponent } from './articles/articles.component';
     AddressListComponent,
     CommentsListComponent,
     ArticlesComponent,
-    ArticleDetailComponent, 
-    
+    ArticleDetailComponent,
+
   ],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    
+
   ],
   exports: [
     JalaliPipe,
@@ -65,7 +66,8 @@ import { ArticlesComponent } from './articles/articles.component';
     CommentComponent,
     RouterModule,
     CheckoutBasketCartComponent,
-    FooterComponent, 
-  ]
+    FooterComponent,
+  ],
+
 })
 export class SharedModule { }

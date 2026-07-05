@@ -10,6 +10,7 @@ import { CartItem, BasketSummary } from '../../basket/model/basket.model';
 import { Address } from './model/address.model';
 import { AddressService } from './services/address.service';
 import { PaymentService } from './services/payment.service';
+import { AddressStateService } from './services/address-state.service';
 
 @Component({
   selector: 'app-shipping',
@@ -46,6 +47,7 @@ export class ShippingComponent implements OnInit, OnDestroy {
     private addressService: AddressService,
     private paymentService: PaymentService,
     private basketStateService: BasketStateService,
+    private addressStateService: AddressStateService,
     private router: Router,
   ) { }
 
@@ -99,6 +101,8 @@ export class ShippingComponent implements OnInit, OnDestroy {
         if (list.length > 0) {
           const def = list.find(a => a.isDefault) || list[0];
           this.selectedAddressId = def.id;
+             console.log('✅ آدرس تنظیم شد:', def);
+          this.addressStateService.setAddress(def);
         } else {
           this.showAddressForm = true;  // اگه آدرسی نیست، فرم رو باز کن
         }
@@ -114,6 +118,10 @@ export class ShippingComponent implements OnInit, OnDestroy {
 
   selectAddress(id: number): void {
     this.selectedAddressId = id;
+    const addr = this.addresses.find(a => a.id === id);
+    if (addr) {
+      this.addressStateService.setAddress(addr);
+    }
     this.showAddressForm = false;
   }
 
@@ -197,8 +205,8 @@ export class ShippingComponent implements OnInit, OnDestroy {
   // =========== محاسبه قیمت ===========
 
 
-    goToProductDetail(item: CartItem,event:Event): void {
-    if(event){
+  goToProductDetail(item: CartItem, event: Event): void {
+    if (event) {
       event.stopPropagation()
     }
     if (item.id) {
