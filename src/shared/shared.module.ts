@@ -1,7 +1,7 @@
 // src/app/shared/shared.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // وارد کردن صحیح
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { JalaliPipe } from '../common/pipes/alali.pipe';
 import { PersianNumberPipe } from '../common/pipes/persian-number.pipe';
@@ -24,7 +24,7 @@ import { AddressListComponent } from './addresses/address-list/address-list.comp
 import { CommentsListComponent } from './comments/comments-list/comments-list.component';
 import { ArticleDetailComponent } from './articles/article-detail/article-detail.component';
 import { ArticlesComponent } from './articles/articles.component';
-import { AddressStateService } from './shipping/services/address-state.service';
+
 
 @NgModule({
   declarations: [

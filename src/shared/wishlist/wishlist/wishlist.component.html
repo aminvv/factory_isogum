@@ -26,7 +26,7 @@
 
       <!-- Image -->
       <div class="img-wrap" (click)="goToProduct(item.product.slug)">
-        <img [src]="item.product.image[0]?.url"
+        <img [src]="item.product.image[0].url"
           [alt]="item.product.productName"
           onerror="this.src='assets/placeholder.png'" />
         <span class="out-of-stock" *ngIf="item.product.quantity === 0">ناموجود</span>

@@ -1,6 +1,8 @@
+import { ViewportScroller } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import AOS from 'aos'
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
@@ -8,6 +10,10 @@ import AOS from 'aos'
   styleUrl: './home-page.component.css'
 })
 export class HomePageComponent implements OnInit {
+
+
+
+  constructor() { }
 
   ngOnInit(): void {
     let tanker = document.getElementById('tanker') as HTMLElement
@@ -17,20 +23,24 @@ export class HomePageComponent implements OnInit {
 
     window.addEventListener('scroll', () => {
       let value = window.scrollY;
-      if(value <350){
-      tanker.style.left = value * 1 + 'px'
-      factory.style.top = value * 0.2 + 'px'
-      img.style.filter = value * 10 + '%'
+      if (value < 350) {
+        tanker.style.left = value * 1 + 'px'
+        factory.style.top = value * 0.2 + 'px'
+        img.style.filter = value * 10 + '%'
 
-    }
+      }
 
 
 
     })
 
+
+
+
+
+
   }
- 
-
-
 }
- 
+
+
+

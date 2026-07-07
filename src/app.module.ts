@@ -19,6 +19,9 @@ import { ProductService } from './home/product-grid/services/product.service';
 import { CertificateComponent } from './home/certificate/certificate.component';
 import { SharedModule } from './shared/shared.module';
 import { BasketComponent } from './basket/basket.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+import { SafeUrlPipe } from './common/pipes/safe-url.pipe';
 
 
 @NgModule({
@@ -34,7 +37,10 @@ import { BasketComponent } from './basket/basket.component';
     AlertComponent,
     CertificateComponent,
     BasketComponent,
-    
+    AboutComponent,
+    ContactComponent,
+    SafeUrlPipe,
+
 
 
 

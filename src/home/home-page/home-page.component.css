@@ -145,9 +145,10 @@
                position: relative;
                z-index: 101;
            }
-           .content-parallax-product{
-            background-color: #fff;
-                           position: relative;
+
+           .content-parallax-product {
+               background-color: #fff;
+               position: relative;
                z-index: 101;
            }
 
@@ -235,7 +236,7 @@
 
 
            .product-grid {
-            
+
                width: 100vw;
                height: 65vh;
                position: sticky;
@@ -243,7 +244,24 @@
                z-index: 100;
 
 
+
+               .scroll-anchor {
+                   display: block;
+                   height: 0;
+                   scroll-margin-top: 80px;
+               }
+
+               .product-grid {
+                   width: 100vw;
+                   height: 65vh;
+                   position: sticky;
+                   bottom: 0;
+                   z-index: 100;
+               }
+
+
            }
+
            .blog-grid {
 
                width: 100vw;
@@ -254,7 +272,7 @@
 
 
            }
-           
+
 
            app-product-grid::before {
                /* content: ""; */

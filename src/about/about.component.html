@@ -1,0 +1,30 @@
+
+<app-navbar></app-navbar>
+<section class="about-page" *ngIf="!loading && data">
+  <div class="about-header">
+    <h1>{{ data.title }}</h1>
+  </div>
+
+  <div class="about-content">
+    <div class="about-image" *ngIf="data.imageUrl">
+      <img [src]="data.imageUrl" [alt]="data.title" />
+    </div>
+
+<div class="about-description ck-content" [innerHTML]="safeDescription"></div>
+  </div>
+
+  <div class="about-stats" *ngIf="data.stats?.length">
+    <div class="stat-item" *ngFor="let s of data.stats">
+      <span class="stat-value">{{ s.value }}</span>
+      <span class="stat-label">{{ s.label }}</span>
+    </div>
+  </div>
+</section>
+
+<div class="loading-state" *ngIf="loading">
+  در حال بارگذاری...
+</div>
+<div class="error-state" *ngIf="!loading && !data">
+  خطا در بارگذاری اطلاعات. لطفاً صفحه را رفرش کنید.
+</div>  
+<app-footer></app-footer>

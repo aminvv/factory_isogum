@@ -12,6 +12,7 @@ import { CartItem, BasketDiscountKind, BasketProduct, BasketSummary } from '../.
 import { AddressStateService } from '../shipping/services/address-state.service';
 import { Address } from '../shipping/model/address.model';
 import { AddressService } from '../shipping/services/address.service';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
@@ -26,7 +27,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   dropdownItems: CartItem[] = [];
   isCartDropdownOpen = false;
   loadingItems = false;
-   hasSearched = false;
+  hasSearched = false;
 
   // ---------- Auth ----------
   authState: AuthStateSnapshot = { isLoggedIn: false, user: null };
@@ -49,7 +50,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private productService: ProductDetailService,
     private router: Router,
     private addressState: AddressStateService,
-      private addressService: AddressService,
+    private viewportScroller: ViewportScroller,
+    private addressService: AddressService,
   ) {
     this.addressState.address$.subscribe(addr => this.address = addr);
   }
@@ -72,7 +74,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         console.log('📦 لیست آدرس از سرور در نوار:', list);
         if (list.length > 0) {
           const def = list.find(a => a.isDefault) || list[0];
-          this.addressState.setAddress(def); 
+          this.addressState.setAddress(def);
         }
       },
       error: (err) => {
@@ -142,7 +144,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   onSearchInput(): void {
     this.isSearchDropdownOpen = true;
     this.searchSubject.next(this.searchKeyword);
-    this.hasSearched = this.searchKeyword.trim().length >= 2; 
+    this.hasSearched = this.searchKeyword.trim().length >= 2;
   }
 
   onSearchFocus(): void {
@@ -348,6 +350,29 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 
   getFullAddress(addr: Address): string {
-  return `${addr.province}، ${addr.city}، ${addr.street}${addr.plaque ? '، پلاک ' + addr.plaque : ''}، کد پستی: ${addr.postalCode}`;
+    return `${addr.province}، ${addr.city}، ${addr.street}${addr.plaque ? '، پلاک ' + addr.plaque : ''}، کد پستی: ${addr.postalCode}`;
+  }
+
+
+
+
+goToProducts(event?: Event) {
+  if (event) event.preventDefault();
+
+  if (this.router.url !== '/') {
+    this.router.navigate(['/']).then(() => {
+      // صبر برای رندر کامل صفحه
+      setTimeout(() => this.smoothScrollToProductGrid(), 300);
+    });
+  } else {
+    this.smoothScrollToProductGrid();
+  }
+}
+
+private smoothScrollToProductGrid() {
+  const element = document.getElementById('productGridSection');
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 }

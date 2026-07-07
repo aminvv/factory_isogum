@@ -1,0 +1,82 @@
+<app-navbar></app-navbar>
+<section class="contact-page" *ngIf="!loading && data">
+
+  <!-- بخش تیره بالا: تماس با ما -->
+  <div class="contact-hero">
+    <h1>تماس با ما</h1>
+    <div class="hero-items">
+
+      <!-- تلفن ثابت -->
+      <div class="hero-item" *ngIf="data.phone?.length">
+        <span class="hero-icon"><i class="fa-solid fa-phone"></i></span>
+        <strong>تلفن ثابت</strong>
+        <p *ngFor="let p of data.phone"><a [href]="'tel:' + p">{{ p }}</a></p>
+      </div>
+
+      <!-- موبایل -->
+      <div class="hero-item" *ngIf="data.mobile?.length">
+        <span class="hero-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
+        <strong>موبایل</strong>
+        <p *ngFor="let m of data.mobile"><a [href]="'tel:' + m">{{ m }}</a></p>
+      </div>
+
+      <div class="hero-item" *ngIf="data.email">
+        <span class="hero-icon"><i class="fa-solid fa-envelope"></i></span>
+        <strong>ایمیل</strong>
+        <p><a [href]="'mailto:' + data.email">{{ data.email }}</a></p>
+      </div>
+
+      <div class="hero-item" *ngIf="data.workHours">
+        <span class="hero-icon"><i class="fa-solid fa-headset"></i></span>
+        <strong>پشتیبانی تیکت</strong>
+        <p>{{ data.workHours }}</p>
+      </div>
+
+      <div class="hero-item" *ngIf="data.address">
+        <span class="hero-icon"><i class="fa-solid fa-location-dot"></i></span>
+        <strong>آدرس</strong>
+        <p>{{ data.address }}</p>
+      </div>
+
+    </div>
+  </div>
+
+<div class="contact-cards">
+  <div class="info-card social-card" *ngIf="data.socialLinks?.length">
+    <span class="card-icon"><i class="fa-solid fa-share-nodes"></i></span>
+    <div class="card-body">
+      <strong>شبکه‌های اجتماعی</strong>
+      <div class="social-links">
+        <a *ngFor="let s of data.socialLinks" 
+           [href]="'https://instagram.com/' + s.url" 
+           target="_blank" 
+           rel="noopener" 
+           class="social-link"
+           [attr.data-platform]="s.platform">
+          <i class="fa-brands" [class]="getIconClass(s.platform)"></i>
+          {{ s.platform }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- نقشه: تمام‌عرض، پایین‌ترین بخش -->
+  <div class="contact-map" *ngIf="data.mapLat && data.mapLng">
+    <iframe [src]="
+        'https://www.google.com/maps?q=' +
+          data.mapLat +
+          ',' +
+          data.mapLng +
+          '&output=embed' | safeUrl
+      " width="100%" height="450" style="border:0" loading="lazy"></iframe>
+  </div>
+</section>
+
+<div class="loading-state" *ngIf="loading">
+  در حال بارگذاری...
+</div>
+<div class="error-state" *ngIf="!loading && !data">
+  خطا در بارگذاری اطلاعات. لطفاً صفحه را رفرش کنید.
+</div>
+<app-footer></app-footer>

@@ -37,7 +37,7 @@
 
       <div class="comment-card" *ngFor="let comment of productComments">
         <div class="card-top" (click)="goToProduct(comment.product.slug)">
-          <img [src]="comment.product.image[0]?.url" [alt]="comment.product.productName"
+          <img [src]="comment.product.image[0].url" [alt]="comment.product.productName"
             class="product-img" onerror="this.src='assets/placeholder.png'" />
           <div class="product-meta">
             <div class="product-name">{{ comment.product.productName }}</div>
@@ -80,7 +80,7 @@
 
       <div class="comment-card" *ngFor="let comment of blogComments">
         <div class="card-top" (click)="goToBlog(comment.blog.slug)">
-          <img [src]="comment.blog.thumbnail[0]?.url || 'assets/placeholder.png'"
+          <img [src]="comment.blog.thumbnail[0].url || 'assets/placeholder.png'"
             [alt]="comment.blog.title" class="product-img"
             onerror="this.src='assets/placeholder.png'" />
           <div class="product-meta">

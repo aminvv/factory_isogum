@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^41.4.2",
     "@fortawesome/fontawesome-free": "^7.2.0",
     "aos": "^2.3.4",
     "jalali-moment": "^3.3.11",

@@ -1,0 +1,322 @@
+/* ============================================================
+   بخش ۱: تنظیمات پایه
+============================================================ */
+.contact-page {
+  --teal: #0f3d3e;
+  --teal-light: #145252;
+  --gold: #c9d94a;
+  --border: #e4e6eb;
+  --text-dark: #1a2332;
+  --text-light: #6b7280;
+  --bg-soft: #f7f8fa;
+
+  direction: rtl;
+  font-family: "Vazirmatn", "IRANSans", Tahoma, sans-serif;
+  color: var(--text-dark);
+  box-sizing: border-box;
+}
+.contact-page *,
+.contact-page *::before,
+.contact-page *::after {
+  box-sizing: border-box;
+}
+
+
+/* ============================================================
+   بخش ۲: هیرو تیره بالا (تماس با ما)
+============================================================ */
+.contact-hero {
+  width: 100%;
+  background: var(--teal);
+  padding: 55px 20px 65px;
+  text-align: center;
+}
+
+.contact-hero > h1 {
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin: 0 0 45px;
+}
+
+.hero-items {
+  max-width: 1000px;
+  margin: 90px auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* تغییر از ۵ به ۴ ستون */
+  gap: 30px;
+}
+.hero-item:last-child {
+
+  grid-column: 1 / -1; /* تمام عرض را می‌گیرد */
+  max-width: 400px;    /* اختیاری: برای جلوگیری از کشیدگی بیش از حد */
+  margin: 30px auto;      /* وسط‌چین شدن */
+}
+
+.hero-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+}
+
+.hero-icon {
+  width: 76px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20%;
+  background: var(--teal-light);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 1.9rem;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.hero-item strong {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
+  color: var(--gold);
+}
+
+.hero-item p {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.85);
+}
+
+.hero-item a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+}
+.hero-item a:hover {
+  color: var(--gold);
+}
+
+
+/* ============================================================
+   کارت شبکه‌های اجتماعی - نسخه نهایی
+============================================================ */
+
+.info-card.social-card {
+  background: #ffffff;
+  padding: 24px 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.info-card.social-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  border-color: var(--teal);
+  transform: translateY(-2px);
+}
+
+.info-card.social-card .card-icon {
+  background: var(--teal);
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.info-card.social-card:hover .card-icon {
+  background: var(--gold);
+  color: var(--teal);
+  transform: rotate(8deg) scale(1.05);
+}
+
+.info-card.social-card .card-body strong {
+  display: block;
+  font-size: 0.95rem;
+  text-align: right;
+  font-weight: 700;
+  color: var(--teal);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
+/* ===== دکمه‌های شبکه‌های اجتماعی ===== */
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: none;
+  cursor: pointer;
+}
+
+.social-link i {
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.social-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== رنگ‌های اختصاصی هر شبکه (بر اساس نام لاتین) ===== */
+.social-link[data-platform="instagram"] {
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+}
+
+.social-link[data-platform="telegram"] {
+  background: linear-gradient(135deg, #0088cc, #0077b3);
+}
+
+.social-link[data-platform="whatsapp"] {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+}
+
+.social-link[data-platform="linkedin"] {
+  background: linear-gradient(135deg, #0a66c2, #004182);
+}
+
+.social-link[data-platform="twitter"] {
+  background: linear-gradient(135deg, #1da1f2, #0d8bd9);
+}
+
+.social-link[data-platform="youtube"] {
+  background: linear-gradient(135deg, #ff0000, #cc0000);
+}
+
+.social-link[data-platform="facebook"] {
+  background: linear-gradient(135deg, #1877f2, #0d65d9);
+}
+
+.social-link[data-platform="spotify"] {
+  background: linear-gradient(135deg, #1db954, #169c46);
+}
+
+.social-link[data-platform="github"] {
+  background: linear-gradient(135deg, #333, #1a1a1a);
+}
+
+.social-link[data-platform="pinterest"] {
+  background: linear-gradient(135deg, #bd081c, #8a0614);
+}
+
+/* رنگ پیش‌فرض برای شبکه‌های ناشناخته */
+.social-link:not([data-platform]) {
+  background: linear-gradient(135deg, #64748b, #475569);
+}
+
+/* ===== واکنش‌گرایی ===== */
+@media (max-width: 640px) {
+  .info-card.social-card {
+    padding: 18px 16px;
+  }
+
+  .social-links {
+    gap: 8px;
+  }
+
+  .social-link {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+  }
+
+  .social-link i {
+    font-size: 0.9rem;
+  }
+}
+
+
+/* ============================================================
+   بخش ۴: نقشه — تمام‌عرض، پایین‌ترین بخش
+============================================================ */
+.contact-map {
+  width: 100%;
+  margin-top: 50px;
+  border-top: 1px solid var(--border);
+}
+.contact-map iframe {
+  display: block;
+  width: 100%;
+  height: 450px;
+  border: 0;
+}
+
+
+/* ============================================================
+   بخش ۵: حالت لودینگ و خطا
+============================================================ */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 40px auto;
+  color: var(--text-light);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+}
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 40px auto;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+
+/* ============================================================
+   بخش ۶: ریسپانسیو
+============================================================ */
+@media (max-width: 800px) {
+  .hero-items {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .contact-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .contact-hero > h1 {
+    font-size: 1.5rem;
+  }
+  .contact-hero {
+    padding: 40px 20px 50px;
+  }
+  .info-card {
+    flex-direction: column;
+  }
+  .contact-map iframe {
+    height: 320px;
+  }
+}

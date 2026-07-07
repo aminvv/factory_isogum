@@ -16,6 +16,8 @@ import { WishlistComponent } from './shared/wishlist/wishlist/wishlist.component
 import { AccountInfoComponent } from './shared/account-info/account-info/account-info.component';
 import { ArticleDetailComponent } from './shared/articles/article-detail/article-detail.component';
 import { ArticlesComponent } from './shared/articles/articles.component';
+import { ContactComponent } from './contact/contact.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -25,8 +27,10 @@ const routes: Routes = [
   { path: 'checkout/shipping', component: ShippingComponent },
   { path: 'payment/success', component: PaymentSuccessComponent },
   { path: 'payment/failedUrl', component: PaymentFailedComponent },
-
-
+  
+  
+  
+  
   {
     path: 'profile',
     component: ProfileComponent,
@@ -40,9 +44,12 @@ const routes: Routes = [
       { path: 'account', component: AccountInfoComponent },
     ]
   },
-
+  
   { path: 'articles', component: ArticlesComponent },
   { path: 'articles/:id', component: ArticleDetailComponent },
+  
+  { path: 'about', component: AboutComponent },
+  { path: 'contact', component: ContactComponent },
 ];
 
 @NgModule({
