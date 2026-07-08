@@ -1,0 +1,64 @@
+/* ============================================================
+   استایل عکس‌های داخل خروجی CKEditor (about-description)
+============================================================ */
+
+.about-description img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.about-description figure.image {
+  max-width: 100%;
+}
+.about-description figure.image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  width: 100%;
+}
+
+.about-description figure.image-style-align-left {
+  float: left;
+  margin: 0.5em 1.5em 1em 0;
+}
+
+.about-description figure.image-style-align-right,
+.about-description a > img.image-style-align-right,
+.about-description img.image-style-align-right {
+  float: right;
+  margin: 0.5em 0 1em 1.5em;
+  max-width: 100%;
+  height: auto;
+}
+
+.about-description .image_resized {
+  max-width: 100%;
+  height: auto;
+}
+
+.about-description p img {
+  display: inline-block;
+  vertical-align: middle;
+}
+.about-description p:has(> img:only-child) {
+  text-align: center;
+}
+
+.about-description::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media (max-width: 600px) {
+  .about-description figure.image-style-align-left,
+  .about-description figure.image-style-align-right,
+  .about-description img.image-style-align-right {
+    float: none;
+    display: block;
+    margin: 1em auto;
+    width: 100% !important;
+    max-width: 100%;
+  }
+}

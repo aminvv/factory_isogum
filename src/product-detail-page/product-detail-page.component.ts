@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef, NgZone, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product, ProductDetailService, Discount } from './services/product-detail.service';
 import { CommentStats } from '../shared/product-comment.page/model/comment.model';
@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
   selector: 'app-product-detail-page',
   templateUrl: './product-detail-page.component.html',
   styleUrls: ['./product-detail-page.component.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailPageComponent implements OnInit {

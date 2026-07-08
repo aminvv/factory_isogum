@@ -31,7 +31,7 @@
             <!-- Article Body -->
             <div class="article-body">
                 <p class="article-desc">{{ blog.description }}</p>
-                <div class="article-content" [innerHTML]="blog.content"></div>
+                <div class="article-content" [innerHTML]="blog.content | safeHtml"></div>
             </div>
 
             <!-- Comments -->

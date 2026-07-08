@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { API_CONFIG } from '../../../common/api/api.config';
@@ -33,6 +33,7 @@ interface Blog {
   selector: 'app-article-detail',
   templateUrl: './article-detail.component.html',
   styleUrls: ['./article-detail.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ArticleDetailComponent implements OnInit {
   blog: Blog | null = null;

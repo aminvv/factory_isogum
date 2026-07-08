@@ -329,10 +329,9 @@
 }
 
 .product-header {
-    background: var(--bg-glass);
     backdrop-filter: blur(10px);
     margin-bottom: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
 }
@@ -445,7 +444,6 @@
     width: auto;
     height: auto;
     padding: 0px 5px;
-    background: linear-gradient(135deg, var(--bg-dark), var(--bg-soft));
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -1111,16 +1109,37 @@
 
 
 .wishlist-btn {
-  display: flex; align-items: center; gap: 6px;
-  background: #fff; color: #6b7280;
-  border: 1.5px solid #e5e7eb; border-radius: 9px;
-  padding: 10px 16px; font-size: 13px; font-weight: 500;
-  cursor: pointer; font-family: inherit; width: 100%;
-  transition: all .15s; margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    color: #6b7280;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 9px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
+    transition: all .15s;
+    margin-top: 8px;
 }
-.wishlist-btn:hover { border-color: #fca5a5; color: #dc2626; }
-.wishlist-btn.active { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
-.wishlist-btn i { font-size: 16px; }
+
+.wishlist-btn:hover {
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+.wishlist-btn.active {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+.wishlist-btn i {
+    font-size: 16px;
+}
 
 
 
@@ -1462,7 +1481,8 @@
         width: calc(100% - 300px);
         max-width: unset;
     }
-        .tab-content {
+
+    .tab-content {
         padding: 100px 40px;
         margin: 0;
     }
@@ -1579,5 +1599,75 @@
 
     .shipping-options {
         flex-direction: column;
+    }
+}
+
+/* 
+
+
+/* ============================================================
+   استایل عکس‌های داخل خروجی CKEditor
+   (هم برای درباره ما، هم برای توضیحات محصول)
+============================================================ */
+
+.about-description img,
+.product-description img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+
+
+
+.about-description figure.image-style-align-right,
+.about-description a>img.image-style-align-right,
+.about-description img.image-style-align-right,
+.product-description figure.image-style-align-right,
+.product-description a>img.image-style-align-right,
+.product-description img.image-style-align-right {
+    float: right;
+    margin: 0.5em 0 1em 1.5em;
+    max-width: 100%;
+    height: auto;
+}
+
+.about-description .image_resized,
+.product-description .image_resized {
+    max-width: 100%;
+    height: auto;
+}
+
+.about-description p img,
+.product-description p img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.about-description p:has(> img:only-child),
+.product-description p:has(> img:only-child) {
+    text-align: center;
+}
+
+.about-description::after,
+.product-description::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media (max-width: 600px) {
+
+    .about-description figure.image-style-align-left,
+    .about-description figure.image-style-align-right,
+    .about-description img.image-style-align-right,
+    .product-description figure.image-style-align-left,
+    .product-description figure.image-style-align-right,
+    .product-description img.image-style-align-right {
+        float: none;
+        display: block;
+        margin: 1em auto;
+        width: 100% !important;
+        max-width: 100%;
     }
 }
