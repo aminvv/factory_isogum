@@ -25,6 +25,15 @@
         <span class="badge" [ngClass]="statusColor[order.status]">
           {{ statusMap[order.status] || order.status }}
         </span>
+        <!-- تو summary-card، بعد از بخش اطلاعات پرداخت -->
+        <div class="info-row" *ngIf="order.status === 'canceled' && order.payment?.status">
+          <i class="ti ti-refresh"></i>
+          <span class="row-label">وضعیت بازگشت وجه</span>
+          <span class="unpaid" *ngIf="!order.payment?.refunded">در انتظار بازگشت وجه</span>
+          <span class="paid" *ngIf="order.payment?.refunded">
+            بازگشت داده شد ({{ formatDate(order.payment.refundedAt) }})
+          </span>
+        </div>
       </div>
       <span class="order-date">{{ formatDate(order.create_at) }}</span>
     </div>

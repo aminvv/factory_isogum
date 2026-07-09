@@ -38,6 +38,8 @@ interface OrderDetail {
   payment: {
     invoice_number: string;
     refId: string | null;
+    refunded:string
+    refundedAt:string
     amount: number;
     status: boolean;
     authority: string;
