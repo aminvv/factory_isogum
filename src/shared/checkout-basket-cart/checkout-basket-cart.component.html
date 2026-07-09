@@ -60,9 +60,9 @@
             </div>
             <div>
               <div class="cart-item-price-row">
-                <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
+                <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber:true }} تومان</span>
                 <ng-container *ngIf="item.discountType">
-                  <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
+                  <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber:true }} تومان</span>
                 </ng-container>
                 <span class="cart-item-discount-label" *ngIf="item.discountType">
                   <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue | persianNumber
@@ -91,13 +91,13 @@
           <div class="summary-title">جزئیات پرداخت</div>
 
           <div class="summary-row">
-            <span class="label">مجموع قیمت کالاها ({{ cartSummary.itemsCount }} کالا)</span>
-            <span class="value">{{ cartSummary.totalPrice | persianNumber }} تومان</span>
+            <span class="label">مجموع قیمت کالاها ({{ cartSummary.itemsCount |persianNumber}} کالا)</span>
+            <span class="value">{{ cartSummary.totalPrice | persianNumber:true }} تومان</span>
           </div>
 
           <div class="summary-row summary-row-Profit" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
             <span class="label">سود شما از خرید</span>
-            <span class="value discount">{{ (cartSummary.totalPrice - cartSummary.finalAmount) | persianNumber }}
+            <span class="value discount">{{ (cartSummary.totalPrice - cartSummary.finalAmount) | persianNumber:true }}
               تومان</span>
           </div>
 
@@ -105,7 +105,7 @@
 
           <div class="summary-total">
             <span>مجموع سبد خرید</span>
-            <span class="price">{{ cartSummary.finalAmount | persianNumber }} تومان</span>
+            <span class="price">{{ cartSummary.finalAmount | persianNumber:true }} تومان</span>
           </div>
 
           <button class="primary-btn" (click)="goToCheckout()">ثبت سفارش</button>
@@ -136,7 +136,7 @@
             <div class="cart-item-qty-control-price-row">
               <div class="cart-item-price-row">
                 <ng-container *ngIf="item.discountType">
-                  <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
+                  <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber:true }} تومان</span>
                   <span class="cart-item-discount-label">
                     <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue | persianNumber
                       }}</ng-container>
@@ -144,7 +144,7 @@
                       تخفیف</ng-container>
                   </span>
                 </ng-container>
-                <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
+                <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber:true  }} تومان</span>
               </div>
               <div class="qty-control">
                 <button *ngIf="item.quantity > 1" type="button" class="qty-btn minus"
@@ -172,11 +172,11 @@
         <button class="primary-btn" (click)="goToCheckout()">ثبت سفارش</button>
         <div class="cart-total">
           <div class="cart-total-row" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
-            <span class="cart-total-old">{{ cartSummary.totalPrice | persianNumber }} تومان</span>
+            <span class="cart-total-old">{{ cartSummary.totalPrice | persianNumber:true  }} تومان</span>
             <span class="cart-total-discount">٪{{ cartSummary.avgDiscountPercent | number: '1.0-0' | persianNumber
               }}</span>
           </div>
-          <span class="cart-total-new">{{ cartSummary.finalAmount | persianNumber }} تومان</span>
+          <span class="cart-total-new">{{ cartSummary.finalAmount | persianNumber:true  }} تومان</span>
         </div>
       </div>
     </ng-container>

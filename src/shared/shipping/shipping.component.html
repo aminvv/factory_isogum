@@ -29,10 +29,10 @@
             <input type="radio" [checked]="selectedAddressId === addr.id" readonly />
           </div>
           <div class="address-info">
-            <p class="address-main">{{ addr.province }}، {{ addr.city }}، {{ addr.street }}
-              <span *ngIf="addr.plaque"> پلاک {{ addr.plaque }}</span>
+            <p class="address-main">{{ addr.province }}، {{ addr.city }}، {{ addr.street |persianNumber }}
+              <span *ngIf="addr.plaque"> پلاک {{ addr.plaque |persianNumber }}</span>
             </p>
-            <p class="address-secondary">کد پستی: {{ addr.postalCode }}</p>
+            <p class="address-secondary">کد پستی: {{ addr.postalCode |persianNumber}}</p>
             <span class="badge-default" *ngIf="addr.isDefault">پیش‌فرض</span>
           </div>
           <div class="address-actions" (click)="$event.stopPropagation()">
@@ -137,7 +137,7 @@
                 <!-- ردیف قیمت‌ها -->
                 <div class="cart-item-price-row">
                   <ng-container *ngIf="item.discountType">
-                    <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber }} تومان</span>
+                    <span class="cart-item-old-price">{{ getItemOldLineTotal(item) | persianNumber:true  }} تومان</span>
                     <span class="cart-item-discount-label">
                       <ng-container *ngIf="item.discountType === 'percent'">٪{{ item.discountValue | persianNumber
                         }}</ng-container>
@@ -145,7 +145,7 @@
                         تومان تخفیف</ng-container>
                     </span>
                   </ng-container>
-                  <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber }} تومان</span>
+                  <span class="cart-item-new-price">{{ getItemLineTotal(item) | persianNumber:true  }} تومان</span>
                 </div>
 
                 <!-- کنترل تعداد -->
@@ -176,7 +176,7 @@
 
         <div class="summary-row">
           <span>تعداد کالا</span>
-          <span>{{ cartSummary.itemsCount }} عدد</span>
+          <span>{{ cartSummary.itemsCount |persianNumber }} عدد</span>
         </div>
 
         <div class="summary-row" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
@@ -198,7 +198,7 @@
 
         <div class="summary-row total">
           <span>مبلغ قابل پرداخت</span>
-          <span class="total-price">{{ cartSummary.finalAmount | number }} تومان</span>
+          <span class="total-price">{{ cartSummary.finalAmount | number |persianNumber:true }} تومان</span>
         </div>
 
         <div class="error-msg" *ngIf="paymentError">{{ paymentError }}</div>

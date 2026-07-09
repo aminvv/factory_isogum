@@ -29,7 +29,7 @@
               <img [src]="product.image?.[0]?.url || 'assets/default.jpg'" [alt]="product.productName" />
               <div class="search-item-info">
                 <span class="search-item-title">{{ product.productName }}</span>
-                <span class="search-item-price">{{ product.price | persianNumber }} تومان</span>
+                <span class="search-item-price">{{ product.price | persianNumber:true  }} تومان</span>
               </div>
             </div>
           </div>

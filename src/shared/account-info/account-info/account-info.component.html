@@ -30,7 +30,7 @@
           {{ user.firstName || '' }} {{ user.lastName || '' }}
           <span class="role-badge">{{ user.role === 'user' ? 'کاربر عادی' : user.role }}</span>
         </div>
-        <div class="profile-mobile">{{ user.mobile }}</div>
+        <div class="profile-mobile">{{ user.mobile  | persianNumber}}</div>
       </div>
       <button class="edit-btn" (click)="toggleEdit()">
         <i class="ti" [class.ti-edit]="!editMode" [class.ti-x]="editMode"></i>
@@ -52,7 +52,7 @@
         </div>
         <div class="info-item">
           <div class="info-label">شماره موبایل</div>
-          <div class="info-val">{{ user.mobile || '—' }}</div>
+          <div class="info-val">{{ user.mobile || '—' | persianNumber }}</div>
         </div>
         <div class="info-item">
           <div class="info-label">نقش</div>

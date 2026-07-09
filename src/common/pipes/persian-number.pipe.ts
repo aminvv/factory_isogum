@@ -2,17 +2,21 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'persianNumber' })
 export class PersianNumberPipe implements PipeTransform {
-  transform(value: number | string |null): string {
+
+  transform(value: number | string | null, useGrouping: boolean = false): string {
     if (value == null) return '';
-    
-    // اگه عدد خالصه، فرمت هزارگان بزن
-    if (typeof value === 'number' || (typeof value === 'string' && /^\d+(\.\d+)?$/.test(value.trim()))) {
+
+    const isPureNumber =
+      typeof value === 'number' ||
+      (typeof value === 'string' && /^\d+(\.\d+)?$/.test(value.trim()));
+
+    if (isPureNumber && useGrouping) {
       const num = typeof value === 'number' ? value : parseFloat(value);
       const formatted = num.toLocaleString('en-US');
       return this.toPersianDigits(formatted);
     }
-    
-    // وگرنه فقط ارقام داخل string رو فارسی کن (مثل "500 گرم")
+
+    // بدون هزارگان: فقط ارقام رو فارسی کن (برای کد ملی، موبایل، کدپستی، "500 گرم" و ...)
     return this.toPersianDigits(value.toString());
   }
 

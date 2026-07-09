@@ -10,14 +10,14 @@
       <div class="hero-item" *ngIf="data.phone?.length">
         <span class="hero-icon"><i class="fa-solid fa-phone"></i></span>
         <strong>تلفن ثابت</strong>
-        <p *ngFor="let p of data.phone"><a [href]="'tel:' + p">{{ p }}</a></p>
+        <p *ngFor="let p of data.phone"><a [href]="'tel:' + p">{{ p |persianNumber}}</a></p>
       </div>
 
       <!-- موبایل -->
       <div class="hero-item" *ngIf="data.mobile?.length">
         <span class="hero-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
         <strong>موبایل</strong>
-        <p *ngFor="let m of data.mobile"><a [href]="'tel:' + m">{{ m }}</a></p>
+        <p *ngFor="let m of data.mobile"><a [href]="'tel:' + m">{{ m  |persianNumber}}</a></p>
       </div>
 
       <div class="hero-item" *ngIf="data.email">

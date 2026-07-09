@@ -11,7 +11,7 @@
       [class.active]="activeTab === tab.key"
       (click)="activeTab = tab.key">
       {{ tab.label }}
-      <span class="tab-count">{{ countByTab(tab.key) }}</span>
+      <span class="tab-count">{{ countByTab(tab.key) |persianNumber }}</span>
     </button>
   </div>
 

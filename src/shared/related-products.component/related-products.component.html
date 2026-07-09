@@ -42,10 +42,10 @@
 
           <div class="price-block">
             <div class="old-price" *ngIf="product.hasDiscount">
-              {{ product.price | persianNumber }} تومان
+              {{ product.price | persianNumber:true  }} تومان
             </div>
             <div class="final-price">
-              {{ (product.finalPrice || product.price) | persianNumber }}
+              {{ (product.finalPrice || product.price) | persianNumber:true  }}
               <small>تومان</small>
               
             </div>

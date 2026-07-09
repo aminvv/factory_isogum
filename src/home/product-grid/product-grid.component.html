@@ -59,10 +59,10 @@
         <div class="price-row">
           <div class="prices">
             <span class="old-price" *ngIf="hasDiscount(product)">
-              {{ formatPrice(product.price) }} تومان
+              {{ formatPrice(product.price) | persianNumber:true }} تومان
             </span>
             <span class="final-price">
-              {{ formatPrice(getFinalPrice(product)) }}
+              {{ formatPrice(getFinalPrice(product)) | persianNumber:true }}
               <small>تومان</small>
             </span>
           </div>

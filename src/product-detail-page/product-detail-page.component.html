@@ -179,10 +179,10 @@
                         <span class="badge discount-badge" *ngIf="discountType === 'amount'">
                             <i class="fas fa-tag"></i> تخفیف {{ discountAmount | persianNumber }} تومانی
                         </span>
-                        <span class="old-price">{{ product.price | persianNumber }} تومان</span>
+                        <span class="old-price">{{ product.price | persianNumber:true }} تومان</span>
                     </div>
                     <div class="final-price">
-                        <span class="price-amount">{{ finalPrice | persianNumber }}</span>
+                        <span class="price-amount">{{ finalPrice | persianNumber:true }}</span>
                         <span class="price-unit">تومان</span>
                     </div>
                 </ng-container>
@@ -190,7 +190,7 @@
                 <!-- بدون تخفیف -->
                 <ng-template #noDiscount>
                     <div class="final-price">
-                        <span class="price-amount">{{ product.price | persianNumber }}</span>
+                        <span class="price-amount">{{ product.price | persianNumber:true }}</span>
                         <span class="price-unit">تومان</span>
                     </div>
                 </ng-template>

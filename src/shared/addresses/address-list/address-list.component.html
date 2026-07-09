@@ -26,7 +26,7 @@
         </div>
         <div class="meta">
           <div class="loc">{{ addr.province }}، {{ addr.city }}</div>
-          <div class="str">{{ addr.street }}<span *ngIf="addr.plaque">، پلاک {{ addr.plaque }}</span></div>
+          <div class="str">{{ addr.street  |persianNumber}}<span *ngIf="addr.plaque">، پلاک {{ addr.plaque |persianNumber }}</span></div>
         </div>
         <span class="def-badge" *ngIf="addr.isDefault">
           <i class="ti ti-star"></i> پیش‌فرض
@@ -35,7 +35,7 @@
       <div class="card-mid">
         <div class="info-row">
           <i class="ti ti-mailbox"></i>
-          <span>کدپستی: {{ addr.postalCode }}</span>
+          <span>کدپستی: {{ addr.postalCode |persianNumber }}</span>
         </div>
       </div>
       <div class="card-foot">
