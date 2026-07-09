@@ -55,28 +55,28 @@ export class OrderDetailComponent implements OnInit {
   error = false;
 
   statusMap: Record<string, string> = {
-    pending:   'در انتظار پرداخت',
-    ordered:   'در حال پردازش',
+    pending: 'در انتظار پرداخت',
+    ordered: 'در حال پردازش',
     inProcess: 'در حال آماده‌سازی',
-    packed:    'بسته‌بندی شده',
+    packed: 'بسته‌بندی شده',
     inTransit: 'در حال ارسال',
     delivered: 'تحویل داده شده',
-    canceled:  'لغو شده',
+    canceled: 'لغو شده',
   };
 
   statusColor: Record<string, string> = {
-    pending:   'badge-warning',
-    ordered:   'badge-blue',
+    pending: 'badge-warning',
+    ordered: 'badge-blue',
     inProcess: 'badge-blue',
-    packed:    'badge-blue',
+    packed: 'badge-blue',
     inTransit: 'badge-purple',
     delivered: 'badge-green',
-    canceled:  'badge-red',
+    canceled: 'badge-red',
   };
 
   steps = ['ordered', 'inProcess', 'packed', 'inTransit', 'delivered'];
 
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -113,4 +113,27 @@ export class OrderDetailComponent implements OnInit {
   goBack() {
     this.router.navigate(['/profile/orders']);
   }
+
+
+
+
+  paying = false;
+
+  payAgain() {
+    if (!this.order) return;
+    this.paying = true;
+    const token = sessionStorage.getItem('accessToken');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    this.http.post<{ gateWayUrl: string }>(
+      `http://localhost:4000/payment/retry/${this.order.id}`,
+      {},
+      { headers }
+    ).subscribe({
+      next: (res) => { window.location.href = res.gateWayUrl; },
+      error: () => { this.paying = false; /* toast خطا */ },
+    });
+  }
+
+
 }

@@ -41,7 +41,7 @@
           <!-- Cart -->
           <div class="cart-wrapper" (mouseenter)="!isCheckoutPage && onCartMouseEnter()"
             (mouseleave)="!isCheckoutPage && onCartMouseLeave()">
-            <button class="act-btn" (click)="!isCheckoutPage && onCartIconClick()" aria-label="سبد خرید">
+            <button class="act-btn" (click)="goToBasket()" (click)="!isCheckoutPage && onCartIconClick()" aria-label="سبد خرید">
               <i class="fas fa-shopping-cart"></i>
               <span class="act-label"></span>
               <span class="cart-count" *ngIf="cartSummary.itemsCount > 0">

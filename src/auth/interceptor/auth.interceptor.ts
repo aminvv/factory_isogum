@@ -99,7 +99,6 @@ export class AuthInterceptor implements HttpInterceptor {
   
   private handleLogout() {
     sessionStorage.removeItem('accessToken');
-  // this.router.navigate(['/signup']);
   }
 }
 

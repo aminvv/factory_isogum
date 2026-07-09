@@ -32,16 +32,14 @@
     <!-- Progress Bar (فقط برای سفارشات جاری) -->
     <div class="progress-section" *ngIf="!['pending','canceled'].includes(order.status)">
       <div class="steps">
-        <div class="step" *ngFor="let step of steps; let i = index"
-          [class.done]="i < currentStepIndex"
+        <div class="step" *ngFor="let step of steps; let i = index" [class.done]="i < currentStepIndex"
           [class.active]="i === currentStepIndex">
           <div class="step-circle">
             <i class="ti ti-check" *ngIf="i < currentStepIndex"></i>
             <span *ngIf="i >= currentStepIndex">{{ i + 1 }}</span>
           </div>
           <div class="step-label">{{ statusMap[step] }}</div>
-          <div class="step-line" *ngIf="i < steps.length - 1"
-            [class.done]="i < currentStepIndex"></div>
+          <div class="step-line" *ngIf="i < steps.length - 1" [class.done]="i < currentStepIndex"></div>
         </div>
       </div>
     </div>
@@ -59,9 +57,7 @@
           </div>
           <div class="product-list">
             <div class="product-row" *ngFor="let item of order.orderItems">
-              <img [src]="item.product.image[0].url"
-                [alt]="item.product.productName"
-                class="product-img"
+              <img [src]="item.product.image[0].url" [alt]="item.product.productName" class="product-img"
                 onerror="this.src='assets/placeholder.png'" />
               <div class="product-info">
                 <div class="product-name">{{ item.product.productName }}</div>
@@ -69,7 +65,8 @@
                 <div class="product-tags">
                   <span class="tag"><i class="ti ti-truck"></i> {{ item.product.deliveryTime }}</span>
                   <span class="tag"><i class="ti ti-coin"></i> {{ item.product.deliveryCost }}</span>
-                  <span class="tag green" *ngIf="item.product.returnable"><i class="ti ti-refresh"></i> قابل مرجوع</span>
+                  <span class="tag green" *ngIf="item.product.returnable"><i class="ti ti-refresh"></i> قابل
+                    مرجوع</span>
                   <span class="tag blue" *ngIf="item.product.insurance"><i class="ti ti-shield"></i> بیمه</span>
                 </div>
               </div>
@@ -105,7 +102,8 @@
               </div>
               <div class="info-row">
                 <i class="ti ti-road"></i>
-                <span>{{ order.shippingAddress.street }}<span *ngIf="order.shippingAddress.plaque">، پلاک {{ order.shippingAddress.plaque }}</span></span>
+                <span>{{ order.shippingAddress.street }}<span *ngIf="order.shippingAddress.plaque">، پلاک {{
+                    order.shippingAddress.plaque }}</span></span>
               </div>
               <div class="info-row">
                 <i class="ti ti-mailbox"></i>
@@ -143,6 +141,12 @@
           </div>
 
           <div class="divider"></div>
+
+          <button class="pay-btn" *ngIf="order.status === 'pending' && !order.payment.status" (click)="payAgain()"
+            [disabled]="paying">
+            <i class="ti ti-credit-card"></i>
+            {{ paying ? 'در حال انتقال...' : 'پرداخت سفارش' }}
+          </button>
 
           <div class="card-title"><i class="ti ti-credit-card"></i> اطلاعات پرداخت</div>
           <div class="info-list">
@@ -183,7 +187,7 @@
             </div>
             <div class="stat-sep"></div>
             <div class="stat">
-              <div class="stat-val">{{ formatDate(order.create_at)  | persianNumber}}</div>
+              <div class="stat-val">{{ formatDate(order.create_at) | persianNumber}}</div>
               <div class="stat-label">تاریخ ثبت</div>
             </div>
           </div>

@@ -120,7 +120,7 @@
   width: 150px; height: 150px; border-radius: 10px;
   border: 1px solid #e5e7eb; object-fit: cover; flex-shrink: 0;
 }
-.product-info { flex: 1; min-width: 0; }
+.product-info { flex: 1; min-width: 0; text-align: right;}
 .product-name { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 2px; }
 .product-code { font-size: 11px; color: #9ca3af; margin-bottom: 6px; }
 .product-tags { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -170,6 +170,45 @@
 }
 
 .divider { height: 1px; background: #f3f4f6; }
+
+.pay-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+}
+
+.pay-btn i {
+  font-size: 18px;
+}
+
+.pay-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
+}
+
+.pay-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pay-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 
 /* Stats */
 .order-stats {

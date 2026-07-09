@@ -160,7 +160,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   goToProduct(product: Product): void {
     this.closeSearchDropdown();
     this.searchKeyword = '';
-    this.router.navigate(['/product', product.id]);
+    this.router.navigate(['/productDetail', product.id])
   }
 
   // ================= Cart =================
