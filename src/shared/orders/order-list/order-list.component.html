@@ -81,7 +81,7 @@
           </div>
           <div class="summary-row shipping">
             <span>ارسال</span>
-            <span class="free">رایگان</span>
+            <span class="free">{{ order.orderItems[0]?.product?.deliveryCost || '' }}</span>
           </div>
           <div class="summary-total">
             <span>مبلغ نهایی</span>

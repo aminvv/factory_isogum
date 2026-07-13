@@ -72,7 +72,7 @@
                 <div class="product-name">{{ item.product.productName }}</div>
                 <div class="product-code">{{ item.product.productCode }}</div>
                 <div class="product-tags">
-                  <span class="tag"><i class="ti ti-truck"></i> {{ item.product.deliveryTime }}</span>
+                  <span class="tag"><i class="ti ti-truck"></i> {{ item.product.deliveryTime |persianNumber }}</span>
                   <span class="tag"><i class="ti ti-coin"></i> {{ item.product.deliveryCost }}</span>
                   <span class="tag green" *ngIf="item.product.returnable"><i class="ti ti-refresh"></i> قابل
                     مرجوع</span>
@@ -98,7 +98,7 @@
               </div>
               <div class="info-row">
                 <i class="ti ti-phone"></i>
-                <span>{{ order.user.mobile }}</span>
+                <span>{{ order.user.mobile |persianNumber}}</span>
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@
             </div>
             <div class="summary-row">
               <span>هزینه ارسال</span>
-              <span class="free">رایگان</span>
+              <span class="free">{{ order.orderItems[0]?.product?.deliveryCost || '' }}</span>
             </div>
             <div class="summary-total">
               <span>مبلغ نهایی</span>
@@ -167,12 +167,12 @@
             <div class="info-row">
               <i class="ti ti-hash"></i>
               <span class="row-label">شماره فاکتور</span>
-              <span>{{ order.payment.invoice_number }}</span>
+              <span>{{ order.payment.invoice_number |persianNumber }}</span>
             </div>
             <div class="info-row" *ngIf="order.payment.refId">
               <i class="ti ti-fingerprint"></i>
               <span class="row-label">کد پیگیری</span>
-              <span>{{ order.payment.refId }}</span>
+              <span>{{ order.payment.refId  |persianNumber}}</span>
             </div>
             <div class="info-row">
               <i class="ti ti-circle-check"></i>

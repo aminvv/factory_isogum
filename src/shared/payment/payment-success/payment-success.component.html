@@ -59,8 +59,8 @@
                         <span class="icon">📍</span>
                         <span>
                             {{ order.shippingAddress.province }}، {{ order.shippingAddress.city }}،
-                            {{ order.shippingAddress.street }}
-                            <span *ngIf="order.shippingAddress.plaque">، پلاک {{ order.shippingAddress.plaque }}</span>
+                            {{ order.shippingAddress.street |persianNumber }}
+                            <span *ngIf="order.shippingAddress.plaque">، پلاک {{ order.shippingAddress.plaque |persianNumber }}</span>
                         </span>
                     </div>
                     <div class="info-row">
@@ -76,11 +76,11 @@
                 <div class="card-body">
                     <div class="info-row">
                         <span class="icon">🗂️</span>
-                        <span>کد سفارش: <strong>#{{ order.id }}</strong></span>
+                        <span>کد سفارش: <strong>#{{ order.id |persianNumber}}</strong></span>
                     </div>
                     <div class="info-row">
                         <span class="icon">📦</span>
-                        <span>تعداد مرسوله: <strong>{{ totalQuantity }} عدد</strong></span>
+                        <span>تعداد مرسوله: <strong>{{ totalQuantity |persianNumber}} عدد</strong></span>
                     </div>
                     <div class="info-row">
                         <span class="icon">📅</span>
@@ -121,13 +121,13 @@
                         <div class="product-name">{{ item.product.productName }}</div>
                         <div class="product-code">کد: {{ item.product.productCode }}</div>
                         <div class="product-meta">
-                            <span>🚚 {{ item.product.deliveryTime }}</span>
+                            <span>🚚 {{ item.product.deliveryTime |persianNumber}}</span>
                             <span>💰 {{ item.product.deliveryCost }}</span>
                         </div>
                     </div>
                     <div class="product-qty">
                         <span class="qty-label">تعداد</span>
-                        <span class="qty-value">{{ item.quantity }}</span>
+                        <span class="qty-value">{{ item.quantity  |persianNumber}}</span>
                     </div>
                     <div class="product-price">
                         {{ formatPrice(+item.price) }} تومان

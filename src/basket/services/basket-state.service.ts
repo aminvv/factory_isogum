@@ -308,4 +308,8 @@ changeQuantity(itemId: number, delta: 1 | -1): void {
   getCurrentSummary(): BasketSummary {
     return this.summarySubject.value;
   }
+
+  isUserLoggedIn(): boolean {
+  return this.isLoggedIn();
+}
 }

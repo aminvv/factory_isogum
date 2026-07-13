@@ -22,7 +22,12 @@
       <div class="img-wrap">
         <img [src]="getImage(product)" [alt]="product.productName"
           onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200/f3f4f6/9ca3af?text=بدون+عکس'" />
-        <span class="disc-badge" *ngIf="hasDiscount(product)">{{ getDiscountPercent(product) }}٪</span>
+        <span class="disc-badge" *ngIf="hasDiscount(product) && getDiscountPercent(product)">
+          ٪{{ getDiscountPercent(product) | persianNumber }}
+        </span>
+        <span class="disc-badge" *ngIf="hasDiscount(product) && !getDiscountPercent(product)">
+          {{ getDiscountAmount(product) | persianNumber }} تومان تخفیف
+        </span>
         <div class="out-overlay" *ngIf="isOutOfStock(product)">ناموجود</div>
       </div>
 
@@ -32,7 +37,7 @@
 
 
         <div class="content-rating-name">
-            <p class="name">{{ product.productName }}</p>
+          <p class="name">{{ product.productName }}</p>
           <div class="stars" *ngIf="product.rating" dir="ltr"
             style="display: flex; align-items: center; justify-content: flex-start;">
             <span style="margin-left: 5px;">{{ product.rating |persianNumber}}</span>

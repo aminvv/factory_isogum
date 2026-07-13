@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BasketStateService } from '../../basket/services/basket-state.service';
+import { BasketService } from '../../basket/services/basket.service';
 import { CartItem, BasketSummary } from '../../basket/model/basket.model';
 import { Address } from './model/address.model';
 import { AddressService } from './services/address.service';
@@ -39,6 +40,12 @@ export class ShippingComponent implements OnInit, OnDestroy {
   // --- فرم آدرس ---
   addressForm!: FormGroup;
 
+  // --- کد تخفیف ---
+  discountForm: FormGroup;
+  discountLoading = false;
+  discountError: string | null = null;
+  discountSuccess: string | null = null;
+  appliedDiscountCode: string | null = null;
 
   quantityErrors: { [itemId: number]: string } = {};
 
@@ -46,10 +53,15 @@ export class ShippingComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private addressService: AddressService,
     private paymentService: PaymentService,
+    private basketService: BasketService,
     private basketStateService: BasketStateService,
     private addressStateService: AddressStateService,
     private router: Router,
-  ) { }
+  ) {
+    this.discountForm = this.fb.group({
+      code: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.buildForm();
@@ -175,6 +187,64 @@ export class ShippingComponent implements OnInit, OnDestroy {
     });
   }
 
+  // =========== کد تخفیف ===========
+
+  private isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('accessToken');
+  }
+
+  applyDiscount(): void {
+    if (this.discountForm.invalid) return;
+
+    if (!this.isLoggedIn()) {
+      this.discountError = 'برای استفاده از کد تخفیف ابتدا وارد حساب کاربری خود شوید';
+      setTimeout(() => (this.discountError = null), 4000);
+      return;
+    }
+
+    this.discountLoading = true;
+    this.discountError = null;
+    const code = this.discountForm.value.code;
+
+    this.basketService.addDiscount({ code }).subscribe({
+      next: () => {
+        this.discountLoading = false;
+        this.discountSuccess = 'کد تخفیف با موفقیت اعمال شد';
+        this.appliedDiscountCode = code;
+        this.discountForm.reset();
+        this.basketStateService.refresh();
+        setTimeout(() => (this.discountSuccess = null), 3000);
+      },
+      error: (err) => {
+        this.discountLoading = false;
+        this.discountError = err.error?.message || 'کد تخفیف نامعتبر است';
+        setTimeout(() => (this.discountError = null), 5000);
+      }
+    });
+  }
+
+  removeDiscount(): void {
+    if (!this.appliedDiscountCode) return;
+
+    this.discountLoading = true;
+    this.discountError = null;
+
+    this.basketService.removeDiscount({ code: this.appliedDiscountCode }).subscribe({
+      next: () => {
+        this.discountLoading = false;
+        this.discountSuccess = 'کد تخفیف حذف شد';
+        this.appliedDiscountCode = null;
+        this.basketStateService.refresh();
+        setTimeout(() => (this.discountSuccess = null), 3000);
+      },
+      error: (err) => {
+        this.discountLoading = false;
+        this.discountError = err.error?.message || 'خطا در حذف کد تخفیف';
+        setTimeout(() => (this.discountError = null), 5000);
+      }
+    });
+  }
+
   // =========== پرداخت ===========
 
   get canSubmit(): boolean {
@@ -204,7 +274,6 @@ export class ShippingComponent implements OnInit, OnDestroy {
 
   // =========== محاسبه قیمت ===========
 
-
   goToProductDetail(item: CartItem, event: Event): void {
     if (event) {
       event.stopPropagation()
@@ -215,7 +284,6 @@ export class ShippingComponent implements OnInit, OnDestroy {
       this.router.navigate(['/product', item.slug]);
     }
   }
-
 
   getItemFinalPrice(item: CartItem): number {
     if (item.discountType === 'percent' && item.discountValue > 0) {
@@ -230,11 +298,6 @@ export class ShippingComponent implements OnInit, OnDestroy {
   getItemLineTotal(item: CartItem): number {
     return this.getItemFinalPrice(item) * item.quantity;
   }
-
-
-
-
-
 
   increaseItemQuantity(item: CartItem): void {
     this.basketStateService.changeQuantity(item.id, 1);

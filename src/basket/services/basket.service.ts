@@ -6,11 +6,6 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { AddDiscountDto, AddToBasketDto, BasketResponse } from '../model/basket.model';
 import { API_CONFIG } from '../../common/api/api.config';
 
-
-
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -27,11 +22,6 @@ export class BasketService {
     );
   }
 
-
-
-
-
-
   addToBasket(dto: AddToBasketDto): Observable<any> {
     const body = new HttpParams()
       .set('productId', dto.productId.toString())
@@ -44,21 +34,22 @@ export class BasketService {
     return this.http.post(`${API_CONFIG.baseUrl}/basket/addToBasket`, body.toString(), { headers });
   }
 
-
-
   // اعمال کد تخفیف به سبد خرید
   addDiscount(dto: AddDiscountDto): Observable<any> {
-    return this.http.post(`${API_CONFIG.baseUrl}/add-discount`, dto).pipe(
+    const body = new HttpParams().set('code', dto.code);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    // فیکس: پیشوند /basket جا افتاده بود -> 404
+    return this.http.post(`${API_CONFIG.baseUrl}/basket/add-discount`, body.toString(), { headers }).pipe(
       tap(() => this.refreshBasket())
     );
   }
 
-
-
-  clearBasket():Observable<any>{
+  clearBasket(): Observable<any> {
     return this.http.delete(`${API_CONFIG.baseUrl}/basket/clear`)
   }
-
 
   removeFromBasket(productId: number): Observable<any> {
     return this.http.delete(`${API_CONFIG.baseUrl}/basket/removeFromBasket`, {
@@ -75,7 +66,8 @@ export class BasketService {
 
   // حذف کد تخفیف از سبد خرید
   removeDiscount(dto: AddDiscountDto): Observable<any> {
-    return this.http.delete(`${API_CONFIG.baseUrl}/removeDiscount-FromBasket`, { body: dto }).pipe(
+    // فیکس: پیشوند /basket جا افتاده بود -> 404
+    return this.http.delete(`${API_CONFIG.baseUrl}/basket/removeDiscount-FromBasket`, { body: dto }).pipe(
       tap(() => this.refreshBasket())
     );
   }
@@ -85,24 +77,10 @@ export class BasketService {
     this.getBasket().subscribe();
   }
 
-
-
-
   updateQuantity(productId: number, quantity: number): Observable<any> {
     return this.http.patch(`${API_CONFIG.baseUrl}/basket/update`, { productId, quantity }).pipe(
       tap(() => this.refreshBasket())
     );
   }
-
-
-
-
-
-
-
-
-
-
-
 
 }

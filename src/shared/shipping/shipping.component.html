@@ -181,17 +181,43 @@
 
         <div class="summary-row" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
           <span>قیمت بدون تخفیف</span>
-          <span class="old-price">{{ cartSummary.totalPrice | number }} تومان</span>
+          <span class="old-price">{{ cartSummary.totalPrice | number | persianNumber:true }} تومان</span>
         </div>
 
         <div class="summary-row discount" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
           <span>تخفیف</span>
-          <span class="discount-value">- {{ (cartSummary.totalPrice - cartSummary.finalAmount) | number }} تومان</span>
+          <span class="discount-value">- {{ (cartSummary.totalPrice - cartSummary.finalAmount) | number  |persianNumber:true}} تومان</span>
         </div>
 
         <div class="summary-row shipping-row">
           <span>هزینه ارسال</span>
           <span class="shipping-note">برعهده خریدار (پس‌کرایه)</span>
+        </div>
+
+        <!-- ===== کد تخفیف ===== -->
+        <div class="discount-section">
+          <p class="login-hint" *ngIf="!appliedDiscountCode">
+            کد تخفیف دارید؟
+          </p>
+
+          <form [formGroup]="discountForm" (ngSubmit)="applyDiscount()" class="discount-form"
+            *ngIf="!appliedDiscountCode">
+            <input type="text" formControlName="code" placeholder="کد تخفیف" />
+            <button type="submit" class="btn-outline" [disabled]="discountForm.invalid || discountLoading">
+              <span *ngIf="!discountLoading">اعمال</span>
+              <span *ngIf="discountLoading">...</span>
+            </button>
+          </form>
+
+          <div class="applied-discount" *ngIf="appliedDiscountCode">
+            <span>کد «{{ appliedDiscountCode }}» اعمال شد</span>
+            <button type="button" class="btn-link" (click)="removeDiscount()" [disabled]="discountLoading">
+              حذف
+            </button>
+          </div>
+
+          <div class="success-msg" *ngIf="discountSuccess">{{ discountSuccess }}</div>
+          <div class="error-msg" *ngIf="discountError">{{ discountError }}</div>
         </div>
 
         <div class="summary-divider"></div>

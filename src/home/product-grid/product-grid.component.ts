@@ -64,27 +64,67 @@ export class ProductGridComponent implements OnInit {
     return new Intl.NumberFormat('fa-IR').format(price);
   }
 
-  hasDiscount(product: Product): boolean {
-    const discounts = (product as any).discounts;
-    if (!discounts?.length) return false;
-    const d = discounts[0];
-    return (d.percent && +d.percent > 0) || (d.amount && +d.amount > 0);
+
+
+
+private getBestDiscount(product: Product): { type: 'percent' | 'amount' | null; percent: number; amount: number } {
+  const p: any = product;
+  let bestPercent = 0, bestAmount = 0;
+
+  if (p.discounts?.length) {
+    for (const d of p.discounts) {
+      if (d.type !== 'product') continue;
+      if (d.code) continue;
+      if (d.percent && +d.percent > bestPercent) bestPercent = +d.percent;
+      if (d.amount && +d.amount > bestAmount) bestAmount = +d.amount;
+    }
   }
 
-  getDiscountPercent(product: Product): string {
-    const discounts = (product as any).discounts;
-    if (!discounts?.length) return '';
-    return discounts[0].percent || '';
+  if (bestPercent > 0) {
+    return { type: 'percent', percent: bestPercent, amount: 0 };
   }
+  if (bestAmount > 0) {
+    return { type: 'amount', percent: 0, amount: bestAmount };
+  }
+  if (p.active_discount && p.discount && +p.discount > 0) {
+    return { type: 'percent', percent: +p.discount, amount: 0 };
+  }
+  return { type: null, percent: 0, amount: 0 };
+}
 
-  getFinalPrice(product: Product): number {
-    const discounts = (product as any).discounts;
-    if (!discounts?.length) return product.price;
-    const d = discounts[0];
-    if (d.percent && +d.percent > 0) return product.price - (product.price * +d.percent / 100);
-    if (d.amount && +d.amount > 0) return product.price - +d.amount;
-    return product.price;
+
+
+
+
+  
+
+hasDiscount(product: Product): boolean {
+  return this.getBestDiscount(product).type !== null;
+}
+
+getDiscountPercent(product: Product): string {
+  const d = this.getBestDiscount(product);
+  return d.type === 'percent' ? String(d.percent) : '';
+}
+
+getDiscountAmount(product: Product): number {
+  const d = this.getBestDiscount(product);
+  return d.type === 'amount' ? d.amount : 0;
+}
+
+getFinalPrice(product: Product): number {
+  const d = this.getBestDiscount(product);
+  let finalPrice = product.price;
+  if (d.type === 'percent') {
+    finalPrice = product.price - (product.price * d.percent / 100);
+  } else if (d.type === 'amount') {
+    finalPrice = product.price - d.amount;
   }
+  return finalPrice < 0 ? 0 : finalPrice;
+}
+
+
+
 
   isOutOfStock(product: Product): boolean {
     return ((product as any).quantity ?? 1) === 0;

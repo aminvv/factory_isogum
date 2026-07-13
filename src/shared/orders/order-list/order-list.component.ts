@@ -15,6 +15,7 @@ export interface Order {
     product: {
       productName: string;
       image: Array<{ url: string }>;
+       deliveryCost: string;
     };
   }>;
   payment: {

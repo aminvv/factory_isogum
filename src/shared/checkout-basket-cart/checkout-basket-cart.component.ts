@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { BasketSummary, CartItem } from '../../basket/model/basket.model';
 import { BasketService } from '../../basket/services/basket.service';
 import { BasketStateService } from '../../basket/services/basket-state.service';
@@ -12,7 +12,7 @@ import { GuestBasketService } from '../../basket/services/guest-basket.service';
   templateUrl: './checkout-basket-cart.component.html',
   styleUrl: './checkout-basket-cart.component.css'
 })
-export class CheckoutBasketCartComponent implements OnInit {
+export class CheckoutBasketCartComponent implements OnInit, OnDestroy {
 
   @Input() mode: 'dropdown' | 'page' = 'page';
   @Input() isCartDropdownOpen: boolean = true;
@@ -30,8 +30,6 @@ export class CheckoutBasketCartComponent implements OnInit {
     private router: Router,
   ) { }
 
-
-
   ngOnInit(): void {
     this.subscription.add(
       this.basketStateService.items$.subscribe(items => {
@@ -45,25 +43,29 @@ export class CheckoutBasketCartComponent implements OnInit {
       })
     );
 
-
-
-
-this.basketStateService.quantityError$.subscribe(err => {
-  if (err) {
-    this.quantityErrors = { ...this.quantityErrors, [err.itemId]: err.message };
-    setTimeout(() => {
-      const updated = { ...this.quantityErrors };
-      delete updated[err.itemId];
-      this.quantityErrors = updated;
-    }, 1000);
-  }
-  });
-
+    this.subscription.add(
+      this.basketStateService.quantityError$.subscribe(err => {
+        if (err) {
+          this.quantityErrors = { ...this.quantityErrors, [err.itemId]: err.message };
+          setTimeout(() => {
+            const updated = { ...this.quantityErrors };
+            delete updated[err.itemId];
+            this.quantityErrors = updated;
+          }, 1000);
+        }
+      })
+    );
 
     this.basketStateService.refresh();
   }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
+  get isLoggedIn(): boolean {
+    return this.authStateService.isLoggedIn();
+  }
 
   getItemNewPrice(item: CartItem): number {
     if (item.discountType === 'percent' && item.discountValue > 0) {
@@ -90,13 +92,11 @@ this.basketStateService.quantityError$.subscribe(err => {
 
   decreaseItemQuantity(item: CartItem): void {
     this.basketStateService.changeQuantity(item.id, -1);
-    console.log("item.id",item.id);
-    
   }
 
-  goToProductDetail(item: CartItem,event:Event): void {
-    if(event){
-      event.stopPropagation()
+  goToProductDetail(item: CartItem, event: Event): void {
+    if (event) {
+      event.stopPropagation();
     }
     if (item.id) {
       this.router.navigate(['/productDetail', item.id]);
@@ -105,38 +105,29 @@ this.basketStateService.quantityError$.subscribe(err => {
     }
   }
 
-  private isLoggedIn(): boolean {
-    return this.authStateService.isLoggedIn();
-  }
-
-goToCheckout(): void {
-  if (this.isLoggedIn()) {
-    this.router.navigate(['/checkout/shipping']);
-  } else {
-    this.router.navigate(['/signup'], { queryParams: { redirect: 'checkout' } });
-  }
-}
-
-
-clearAllItems(): void {
-  if (this.dropdownItems.length === 0) return;
-
-  if (confirm('آیا مطمئن هستید که همه کالاها را حذف کنید؟')) {
-    const isLoggedIn = !!sessionStorage.getItem('accessToken');
-
-    if (isLoggedIn) {
-      this.basketService.clearBasket().subscribe({
-        next: () => {
-          this.basketStateService.reset();
-        },
-        error: (err) => console.error('خطا در حذف سبد خرید', err)
-      });
+  goToCheckout(): void {
+    if (this.isLoggedIn) {
+      this.router.navigate(['/checkout/shipping']);
     } else {
-      this.guestBasketService.clearCart();
-      this.basketStateService.reset();
+      this.router.navigate(['/signup'], { queryParams: { redirect: 'checkout' } });
     }
   }
-}
 
+  clearAllItems(): void {
+    if (this.dropdownItems.length === 0) return;
 
+    if (confirm('آیا مطمئن هستید که همه کالاها را حذف کنید؟')) {
+      if (this.isLoggedIn) {
+        this.basketService.clearBasket().subscribe({
+          next: () => {
+            this.basketStateService.reset();
+          },
+          error: (err) => console.error('خطا در حذف سبد خرید', err)
+        });
+      } else {
+        this.guestBasketService.clearCart();
+        this.basketStateService.reset();
+      }
+    }
+  }
 }
