@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { API_CONFIG } from '../../../common/api/api.config';
+import { BAD_WORDS } from '../../product-comment.page/model/bad-words.constants.ts';
 
 interface Comment {
   id: number;
@@ -43,6 +44,7 @@ export class ArticleDetailComponent implements OnInit {
   submitting = false;
   replyingTo: number | null = null;
   replyText = '';
+  private badWords = BAD_WORDS;
 
   constructor(
     private route: ActivatedRoute,
@@ -71,6 +73,12 @@ export class ArticleDetailComponent implements OnInit {
 
 
 
+private containsBadWord(text: string): boolean {
+  const lowerText = text.toLowerCase();
+  return this.badWords.some(word => lowerText.includes(word.toLowerCase()));
+}
+
+
 
 
   toggleReply(commentId: number) {
@@ -84,8 +92,13 @@ export class ArticleDetailComponent implements OnInit {
     this.replyText = '';
   }
 
-  submitReply(parentId: number) {
+submitReply(parentId: number) {
     if (!this.replyText.trim()) return;
+
+    if (this.containsBadWord(this.replyText.trim())) {
+      alert('متن پاسخ شامل کلمات نامناسب است. لطفاً اصلاح کنید.');
+      return;
+    }
 
     const token = sessionStorage.getItem('accessToken');
 
@@ -122,11 +135,18 @@ export class ArticleDetailComponent implements OnInit {
 
 
 
-  submitComment() {
+submitComment() {
     if (!this.commentText.trim()) return;
+
+    if (this.containsBadWord(this.commentText.trim())) {
+      alert('متن دیدگاه شامل کلمات نامناسب است. لطفاً اصلاح کنید.');
+      return;
+    }
+
     const token = sessionStorage.getItem('accessToken');
     if (!token) { alert('برای ثبت دیدگاه لاگین کنید'); return; }
 
+    
     this.submitting = true;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
