@@ -1,0 +1,53 @@
+<section class="certificates-section">
+  <div class="cert-header">
+    <span class="cert-badge">افتخارات ما</span>
+    <h2 class="cert-title">لوح‌های تقدیر و گواهینامه‌ها</h2>
+    <p class="cert-subtitle">
+      کیفیتی که با اعتماد مشتریان و تاییدیه‌های معتبر ثابت شده است
+    </p>
+  </div>
+
+  <!-- حالت لودینگ -->
+  <div class="cert-loading" *ngIf="loading()">
+    <div class="cert-spinner"></div>
+  </div>
+
+  <!-- حالت خطا -->
+  <div class="cert-error" *ngIf="error()">
+    مشکلی در دریافت اطلاعات پیش آمد
+  </div>
+
+  <!-- گرید اصلی -->
+  <div class="cert-grid" *ngIf="!loading() && !error()">
+    <div
+      class="cert-card"
+      *ngFor="let cert of certificates()"
+      (click)="open(cert)"
+    >
+      <div class="cert-frame">
+        <img [src]="cert.image" [alt]="cert.title" loading="lazy" />
+        <div class="cert-corner tl"></div>
+        <div class="cert-corner tr"></div>
+        <div class="cert-corner bl"></div>
+        <div class="cert-corner br"></div>
+      </div>
+      <div class="cert-info">
+        <h3>{{ cert.title }}</h3>
+        <p>{{ cert.issuer }}</p>
+        <span class="cert-date">{{ cert.issueDate |persianNumber }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="cert-modal" *ngIf="selected()" (click)="close()">
+    <div class="cert-modal-content" (click)="$event.stopPropagation()">
+      <button class="cert-close" (click)="close()">×</button>
+      <img [src]="selected()?.image" [alt]="selected()?.title" />
+      <div class="cert-modal-info">
+        <h3>{{ selected()?.title }}</h3>
+        <p>{{ selected()?.issuer }} - {{ selected()!.issueDate  |persianNumber}}</p>
+      </div>
+    </div>
+  </div>
+</section>

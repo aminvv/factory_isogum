@@ -16,11 +16,11 @@ import { ProductDetailPageComponent } from './product-detail-page/product-detail
 import { AlertComponent } from './alert/alert.component';
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ProductService } from './home/product-grid/services/product.service';
-import { CertificateComponent } from './home/certificate/certificate.component';
 import { SharedModule } from './shared/shared.module';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { SafeUrlPipe } from './common/pipes/safe-url.pipe';
+import { CertificatesComponent } from './home/certificate/certificates.component';
 
 
 @NgModule({
@@ -34,7 +34,7 @@ import { SafeUrlPipe } from './common/pipes/safe-url.pipe';
     SignUpComponent,
     ProductDetailPageComponent,
     AlertComponent,
-    CertificateComponent,
+    CertificatesComponent,
     AboutComponent,
     ContactComponent,
     SafeUrlPipe,
