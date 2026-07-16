@@ -1,0 +1,38 @@
+<section class="sec sec--spotlight" *ngIf="!loading && spotlight as s">
+    <div class="spotlight-grid-bg"></div>
+
+    <div class="spotlight-container">
+        <div class="spotlight-product">
+            <div class="spotlight-glow"></div>
+            <img [src]="s.image" id="cylinder_bitumen" class="spotlight-img" [alt]="s.title">
+
+            <div class="annotation" [ngClass]="ann.position" *ngFor="let ann of s.annotations">
+                <span class="annotation-dot"></span>
+                <span class="annotation-line"></span>
+                <div class="annotation-card">
+                    <strong>{{ ann.value }}</strong>
+                    <span>{{ ann.label }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="spotlight-content">
+            <span class="spotlight-tag">{{ s.tag }}</span>
+            <h2 class="spotlight-title">{{ s.title }}</h2>
+            <p class="spotlight-desc">{{ s.description }}</p>
+
+            <div class="spotlight-stats">
+                <div class="stat" *ngFor="let stat of s.stats">
+                    <strong>{{ stat.value }}</strong>
+                    <span>{{ stat.label }}</span>
+                </div>
+            </div>
+
+            <a [href]="s.ctaLink" class="spotlight-cta">{{ s.ctaText }} →</a>
+        </div>
+    </div>
+
+    <div class="spotlight-slider-wrap">
+        <app-slide></app-slide>
+    </div>
+</section>

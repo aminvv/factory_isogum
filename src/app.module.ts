@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './home/home-page/home-page.component';
-import { SliderComponent } from './home/slider/slider.component';
 import { ProductGridComponent } from './home/product-grid/product-grid.component';
 import { BlogSectionComponent } from './home/blog-section/blog-section.component';
 import { SignUpComponent } from './auth/sign-up-in/sign-up.component';
@@ -21,23 +20,25 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { SafeUrlPipe } from './common/pipes/safe-url.pipe';
 import { CertificatesComponent } from './home/certificate/certificates.component';
+import { SpotlightComponent } from './home/spotlight/spotlight.component';
+import { SliderComponent } from './home/slide/slide.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomePageComponent,
-    SliderComponent,
+    SpotlightComponent,
     ProductGridComponent,
     ProductDetailPageComponent,
     BlogSectionComponent,
     SignUpComponent,
-    ProductDetailPageComponent,
     AlertComponent,
     CertificatesComponent,
     AboutComponent,
     ContactComponent,
     SafeUrlPipe,
+    SliderComponent,
 
 
 
