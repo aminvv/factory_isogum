@@ -1,0 +1,25 @@
+<section class="best-seller-section" *ngIf="!loading && products.length">
+  <div class="bs-header">
+    <span class="bs-badge">پرفروش‌ترین‌ها</span>
+    <h2 class="bs-title">محصولات پرطرفدار ما</h2>
+    <p class="bs-subtitle">انتخاب اول مشتریان بر اساس بیشترین فروش</p>
+  </div>
+
+  <div class="bs-grid">
+    <a
+      class="bs-card"
+      *ngFor="let product of products; let i = index"
+      [routerLink]="['/productDetail', product.id]"
+    >
+      <div class="bs-image-wrap">
+        <img [src]="product.image?.[0]?.url" [alt]="product.productName" loading="lazy" />
+      </div>
+      <div class="bs-info">
+        <h3>{{ product.productName }}</h3>
+        <div class="bs-meta">
+          <span class="bs-price">{{ product.price | number |persianNumber:true}} تومان</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>

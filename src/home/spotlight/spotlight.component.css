@@ -1,74 +1,11 @@
-
-
-
-
-
-
-
-
-
-#cylinder_bitumen {
-  width: 100%;
-  max-width: 300px;
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.5));
-  animation: floatCylinder 5s ease-in-out infinite;
-}
-
-@keyframes floatCylinder {
-  0%, 100% { transform: translateY(0px) rotate(-1deg); }
-  50% { transform: translateY(-18px) rotate(1deg); }
-}
-
-.cylinder-badge {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #d4af37, #b8942c);
-  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-  animation: pulseBadge 2.4s ease-in-out infinite;
-}
-
-@keyframes pulseBadge {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-}
-
-.cylinder-badge__num {
-  font-size: 18px;
-  font-weight: 800;
-  color: #1a1d24;
-  line-height: 1.1;
-}
-
-.cylinder-badge__label {
-  font-size: 9px;
-  font-weight: 600;
-  color: #1a1d24;
-  text-align: center;
-  padding: 0 6px;
-  line-height: 1.3;
-}
-
-/* ---------- ظرف اسلایدر ---------- */
-
-
-
 .sec--spotlight {
   position: relative;
-  padding: 100px 40px 80px;
+  padding: clamp(40px, 8vw, 100px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 80px);
   background: #0a0c10;
   overflow: hidden;
   direction: rtl;
 }
 
-/* گرید فنی پس‌زمینه */
 .spotlight-grid-bg {
   position: absolute;
   inset: 0;
@@ -84,26 +21,28 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 110px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(40px, 8vw, 110px);
   max-width: 1300px;
-  margin: 0 120px 0 0;
+  margin: 0 auto;
 }
 
-/* ---------- محصول ---------- */
 .spotlight-product {
   position: relative;
-  flex: 0 0 380px;
+  flex: 0 0 auto;
+  width: min(100%, 380px);
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 420px;
+  height: clamp(240px, 40vw, 420px);
 }
 
 .spotlight-glow {
   position: absolute;
-  width: 320px;
-  height: 320px;
+  width: 70%;
+  max-width: 320px;
+  aspect-ratio: 1;
   background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 70%);
   filter: blur(10px);
   animation: glowPulse 4s ease-in-out infinite;
@@ -117,7 +56,7 @@
 .spotlight-img {
   position: relative;
   z-index: 2;
-  max-width: 260px;
+  max-width: min(100%, 260px);
   filter: drop-shadow(0 30px 45px rgba(0, 0, 0, 0.6));
   animation: floatImg 6s ease-in-out infinite;
 }
@@ -127,7 +66,6 @@
   50% { transform: translateY(-14px); }
 }
 
-/* ---------- annotation ها ---------- */
 .annotation {
   position: absolute;
   display: flex;
@@ -152,48 +90,35 @@
 .annotation-card {
   display: flex;
   flex-direction: column;
-  padding: 8px 14px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  padding: 6px 12px;
+  background: #2b2f3a;
+  border: 1px solid rgba(212, 175, 55, 0.35);
   border-radius: 8px;
-  backdrop-filter: blur(6px);
   white-space: nowrap;
 }
 
 .annotation-card strong {
   color: #fff;
-  font-size: 15px;
+  font-size: clamp(12px, 1.6vw, 15px);
   font-weight: 700;
 }
 
 .annotation-card span {
   color: #9aa0ab;
-  font-size: 11px;
+  font-size: clamp(9px, 1.2vw, 11px);
 }
 
-.annotation--1 {
-  top: 20px;
-  right: -40px;
-  flex-direction: row-reverse;
-}
+.annotation--1 { top: 20px; right: -40px; flex-direction: row-reverse; }
 .annotation--1 .annotation-line { width: 60px; }
 
-.annotation--2 {
-  bottom: 90px;
-  left: -60px;
-}
+.annotation--2 { bottom: 90px; left: -60px; }
 .annotation--2 .annotation-line { width: 70px; }
 
-.annotation--3 {
-  bottom: 10px;
-  right: -20px;
-  flex-direction: row-reverse;
-}
+.annotation--3 { bottom: 10px; right: -20px; flex-direction: row-reverse; }
 .annotation--3 .annotation-line { width: 45px; }
 
-/* ---------- محتوای متنی ---------- */
 .spotlight-content {
-  flex: 1;
+  flex: 1 1 320px;
   max-width: 480px;
 }
 
@@ -210,7 +135,7 @@
 
 .spotlight-title {
   color: #fff;
-  font-size: 34px;
+  font-size: clamp(20px, 4vw, 34px);
   font-weight: 800;
   margin: 0 0 16px;
   line-height: 1.3;
@@ -218,14 +143,15 @@
 
 .spotlight-desc {
   color: #9aa0ab;
-  font-size: 15px;
+  font-size: clamp(12px, 1.8vw, 15px);
   line-height: 1.9;
   margin: 0 0 32px;
 }
 
 .spotlight-stats {
   display: flex;
-  gap: 32px;
+  flex-wrap: wrap;
+  gap: 24px;
   margin-bottom: 32px;
   padding-bottom: 32px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -238,7 +164,7 @@
 
 .stat strong {
   color: #d4af37;
-  font-size: 26px;
+  font-size: clamp(18px, 2.8vw, 26px);
   font-weight: 800;
 }
 
@@ -252,7 +178,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 13px 32px;
+  padding: 12px 28px;
   background: #d4af37;
   color: #0a0c10;
   font-size: 14px;
@@ -267,20 +193,19 @@
   transform: translateX(-4px);
 }
 
-/* ---------- نوار اسلایدر ---------- */
 .spotlight-slider-wrap {
   position: relative;
   z-index: 1;
   max-width: 1300px;
-  margin: 38px 850px 0 0;
+  margin: clamp(30px, 6vw, 90px) auto 0;
 }
 
-/* ---------- ریسپانسیو ---------- */
+/* ---------- Tablet ---------- */
 @media (max-width: 1024px) {
   .spotlight-container {
     flex-direction: column;
-    gap: 60px;
     text-align: center;
+    gap: 60px;
   }
 
   .spotlight-content {
@@ -296,21 +221,17 @@
   }
 }
 
+/* ---------- Mobile ---------- */
 @media (max-width: 600px) {
-  .sec--spotlight {
-    padding: 60px 20px 50px;
-  }
-
   .spotlight-product {
-    height: 320px;
-    flex: 0 0 auto;
+    height: 260px;
+    width: 100%;
   }
 
   .spotlight-img {
-    max-width: 180px;
+    max-width: 160px;
   }
 
-  /* تو موبایل annotation ها به‌شکل badge ساده زیر عکس نشون داده بشن */
   .annotation {
     position: static;
     display: inline-flex;
@@ -321,15 +242,23 @@
     display: none;
   }
 
-  .spotlight-title {
-    font-size: 24px;
-  }
-
   .spotlight-stats {
-    gap: 20px;
+    gap: 16px;
+    justify-content: center;
   }
 
-  .stat strong {
-    font-size: 20px;
+  .spotlight-cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .spotlight-img {
+    max-width: 130px;
+  }
+
+  .annotation-card {
+    padding: 5px 8px;
   }
 }

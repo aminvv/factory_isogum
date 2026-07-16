@@ -22,6 +22,7 @@ import { SafeUrlPipe } from './common/pipes/safe-url.pipe';
 import { CertificatesComponent } from './home/certificate/certificates.component';
 import { SpotlightComponent } from './home/spotlight/spotlight.component';
 import { SliderComponent } from './home/slide/slide.component';
+import { BestSellerComponent } from './home/best-seller/best-seller.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { SliderComponent } from './home/slide/slide.component';
     ContactComponent,
     SafeUrlPipe,
     SliderComponent,
+    BestSellerComponent,
 
 
 

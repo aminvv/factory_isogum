@@ -64,23 +64,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 
 
-    this.addressState.address$.subscribe(addr => {
-      this.address = addr;
-      console.log('📍 آدرس در نوار دریافت شد:', addr);
-    });
-
+  if (this.isLoggedIn()) {
     this.addressService.getAddresses().subscribe({
       next: (list) => {
-        console.log('📦 لیست آدرس از سرور در نوار:', list);
         if (list.length > 0) {
           const def = list.find(a => a.isDefault) || list[0];
           this.addressState.setAddress(def);
         }
       },
       error: (err) => {
-        console.error('خطا در دریافت آدرس در نوار:', err);
       }
     });
+  }
+
+  this.basketStateService.summary$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(summary => (this.cartSummary = summary));
 
 
 
@@ -361,7 +360,6 @@ goToProducts(event?: Event) {
 
   if (this.router.url !== '/') {
     this.router.navigate(['/']).then(() => {
-      // صبر برای رندر کامل صفحه
       setTimeout(() => this.smoothScrollToProductGrid(), 300);
     });
   } else {

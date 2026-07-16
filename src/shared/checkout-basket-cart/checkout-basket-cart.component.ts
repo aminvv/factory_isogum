@@ -113,6 +113,25 @@ export class CheckoutBasketCartComponent implements OnInit, OnDestroy {
     }
   }
 
+  goToProducts(event?: Event) {
+  if (event) event.preventDefault();
+
+  if (this.router.url !== '/') {
+    this.router.navigate(['/']).then(() => {
+      setTimeout(() => this.smoothScrollToProductGrid(), 300);
+    });
+  } else {
+    this.smoothScrollToProductGrid();
+  }
+}
+
+private smoothScrollToProductGrid() {
+  const element = document.getElementById('productGridSection');
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
   clearAllItems(): void {
     if (this.dropdownItems.length === 0) return;
 

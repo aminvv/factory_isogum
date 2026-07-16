@@ -43,7 +43,7 @@
             </div>
             <h3 class="empty-cart-title">سبد خرید شما خالی است</h3>
             <p class="empty-cart-desc">همین حالا خرید کنید و از تخفیف‌های ویژه بهره‌مند شوید</p>
-            <a routerLink="/" class="btn btn-primary">مشاهده محصولات</a>
+            <a (click)="goToProducts($event)"  class="btn btn-primary">مشاهده محصولات</a>
           </div>
 
           <div class="cart-item" *ngFor="let item of dropdownItems">
