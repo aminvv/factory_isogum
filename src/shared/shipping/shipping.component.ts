@@ -86,6 +86,14 @@ export class ShippingComponent implements OnInit, OnDestroy {
     });
 
     this.loadAddresses();
+
+  this.sub.add(
+    this.basketStateService.discountCode$.subscribe(code => {
+      this.appliedDiscountCode = code;
+    })
+  );
+
+
   }
 
   ngOnDestroy(): void {
@@ -213,6 +221,7 @@ export class ShippingComponent implements OnInit, OnDestroy {
         this.appliedDiscountCode = code;
         this.discountForm.reset();
         this.basketStateService.refresh();
+         this.basketStateService.setDiscountCode(code);
         setTimeout(() => (this.discountSuccess = null), 3000);
       },
       error: (err) => {
@@ -235,6 +244,7 @@ export class ShippingComponent implements OnInit, OnDestroy {
         this.discountSuccess = 'کد تخفیف حذف شد';
         this.appliedDiscountCode = null;
         this.basketStateService.refresh();
+         this.basketStateService.setDiscountCode(null);
         setTimeout(() => (this.discountSuccess = null), 3000);
       },
       error: (err) => {

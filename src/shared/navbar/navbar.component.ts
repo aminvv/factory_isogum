@@ -344,6 +344,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.closeAuthDropdown();
     this.authStateService.logout();
     this.basketStateService.refresh();
+    this.router.navigate(['/'])
   }
 
 

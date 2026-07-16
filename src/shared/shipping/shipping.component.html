@@ -185,8 +185,8 @@
         </div>
 
         <div class="summary-row discount" *ngIf="cartSummary.totalPrice !== cartSummary.finalAmount">
-          <span>تخفیف</span>
-          <span class="discount-value">- {{ (cartSummary.totalPrice - cartSummary.finalAmount) | number  |persianNumber:true}} تومان</span>
+          <span>سود شما از این خرید</span>
+          <span class="discount-value">{{ (cartSummary.totalPrice - cartSummary.finalAmount) | number  |persianNumber:true}} تومان</span>
         </div>
 
         <div class="summary-row shipping-row">

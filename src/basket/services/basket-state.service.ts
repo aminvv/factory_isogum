@@ -23,6 +23,13 @@ export class BasketStateService {
   readonly drawerOpen$: Observable<boolean> = this.drawerOpenSubject.asObservable();
   summary$ = this.summarySubject.asObservable();
 
+
+
+  private discountCodeSubject = new BehaviorSubject<string | null>(null);
+  discountCode$ = this.discountCodeSubject.asObservable();
+
+
+
   get items$(): Observable<CartItem[]> {
     return this.itemsSubject.asObservable();
   }
@@ -38,7 +45,18 @@ export class BasketStateService {
       }
     });
     this.refresh();
+
+    const saved = localStorage.getItem('discountCode');
+    if (saved) this.discountCodeSubject.next(saved);
   }
+
+
+
+  setDiscountCode(code: string | null): void {
+  this.discountCodeSubject.next(code);
+  if (code) localStorage.setItem('discountCode', code);
+  else localStorage.removeItem('discountCode');
+}
 
   private isLoggedIn(): boolean {
     return !!sessionStorage.getItem('accessToken');
@@ -186,63 +204,63 @@ export class BasketStateService {
   }
 
 
-changeQuantity(itemId: number, delta: 1 | -1): void {
-  const current = this.itemsSubject.value;
-  const target = current.find((i) => i.id === itemId);
-  if (!target) {
-    console.warn('[basket] changeQuantity: item not found', itemId);
-    return;
-  }
-
-  const nextQty = target.quantity + delta;
-  const previousSnapshot = [...current];
-
-  // بررسی موجودی برای افزایش
-  if (delta === 1 && nextQty > (target.stock ?? 100000)) {
-    this.quantityErrorSubject.next({
-      itemId,
-      message: `حداکثر ${target.stock} عدد موجود است`
-    });
-    return;
-  }
-
-  // به‌روزرسانی UI (خوش‌بینانه)
-  let newItems: CartItem[];
-  if (nextQty < 1) {
-    newItems = current.filter((i) => i.id !== itemId);
-  } else {
-    newItems = current.map((i) =>
-      i.id === itemId ? { ...i, quantity: nextQty } : i
-    );
-  }
-  this.itemsSubject.next(newItems);
-
-  // درخواست به سرور
-  if (this.isLoggedIn()) {
-    if (delta === 1) {
-      this.basketService.addToBasket({ productId: itemId, quantity: 1 }).subscribe({
-        next: () => this.refreshFromServer(),
-        error: (err) => {
-          console.error('addToBasket error', err);
-          this.itemsSubject.next(previousSnapshot);
-        }
-      });
-    } else {
-      // کاهش: از متد removeFromBasket استفاده کن (با productId)
-      this.basketService.removeFromBasket(itemId).subscribe({
-        next: () => this.refreshFromServer(),
-        error: (err) => {
-          console.error('removeFromBasket error', err);
-          this.itemsSubject.next(previousSnapshot);
-        }
-      });
+  changeQuantity(itemId: number, delta: 1 | -1): void {
+    const current = this.itemsSubject.value;
+    const target = current.find((i) => i.id === itemId);
+    if (!target) {
+      console.warn('[basket] changeQuantity: item not found', itemId);
+      return;
     }
-  } else {
-    // حالت مهمان
-    this.guestBasketService.updateQuantity(itemId, nextQty);
-    this.refreshGuestSummary();
+
+    const nextQty = target.quantity + delta;
+    const previousSnapshot = [...current];
+
+    // بررسی موجودی برای افزایش
+    if (delta === 1 && nextQty > (target.stock ?? 100000)) {
+      this.quantityErrorSubject.next({
+        itemId,
+        message: `حداکثر ${target.stock} عدد موجود است`
+      });
+      return;
+    }
+
+    // به‌روزرسانی UI (خوش‌بینانه)
+    let newItems: CartItem[];
+    if (nextQty < 1) {
+      newItems = current.filter((i) => i.id !== itemId);
+    } else {
+      newItems = current.map((i) =>
+        i.id === itemId ? { ...i, quantity: nextQty } : i
+      );
+    }
+    this.itemsSubject.next(newItems);
+
+    // درخواست به سرور
+    if (this.isLoggedIn()) {
+      if (delta === 1) {
+        this.basketService.addToBasket({ productId: itemId, quantity: 1 }).subscribe({
+          next: () => this.refreshFromServer(),
+          error: (err) => {
+            console.error('addToBasket error', err);
+            this.itemsSubject.next(previousSnapshot);
+          }
+        });
+      } else {
+        // کاهش: از متد removeFromBasket استفاده کن (با productId)
+        this.basketService.removeFromBasket(itemId).subscribe({
+          next: () => this.refreshFromServer(),
+          error: (err) => {
+            console.error('removeFromBasket error', err);
+            this.itemsSubject.next(previousSnapshot);
+          }
+        });
+      }
+    } else {
+      // حالت مهمان
+      this.guestBasketService.updateQuantity(itemId, nextQty);
+      this.refreshGuestSummary();
+    }
   }
-}
 
   private updateQuantityOnServer(
     itemId: number,
@@ -310,6 +328,6 @@ changeQuantity(itemId: number, delta: 1 | -1): void {
   }
 
   isUserLoggedIn(): boolean {
-  return this.isLoggedIn();
-}
+    return this.isLoggedIn();
+  }
 }

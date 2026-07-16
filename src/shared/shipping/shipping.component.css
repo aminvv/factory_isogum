@@ -962,114 +962,132 @@
 
 
 /* ===================== کد تخفیف ===================== */
-
 .discount-section {
-  margin: 12px 0;
-  padding: 12px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-}
+  margin-top: 20px;
+  padding: 16px 0;
+  border-top: 1px solid #e5e7eb;
 
-.discount-form {
-  display: flex;
-  gap: 8px;
-}
+  .login-hint {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 10px 0;
+  }
 
-.discount-form input[type="text"] {
-  flex: 1;
-  padding: 8px 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s ease;
-}
+  .discount-form {
+    display: flex;
+    gap: 10px;
 
-.discount-form input[type="text"]:focus {
-  border-color: #6366f1;
-}
+    input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
 
-.discount-form .btn-outline {
-  padding: 8px 16px;
-  border: 1px solid #6366f1;
-  color: #6366f1;
-  background: transparent;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s ease, color 0.15s ease;
-}
+      &:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
 
-.discount-form .btn-outline:hover:not(:disabled) {
-  background: #6366f1;
-  color: #fff;
-}
+      &::placeholder {
+        color: #9ca3af;
+      }
 
-.discount-form .btn-outline:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+      &:disabled {
+        background: #f3f4f6;
+        cursor: not-allowed;
+      }
+    }
 
-.applied-discount {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  border-radius: 6px;
-  font-size: 14px;
-  color: #065f46;
-}
+    .btn-outline {
+      padding: 10px 22px;
+      background: transparent;
+      border: 1px solid #4f46e5;
+      border-radius: 8px;
+      color: #4f46e5;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
 
-.applied-discount .btn-link {
-  border: none;
-  background: none;
-  color: #dc2626;
-  font-size: 13px;
-  cursor: pointer;
-  padding: 0;
-  text-decoration: underline;
-}
+      &:hover:not(:disabled) {
+        background: #4f46e5;
+        color: #fff;
+      }
 
-.applied-discount .btn-link:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
 
-.login-hint {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #6b7280;
-  margin: 0 0 8px;
-}
+  .applied-discount {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #065f46;
+    gap: 12px;
 
-.login-hint i {
-  color: #f59e0b;
-}
+    span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
 
-.success-msg {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  color: #065f46;
-  border-radius: 6px;
-  font-size: 13px;
-}
+      &::before {
+        content: "✅";
+        font-size: 16px;
+      }
+    }
 
-/* در صورتی که .error-msg از قبل در shipping.component.css تعریف نشده باشد: */
-.error-msg {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: #fef2f2;
-  text-align: right;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  border-radius: 6px;
-  font-size: 13px;
+    .btn-link {
+      border: none;
+      background: none;
+      color: #dc2626;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background 0.2s;
+
+      &:hover:not(:disabled) {
+        background: #fee2e2;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .success-msg {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #ecfdf5;
+    border-radius: 6px;
+    color: #065f46;
+    font-size: 13px;
+    border: 1px solid #a7f3d0;
+  }
+
+  .error-msg {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border-radius: 6px;
+    color: #991b1b;
+    font-size: 13px;
+    border: 1px solid #fca5a5;
+  }
 }
