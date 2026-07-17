@@ -134,14 +134,21 @@ export class BasketStateService {
     });
   }
 
-  reset(): void {
-    this.summarySubject.next(EMPTY_SUMMARY);
-    this.itemsSubject.next([]);
-    if (!this.isLoggedIn()) {
-      this.guestBasketService.clearCart();
-
-    }
+reset(): void {
+  this.summarySubject.next(EMPTY_SUMMARY);
+  this.itemsSubject.next([]);
+  this.clearDiscount();
+  if (!this.isLoggedIn()) {
+    this.guestBasketService.clearCart();
   }
+}
+
+clearDiscount(): void {
+  this.discountCodeSubject.next(null);
+  localStorage.removeItem('discountCode');
+}
+
+  
 
   fetchBasket(): Observable<CartItem[]> {
     this.loadingSubject.next(true);

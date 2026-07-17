@@ -136,8 +136,8 @@
               <span>{{ formatPrice(order.total_amount) }} تومان</span>
             </div>
             <div class="summary-row disc" *ngIf="order.discount_amount > 0">
-              <span>تخفیف</span>
-              <span>- {{ formatPrice(order.discount_amount) }} تومان</span>
+              <span>سود شما از این خرید</span>
+              <span>{{ formatPrice(order.discount_amount) }} تومان</span>
             </div>
             <div class="summary-row">
               <span>هزینه ارسال</span>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BasketStateService } from '../../../basket/services/basket-state.service';
 
 interface OrderDetail {
   id: number;
@@ -54,7 +55,8 @@ export class PaymentSuccessComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private basketStateService: BasketStateService,
   ) {}
 
   ngOnInit() {
@@ -77,6 +79,7 @@ export class PaymentSuccessComponent implements OnInit {
         next: (data) => {
           this.order = data;
           this.loading = false;
+          this.basketStateService.reset()
         },
         error: () => {
           this.error = true;
