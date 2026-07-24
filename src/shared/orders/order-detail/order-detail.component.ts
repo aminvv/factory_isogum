@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface OrderDetail {
   id: number;
@@ -88,7 +89,7 @@ export class OrderDetailComponent implements OnInit {
   loadOrder(id: number) {
     const token = sessionStorage.getItem('accessToken');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get<OrderDetail>(`http://localhost:4000/orders/${id}`, { headers }).subscribe({
+    this.http.get<OrderDetail>(`${environment.apiUrl}/orders/${id}`, { headers }).subscribe({
       next: (data) => { this.order = data; this.loading = false; },
       error: () => { this.error = true; this.loading = false; },
     });
@@ -128,7 +129,7 @@ export class OrderDetailComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http.post<{ gateWayUrl: string }>(
-      `http://localhost:4000/payment/retry/${this.order.id}`,
+      `${environment.apiUrl}/payment/retry/${this.order.id}`,
       {},
       { headers }
     ).subscribe({

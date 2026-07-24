@@ -1,8 +1,9 @@
+import { environment } from "../../environments/environment.prod";
 
 
 
 export const API_CONFIG = {
-  baseUrl: 'http://localhost:4000',
+  baseUrl: environment.apiUrl,
   auth: 'auth',
   product: 'product',
   category: 'category',

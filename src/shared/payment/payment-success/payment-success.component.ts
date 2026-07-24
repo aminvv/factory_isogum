@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BasketStateService } from '../../../basket/services/basket-state.service';
+import { environment } from '../../../environments/environment';
 
 interface OrderDetail {
   id: number;
@@ -74,7 +75,7 @@ export class PaymentSuccessComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
-      .get<OrderDetail>(`http://localhost:4000/orders/${this.orderId}`, { headers })
+      .get<OrderDetail>(`${environment.apiUrl}/orders/${this.orderId}`, { headers })
       .subscribe({
         next: (data) => {
           this.order = data;

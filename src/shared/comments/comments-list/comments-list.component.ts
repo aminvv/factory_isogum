@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 interface ProductComment {
   id: number;
@@ -50,8 +51,8 @@ export class CommentsListComponent implements OnInit {
 
   loadAll() {
     forkJoin({
-      product: this.http.get<ProductComment[]>('http://localhost:4000/product-comment/my', { headers: this.headers }),
-      blog: this.http.get<BlogComment[]>('http://localhost:4000/blog-comment/my', { headers: this.headers }),
+      product: this.http.get<ProductComment[]>(`${environment.apiUrl}/product-comment/my`, { headers: this.headers }),
+      blog: this.http.get<BlogComment[]>(`${environment.apiUrl}/blog-comment/my`, { headers: this.headers }),
     }).subscribe({
       next: ({ product, blog }) => {
         this.productComments = product;
@@ -78,14 +79,14 @@ export class CommentsListComponent implements OnInit {
 
   deleteProductComment(id: number) {
     if (!confirm('آیا از حذف این دیدگاه مطمئن هستید؟')) return;
-    this.http.delete(`http://localhost:4000/product-comment/delete/${id}`, { headers: this.headers }).subscribe({
+    this.http.delete(`${environment.apiUrl}/product-comment/delete/${id}`, { headers: this.headers }).subscribe({
       next: () => this.productComments = this.productComments.filter(c => c.id !== id),
     });
   }
 
   deleteBlogComment(id: number) {
     if (!confirm('آیا از حذف این دیدگاه مطمئن هستید؟')) return;
-    this.http.delete(`http://localhost:4000/blog-comment/delete/${id}`, { headers: this.headers }).subscribe({
+    this.http.delete(`${environment.apiUrl}/blog-comment/delete/${id}`, { headers: this.headers }).subscribe({
       next: () => this.blogComments = this.blogComments.filter(c => c.id !== id),
     });
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BasketStateService } from '../../../basket/services/basket-state.service';
+import { environment } from '../../../environments/environment';
 
 export interface Order {
   id: number;
@@ -74,7 +75,7 @@ export class OrderListComponent implements OnInit {
   loadOrders() {
     const token = sessionStorage.getItem('accessToken');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get<Order[]>('http://localhost:4000/orders', { headers }).subscribe({
+    this.http.get<Order[]>(`${environment.apiUrl}/orders`, { headers }).subscribe({
       next: (data) => {
         this.orders = data;
         this.loading = false;

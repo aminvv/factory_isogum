@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface OrderDetail {
   id: number;
@@ -49,7 +50,7 @@ export class PaymentFailedComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
-      .get<OrderDetail>(`http://localhost:4000/orders/${this.orderId}`, { headers })
+      .get<OrderDetail>(`${environment.apiUrl}/orders/${this.orderId}`, { headers })
       .subscribe({
         next: (data) => {
           this.order = data;
@@ -67,7 +68,7 @@ export class PaymentFailedComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
-      .get<OrderDetail>(`http://localhost:4000/payment/by-authority/${authority}`, { headers })
+      .get<OrderDetail>(`${environment.apiUrl}/payment/by-authority/${authority}`, { headers })
       .subscribe({
         next: (data) => { this.order = data; this.loading = false; },
         error: () => { this.loading = false; },

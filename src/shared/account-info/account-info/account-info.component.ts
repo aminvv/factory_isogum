@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface UserProfile {
   id: number;
@@ -39,7 +40,7 @@ export class AccountInfoComponent implements OnInit {
   }
 
   loadProfile() {
-    this.http.get<UserProfile>('http://localhost:4000/user/profile', { headers: this.headers }).subscribe({
+    this.http.get<UserProfile>(`${environment.apiUrl}/user/profile`, { headers: this.headers }).subscribe({
       next: (data) => {
         this.user = data;
         this.form = {
@@ -71,7 +72,7 @@ export class AccountInfoComponent implements OnInit {
     Object.entries(this.form).forEach(([k, v]) => { if (v) body.set(k, v); });
     const headers = this.headers.set('Content-Type', 'application/x-www-form-urlencoded');
 
-    this.http.patch('http://localhost:4000/user/profile', body.toString(), { headers }).subscribe({
+    this.http.patch(`${environment.apiUrl}/user/profile`, body.toString(), { headers }).subscribe({
       next: (data: any) => {
         this.user = data;
         this.saving = false;

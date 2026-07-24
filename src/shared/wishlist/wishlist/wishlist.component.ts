@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 interface WishlistItem {
   id: number;
@@ -35,14 +36,14 @@ export class WishlistComponent implements OnInit {
   }
 
   loadWishlist() {
-    this.http.get<WishlistItem[]>('http://localhost:4000/wishlist', { headers: this.headers }).subscribe({
+    this.http.get<WishlistItem[]>(`${environment.apiUrl}/wishlist`, { headers: this.headers }).subscribe({
       next: (data) => { this.items = data; this.loading = false; },
       error: () => { this.loading = false; },
     });
   }
 
   remove(productId: number) {
-    this.http.delete(`http://localhost:4000/wishlist/${productId}`, { headers: this.headers }).subscribe({
+    this.http.delete(`${environment.apiUrl}/wishlist/${productId}`, { headers: this.headers }).subscribe({
       next: () => this.items = this.items.filter(i => i.product.id !== productId),
     });
   }

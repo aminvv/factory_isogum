@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface Address {
   id: number;
@@ -43,7 +44,7 @@ export class AddressListComponent implements OnInit {
 
   loadAddresses() {
     this.loading = true;
-    this.http.get<Address[]>('http://localhost:4000/address', { headers: this.headers }).subscribe({
+    this.http.get<Address[]>(`${environment.apiUrl}/address`, { headers: this.headers }).subscribe({
       next: (data) => { this.addresses = data; this.loading = false; },
       error: () => { this.loading = false; },
     });
@@ -74,11 +75,11 @@ export class AddressListComponent implements OnInit {
     const headers = this.headers.set('Content-Type', 'application/x-www-form-urlencoded');
 
     if (this.editingAddress) {
-      this.http.patch(`http://localhost:4000/address/${this.editingAddress.id}`, body.toString(), { headers }).subscribe({
+      this.http.patch(`${environment.apiUrl}/address/${this.editingAddress.id}`, body.toString(), { headers }).subscribe({
         next: () => { this.showForm = false; this.loadAddresses(); },
       });
     } else {
-      this.http.post('http://localhost:4000/address', body.toString(), { headers }).subscribe({
+      this.http.post(`${environment.apiUrl}/address`, body.toString(), { headers }).subscribe({
         next: () => { this.showForm = false; this.loadAddresses(); },
       });
     }
@@ -86,7 +87,7 @@ export class AddressListComponent implements OnInit {
 
   deleteAddress(id: number) {
     if (!confirm('آیا از حذف این آدرس مطمئن هستید؟')) return;
-    this.http.delete(`http://localhost:4000/address/${id}`, { headers: this.headers }).subscribe({
+    this.http.delete(`${environment.apiUrl}/address/${id}`, { headers: this.headers }).subscribe({
       next: () => this.loadAddresses(),
     });
   }
