@@ -1,9 +1,14 @@
-<nav class="navbar"  class="fixed-navbar" dir="rtl">
+<nav class="navbar fixed-navbar" dir="rtl">
 
   <div class="navbar-column">
     <!-- Row 1 -->
     <div class="nav-top">
       <div class="nav-top-inner">
+
+        <!-- دکمه همبرگری (فقط موبایل دیده میشه) -->
+        <button class="hamburger-btn" (click)="toggleMobileMenu()" aria-label="منو">
+          <i class="fas fa-bars"></i>
+        </button>
 
         <!-- Logo -->
         <div class="navbar-brand">
@@ -29,7 +34,7 @@
               <img [src]="product.image?.[0]?.url || 'assets/default.jpg'" [alt]="product.productName" />
               <div class="search-item-info">
                 <span class="search-item-title">{{ product.productName }}</span>
-                <span class="search-item-price">{{ product.price | persianNumber:true  }} تومان</span>
+                <span class="search-item-price">{{ product.price | persianNumber:true }} تومان</span>
               </div>
             </div>
           </div>
@@ -41,7 +46,8 @@
           <!-- Cart -->
           <div class="cart-wrapper" (mouseenter)="!isCheckoutPage && onCartMouseEnter()"
             (mouseleave)="!isCheckoutPage && onCartMouseLeave()">
-            <button class="act-btn" (click)="goToBasket()" (click)="!isCheckoutPage && onCartIconClick()" aria-label="سبد خرید">
+            <button class="act-btn" (click)="goToBasket()" (click)="!isCheckoutPage && onCartIconClick()"
+              aria-label="سبد خرید">
               <i class="fas fa-shopping-cart"></i>
               <span class="act-label"></span>
               <span class="cart-count" *ngIf="cartSummary.itemsCount > 0">
@@ -126,7 +132,7 @@
             </a></li>
         </ul>
       </div>
-      <div class="navbar-address-wrapper" *ngIf="address; ">
+      <div class="navbar-address-wrapper" *ngIf="address">
         <div class="navbar-address">
           <span class="address-prefix"> آدرس تحویل:</span>
           <i class="fas fa-location-dot"></i>
@@ -137,7 +143,55 @@
         </div>
       </div>
 
-
     </div>
   </div>
 </nav>
+
+<!-- ===== منوی کشویی موبایل ===== -->
+<div class="mobile-menu-overlay" *ngIf="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
+
+<div class="mobile-menu-panel" [class.open]="isMobileMenuOpen">
+  <div class="mobile-menu-header">
+    <button class="mobile-menu-close" (click)="closeMobileMenu()" aria-label="بستن">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <ul class="mobile-menu-links">
+    <li>
+      <a routerLink="/" (click)="closeMobileMenu()" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact:true}">
+        <i class="fas fa-home"></i> صفحه اصلی
+      </a>
+    </li>
+    <li>
+      <a (click)="goToProducts($event); closeMobileMenu()" style="cursor:pointer;">
+        <i class="fas fa-boxes"></i> محصولات
+      </a>
+    </li>
+    <li>
+      <a routerLink="/articles" (click)="closeMobileMenu()" routerLinkActive="active">
+        <i class="fas fa-newspaper"></i> مقالات
+      </a>
+    </li>
+    <li>
+      <a routerLink="/about" (click)="closeMobileMenu()" routerLinkActive="active">
+        <i class="fas fa-info-circle"></i> درباره ما
+      </a>
+    </li>
+    <li>
+      <a routerLink="/contact" (click)="closeMobileMenu()" routerLinkActive="active">
+        <i class="fas fa-phone"></i> تماس با ما
+      </a>
+    </li>
+  </ul>
+
+  <!-- آدرس تحویل هم داخل پنل موبایل نشون داده میشه -->
+  <div class="mobile-menu-address" *ngIf="address">
+    <i class="fas fa-location-dot"></i>
+    <span>
+      {{ address.city }}، {{ address.street }}
+      <span *ngIf="address.plaque">، پلاک {{ address.plaque }}</span>
+    </span>
+  </div>
+</div>

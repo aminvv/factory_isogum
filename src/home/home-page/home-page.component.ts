@@ -21,18 +21,13 @@ export class HomePageComponent implements OnInit {
     let img = document.getElementById('img') as HTMLElement
     AOS.init()
 
-    window.addEventListener('scroll', () => {
-      let value = window.scrollY;
-      if (value < 350) {
-        tanker.style.left = value * 1 + 'px'
-        factory.style.top = value * 0.2 + 'px'
-        img.style.filter = value * 10 + '%'
-
-      }
-
-
-
-    })
+window.addEventListener('scroll', () => {
+  let value = Math.min(window.scrollY, 350); 
+  if (value < 350) {
+    tanker.style.transform = `translateX(${value}px)`;
+    factory.style.transform = `translateY(${value * 0.2}px)`;
+  }
+});
 
 
 

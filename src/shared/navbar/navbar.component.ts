@@ -374,4 +374,18 @@ private smoothScrollToProductGrid() {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
+
+
+
+
+
+isMobileMenuOpen = false;
+
+toggleMobileMenu() {
+  this.isMobileMenuOpen = !this.isMobileMenuOpen;
+}
+
+closeMobileMenu() {
+  this.isMobileMenuOpen = false;
+}
 }
