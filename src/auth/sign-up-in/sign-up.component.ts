@@ -136,7 +136,9 @@ export class SignUpComponent implements OnInit, AfterViewInit {
 
     this.authService.sendOtpCode({ mobile }).subscribe({
       next: res => {
-        this.alertService.showAlert('success', res.message || 'کد ارسال شد.');
+        // this.alertService.showAlert('success', res.message || 'کد ارسال شد.');
+          this.alertService.showAlert('success', res.hint ? `${res.message} (${res.hint})` : res.message);
+
         sessionStorage.setItem('otpToken', res.otpToken);
         this.startOtpTimer();
       },

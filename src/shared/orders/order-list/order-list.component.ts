@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BasketStateService } from '../../../basket/services/basket-state.service';
 import { environment } from '../../../environments/environment';
 
 export interface Order {

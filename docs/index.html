@@ -1,6 +1,17 @@
 <!doctype html>
 <html lang="en" data-critters-container>
-
+<script type="text/javascript">
+  (function(l) {
+    if (l.search[1] === '/' ) {
+      var decoded = l.search.slice(1).split('&').map(function(s) { 
+        return s.replace(/~and~/g, '&')
+      }).join('?');
+      window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+      );
+    }
+  }(window.location));
+</script>
 <head><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <meta charset="utf-8">
   <title>isogum</title>
@@ -22,6 +33,6 @@
 
   <app-root></app-root>
 
-<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-TLNXKPME.js" type="module"></script></body> 
+<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-YIZ225ZY.js" type="module"></script></body> 
 
 </html>
